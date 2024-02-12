@@ -22,7 +22,6 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
-  var profile;
   final emailController = TextEditingController();
   final namecontroller = TextEditingController();
   final agecontroller = TextEditingController();
@@ -204,7 +203,7 @@ class _SignUpState extends State<SignUp> {
                                               border: Border.all(
                                                   color: AppColor.textColor)),
                                           child: imagepath == null
-                                              ? !widget.editdcreen && currentUserDocument!.imagePath!.isEmpty? Icon(Icons.camera_alt_outlined,
+                                              ? !widget.editdcreen ? Icon(Icons.camera_alt_outlined,
                                               color: AppColor.textColor
                                                   .withOpacity(0.5)):Image.network(currentUserDocument!.imagePath!,fit: BoxFit.cover)
                                               : Image.file(File(imagepath!),
