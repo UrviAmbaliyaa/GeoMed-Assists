@@ -72,7 +72,9 @@ class _SignUpState extends State<SignUp> {
         "latLong" :  location.latitude,
         "longitude" :  location.longitude,
         "imagePath" :  networkImagepath,
+        "approve" : true
       };
+      !widget.editdcreen? mapdata.addAll({"favoriteReference": []}):null;
       !widget.editdcreen
           ? await firebase_auth().signUpWithEmailAndPassword(
           emailController.text, password.text, mapdata, context)

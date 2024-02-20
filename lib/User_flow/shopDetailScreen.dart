@@ -1,18 +1,27 @@
+import 'package:geomed_assist/Firebase/firebaseAuthentications.dart';
+import 'package:geomed_assist/User_flow/favorites.dart';
+import 'package:intl/intl.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:geomed_assist/Firebase/firebase_quaries.dart';
+import 'package:geomed_assist/Models/product.dart';
+import 'package:geomed_assist/Models/rateModel.dart';
+import 'package:geomed_assist/Models/user_model.dart';
 import 'package:geomed_assist/User_flow/HomePage.dart';
 import 'package:geomed_assist/User_flow/message.dart';
 import 'package:geomed_assist/constants/Appcolors.dart';
 import 'package:geomed_assist/constants/constantWidgets.dart';
+import 'package:geomed_assist/constants/constantdata.dart';
 import 'package:geomed_assist/constants/dataFile.dart';
 import 'package:geomed_assist/constants/rattingBar.dart';
 import 'package:geomed_assist/productDetail.dart';
 import 'package:hive/hive.dart';
 
 class shopDetailScreen extends StatefulWidget {
-  final int index;
+  final UserModel data;
 
-  const shopDetailScreen({super.key, required this.index});
+  const shopDetailScreen({super.key, required this.data});
 
   @override
   State<shopDetailScreen> createState() => _shopDetailScreenState();
@@ -20,15 +29,16 @@ class shopDetailScreen extends StatefulWidget {
 
 class _shopDetailScreenState extends State<shopDetailScreen> {
   PageController pgcontrolles = PageController(initialPage: 0);
-  List page = [productsPage(), rattibgPage()];
+  bool isload = false;
+  List page = [];
 
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: AppColor.backgroundColor,
-      appBar: constWidget().appbar(context,
-          Name: Datas().shopes[widget.index]['name'], backbutton: true),
+      appBar: constWidget()
+          .appbar(context, Name: widget.data.name, backbutton: true),
       body: SingleChildScrollView(
         child: Container(
           width: width,
@@ -52,14 +62,13 @@ class _shopDetailScreenState extends State<shopDetailScreen> {
                       ),
                     ],
                     image: DecorationImage(
-                      image:
-                          NetworkImage(Datas().shopes[widget.index]['image']),
+                      image: NetworkImage(widget.data.imagePath!),
                       fit: BoxFit.cover,
                     )),
               ),
               SizedBox(height: 10),
               Text(
-                Datas().shopes[widget.index]['name'],
+                widget.data.name,
                 style: TextStyle(
                     color: AppColor.textColor,
                     fontSize: 18,
@@ -67,76 +76,115 @@ class _shopDetailScreenState extends State<shopDetailScreen> {
               ),
               SizedBox(height: 5),
               Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  rattingBar(tapOnly: true, initValue: 3.5, size: 25),
-                  Text("5.5 km",
-                      style: TextStyle(
-                          color: AppColor.greycolor,
-                          fontSize: 13,
-                          fontWeight: FontWeight.w500))
-                ],
-              ),
-              SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Icon(Icons.location_on_outlined,
-                      color: AppColor.primaryColor, size: 30),
-                  Expanded(
-                    child: Text(
-                        "Simada Naka, Shiv Darshan Society, Yoginagar Society, Surat, Gujarat 395006",
-                        style:
-                            TextStyle(color: AppColor.greycolor, fontSize: 13)),
-                  ),
-                  InkWell(
-                    splashColor: Colors.transparent,
-                    onTap: () =>
-                        Navigator.of(context, rootNavigator: true).push(
-                      CupertinoPageRoute<bool>(
-                        fullscreenDialog: true,
-                        builder: (BuildContext context) => messageScreen(),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      StreamBuilder<UserModel?>(
+                          stream: Firebase_Quires().getuserInfo(refId: widget.data.reference),
+                          builder: (context, snapshot) {
+                            return rattingBar(
+                                tapOnly: true,
+                                initValue: (snapshot.connectionState == ConnectionState.done || snapshot.connectionState == ConnectionState.waiting) && snapshot.hasData ? (snapshot.data!.rate! /snapshot.data!.ratedUser!):0,
+                                size: 25);
+                          }
                       ),
-                    ),
-                    child: Icon(CupertinoIcons.chat_bubble,
-                        size: 30, color: AppColor.primaryColor),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 20, right: 5),
-                    child: InkWell(
-                      splashColor: Colors.transparent,
-                      onTap: () {
-                        setState(() {
-                          favoriteItems.contains(
-                                  Datas().shopes[widget.index]['name'])
-                              ? favoriteItems
-                                  .remove(Datas().shopes[widget.index]['name'])
-                              : favoriteItems
-                                  .add(Datas().shopes[widget.index]['name']);
-                        });
-                      },
-                      child: Icon(
-                        favoriteItems
-                                .contains(Datas().shopes[widget.index]['name'])
-                            ? Icons.favorite
-                            : Icons.favorite_border,
-                        size: 30,
-                        color: AppColor.textColor,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Icon(Icons.location_on_outlined,
+                              color: AppColor.primaryColor, size: 25),
+                          SizedBox(
+                            width: width*0.63,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(widget.data.address,
+                                    style:
+                                    TextStyle(color: AppColor.greycolor, fontSize: 15)),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
+                    ],
                   ),
+                  Column(
+                    children: [
+                      Row(
+                        children: [
+                          Padding(
+                            padding:  EdgeInsets.all(5.0),
+                            child: InkWell(
+                              splashColor: Colors.transparent,
+                              onTap: () async {
+                                setState(() {
+                                  isload = true;
+                                });
+                                var chatRef = await FirebaseFirestore.instance
+                                    .collection("chat")
+                                    .where("user", isEqualTo: currentUserDocument!.reference)
+                                    .where("otherUser", isEqualTo: widget.data.reference)
+                                    .get();
+                                var chatrefereance2;
+                                if(chatRef.docs.length != 0){
+                                  chatrefereance2 = chatRef.docs.first.reference;
+                                }else{
+                                  Map<String, dynamic> mapdata = {
+                                    "user" : currentUserDocument!.reference,
+                                    "otherUser" : widget.data.reference,
+                                    "messageList" : [],
+                                    "userMessageList":[]
+                                  };
+                                  await FirebaseFirestore.instance
+                                      .collection("chat").doc().set(mapdata);
+                                  var chatRef2 = await FirebaseFirestore.instance
+                                      .collection("chat")
+                                      .where("user", isEqualTo: currentUserDocument!.reference)
+                                      .where("otherUser", isEqualTo: widget.data.reference)
+                                      .get();
+                                  chatrefereance2 = chatRef2.docs.first.reference;
+                                }
+                                setState(() {
+                                  isload = false;
+                                });
+                                Navigator.of(context, rootNavigator: true).push(
+                                  CupertinoPageRoute<bool>(
+                                    fullscreenDialog: true,
+                                    builder: (BuildContext context) => messageScreen(chatrefe: chatrefereance2,user: widget.data),
+                                  ),
+                                );
+                              },
+                              child: !isload ? Icon(CupertinoIcons.chat_bubble,
+                                  size: 30, color: AppColor.primaryColor):
+                              constWidget().circularProgressInd(nodatafound: false),
+                            ),
+                          ),
+                          Favorites(reference: widget.data.reference, action: () => setState(() {})),
+                        ],
+                      ),
+                      Text(
+                          "${calculateDistance(currentUserDocument!.latLong, currentUserDocument!.longitude, widget.data.latLong, widget.data.longitude)} km",
+                          style: TextStyle(
+                              color: AppColor.greycolor,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500))
+                    ],
+                  ),
+
+
                 ],
               ),
               SizedBox(height: 5),
-              Text("contact Number: +91 12345 56789",
+              Text("contact Number: ${widget.data.contact}",
                   style: TextStyle(color: AppColor.textColor, fontSize: 13)),
-              Text("Working time: 9:00AM to 10:00Pm",
-                  style: TextStyle(color: AppColor.textColor, fontSize: 13)),
-              SizedBox(height: 5),
               Text(
-                  "A one-stop destination for healthcare needs, our medical shop provides a wide range of prescription medications, over-the-counter drugs, and essential medical supplies. With a dedicated and knowledgeable staff, we ensure a seamless and reliable experience for all your health-related requirements. Conveniently located with flexible hours, we prioritize your well-being.",
+                  "Working time: ${widget.data.startTime} to ${widget.data.endTime}",
+                  style: TextStyle(color: AppColor.textColor, fontSize: 13)),
+              SizedBox(height: 5),
+              Text(widget.data.aboutUs!,
                   style: TextStyle(color: AppColor.textColor, fontSize: 13)),
               SizedBox(height: 10),
               Row(
@@ -163,7 +211,6 @@ class _shopDetailScreenState extends State<shopDetailScreen> {
                       onTap: () {
                         setState(() {
                           pgcontrolles.jumpToPage(1);
-                          print("pgcontrolles.page --->${pgcontrolles.page}");
                         });
                       },
                       child: Text("Rates",
@@ -181,7 +228,9 @@ class _shopDetailScreenState extends State<shopDetailScreen> {
                   scrollDirection: Axis.horizontal,
                   controller: pgcontrolles,
                   itemBuilder: (context, index) {
-                    return page[index];
+                    return index == 0
+                        ? productsPage(refShopkeeper: widget.data.reference)
+                        : rattibgPage(refShopkeeper: widget.data.reference,rate: widget.data.rate!,rateUsers: widget.data.ratedUser!);
                   },
                 ),
               ),
@@ -194,99 +243,214 @@ class _shopDetailScreenState extends State<shopDetailScreen> {
 }
 
 class productsPage extends StatefulWidget {
-  const productsPage({super.key});
+  final DocumentReference refShopkeeper;
+
+  const productsPage({super.key, required this.refShopkeeper});
 
   @override
   State<productsPage> createState() => _productsPageState();
 }
 
 class _productsPageState extends State<productsPage> {
+  TextEditingController serachingController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
-    return Container(
-      width: width,
-      child: GridView.builder(
-          shrinkWrap: true,
-          physics: BouncingScrollPhysics(),
-          itemCount: Datas().category.length,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 15,
-              mainAxisSpacing: 15,
-              childAspectRatio: 0.72),
-          itemBuilder: (context, index) {
-            return InkWell(
-              onTap: () {
-                showBottomSheet(
-                    context: context,
-                    clipBehavior: Clip.antiAlias,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(50),
-                            topRight: Radius.circular(50))),
-                    builder: (context) {
-                      return Container(
-                          height: MediaQuery.of(context).size.height*0.7,
-                          child: productDetail(index: index));
-                    });
-              },
-              child: Container(
-                margin: EdgeInsets.only(bottom: 5, left: 5, top: 5),
-                padding: EdgeInsets.all(2),
-                clipBehavior: Clip.antiAlias,
-                decoration: BoxDecoration(
-                  color: AppColor.backgroundColor,
-                  borderRadius: BorderRadius.circular(15.0),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 1,
-                      blurRadius: 8,
-                      offset: Offset(0, 3), // changes position of shadow
-                    ),
-                  ],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Image.network(Datas().category[index]['image'],
-                        height: width * 0.3,
-                        fit: BoxFit.cover,
-                        width: double.infinity),
-                    Padding(
-                      padding: EdgeInsets.all(5),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                              "djadj hdqjrnq iuoh3r c tchiu jth kjewhljwhfn fuehfuif kjhejh",
-                              style: TextStyle(
-                                  color: AppColor.textColor, fontSize: 16),
-                              maxLines: 2),
-                          Text(
-                              "Category: gwertw ${Datas().category[index]['name']}",
-                              style: TextStyle(
-                                  color: AppColor.greycolor, fontSize: 13),
-                              maxLines: 2),
-                          Text("Price: 10.5\$",
-                              style: TextStyle(
-                                  color: AppColor.greycolor, fontSize: 13),
-                              maxLines: 2),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+    return Column(
+      children: [
+        Container(
+          margin: EdgeInsets.only(top: 20,bottom: 20,left: 5,right: 5),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(25.0),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                spreadRadius: 2,
+                blurRadius: 10,
+                offset: Offset(0, 3), // changes position of shadow
               ),
-            );
-          }),
+            ],
+          ),
+          child: TextField(
+            controller: serachingController,
+            style: TextStyle(color: AppColor.textColor, fontSize: 15),
+            onChanged: (value) {
+              Future.delayed(Duration(seconds: 3),() => setState(() {}));
+            },
+            decoration: InputDecoration(
+              hintText: "Search here..",
+              hintStyle: TextStyle(color: AppColor.greycolor, fontSize: 15),
+              isDense: true,
+              fillColor: AppColor.backgroundColor,
+              filled: true,
+              contentPadding:
+              EdgeInsets.only(left: 15, top: 5, bottom: 5, right: 15),
+              suffixIcon:
+              Icon(Icons.search, color: AppColor.greycolor, size: 29),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(50.0),
+                borderSide:
+                BorderSide(color: AppColor.greycolor.withOpacity(0.3)),
+              ),
+              border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(50.0),
+                  borderSide: BorderSide(
+                    color: AppColor.greycolor,
+                  )),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(50.0),
+                borderSide:
+                BorderSide(color: AppColor.textColor.withOpacity(0.5)),
+              ),
+            ),
+          ),
+        ),
+        StreamBuilder<ProductList?>(
+            stream: Firebase_Quires().getProductDocuments(
+                shopRef: widget.refShopkeeper, available: true,forCategories: false),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.active ||
+                  snapshot.connectionState == ConnectionState.done) {
+                if (snapshot.hasData && snapshot.data!.products.length != 0) {
+                  var maindata = serachingController.text.trim().length != 0 ?
+                      snapshot.data!.products.where((element) {
+                         return (element.name.toUpperCase().contains(serachingController.text.toUpperCase())) ||
+                             (element.category.toUpperCase().contains(serachingController.text.toUpperCase())) ||
+                             (element.price.toString().contains(serachingController.text.toUpperCase())) ||
+                             (serachingController.text.toUpperCase().contains("AVAILABLE") && element.available);
+                      }).toList()
+                      : snapshot.data!.products;
+                  return GridView.builder(
+                      shrinkWrap: true,
+                      physics: BouncingScrollPhysics(),
+                      itemCount: maindata.length,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 15,
+                          mainAxisSpacing: 15,
+                          childAspectRatio: 0.66),
+                      itemBuilder: (context, index) {
+                        var data = maindata[index];
+                        return InkWell(
+                          onTap: () {
+                            showBottomSheet(
+                                context: context,
+                                clipBehavior: Clip.antiAlias,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(50),
+                                        topRight: Radius.circular(50))),
+                                builder: (context) {
+                                  return Container(
+                                      height: MediaQuery.of(context).size.height *
+                                          0.7,
+                                      child: productDetail(data: data));
+                                });
+                          },
+                          child: Container(
+                            margin: EdgeInsets.only(bottom: 5, left: 5, top: 5),
+                            padding: EdgeInsets.only(bottom: 5),
+                            clipBehavior: Clip.antiAlias,
+                            decoration: BoxDecoration(
+                              color: AppColor.backgroundColor,
+                              borderRadius: BorderRadius.circular(15.0),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.5),
+                                  spreadRadius: 1,
+                                  blurRadius: 8,
+                                  offset:
+                                      Offset(0, 3), // changes position of shadow
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Image.network(data.image,
+                                    height: width * 0.3,
+                                    fit: BoxFit.cover,
+                                    width: double.infinity),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 5),
+                                  child: Text(data.name,
+                                      style: TextStyle(
+                                          color: AppColor.textColor,
+                                          fontSize: 16),
+                                      maxLines: 2),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 5),
+                                  child: Text("Category: ${data.category}",
+                                      style: TextStyle(
+                                          color: AppColor.greycolor,
+                                          fontSize: 13),
+                                      maxLines: 2),
+                                ),
+
+                                Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 5),
+                                  child: Text("Price: ${data.price}\$",
+                                      style: TextStyle(
+                                          color: AppColor.greycolor,
+                                          fontSize: 13),
+                                      maxLines: 2),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 5),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        width: 10,
+                                        height: 10,
+                                        margin: EdgeInsets.only(right: 5),
+                                        decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(100),
+                                            color: data.available ? Colors.green : Colors.red
+                                        ),
+                                      ),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(data.available ? "Available" : "Not Available",
+                                              style: TextStyle(
+                                                  color: data.available ? Colors.green : Colors.red,
+                                                  fontSize: 13),
+                                              maxLines: 2),
+                                        ],
+                                      ),
+
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      });
+                } else {
+                  return Center(
+                    child: constWidget().circularProgressInd(nodatafound: true),
+                  );
+                }
+              } else {
+                return Center(
+                  child: constWidget().circularProgressInd(nodatafound: false),
+                );
+              }
+            }),
+      ],
     );
   }
 }
 
 class rattibgPage extends StatefulWidget {
-  const rattibgPage({super.key});
+  final DocumentReference refShopkeeper;
+  final double rate;
+  final int rateUsers;
+
+  const rattibgPage({super.key, required this.refShopkeeper, required this.rate, required this.rateUsers});
 
   @override
   State<rattibgPage> createState() => _rattibgPageState();
@@ -314,7 +478,8 @@ class _rattibgPageState extends State<rattibgPage> {
                     return AlertDialog(
                       backgroundColor: Colors.white,
                       contentPadding: EdgeInsets.zero,
-                      content: RattingPopUp(),
+                      content:
+                          RattingPopUp(refShopkeeper: widget.refShopkeeper,rate: widget.rate,rateUsers: widget.rateUsers),
                     );
                   },
                 );
@@ -322,73 +487,98 @@ class _rattibgPageState extends State<rattibgPage> {
               child: Text("Ratting",
                   style: TextStyle(color: AppColor.textColor, fontSize: 18))),
           Expanded(
-            child: ListView.separated(
-                separatorBuilder: (context, index) => Divider(
-                    color: AppColor.greycolor.withOpacity(0.5),
-                    height: 0,
-                    thickness: 2),
-                shrinkWrap: true,
-                physics: BouncingScrollPhysics(),
-                itemCount: Datas().doctores.length,
-                itemBuilder: (context, index) {
-                  return Container(
-                    padding: EdgeInsets.symmetric(vertical: 15),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Container(
-                          width: 45,
-                          height: 45,
-                          clipBehavior: Clip.antiAlias,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(100),
-                          ),
-                          child: Image.network(Datas().doctores[index]['image'],
-                              fit: BoxFit.cover),
-                        ),
-                        SizedBox(width: 15),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(Datas().doctores[index]['name'],
-                                style: TextStyle(
-                                    color: AppColor.textColor,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w400)),
-                            SizedBox(
-                              width: width * 0.75,
-                              child: Text(
-                                  "Thank you, Neethi. Your medician has been very helpful for me.",
-                                  style: TextStyle(
-                                      color: AppColor.greycolor, fontSize: 14),
-                                  maxLines: 2),
-                            ),
-                            SizedBox(
-                              width: width * 0.75,
+            child: StreamBuilder<RateList?>(
+                stream: Firebase_Quires()
+                    .getRateDocuments(shopRef: widget.refShopkeeper),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.active ||
+                      snapshot.connectionState == ConnectionState.done) {
+                    if (snapshot.hasData && snapshot.data!.rate.length != 0) {
+                      var maindata = snapshot.data!.rate;
+                      return ListView.separated(
+                          separatorBuilder: (context, index) => Divider(
+                              color: AppColor.greycolor.withOpacity(0.5),
+                              height: 0,
+                              thickness: 2),
+                          shrinkWrap: true,
+                          physics: BouncingScrollPhysics(),
+                          itemCount: maindata.length,
+                          itemBuilder: (context, index) {
+                            var data = maindata[index];
+                            return Container(
+                              padding: EdgeInsets.symmetric(vertical: 15),
                               child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.end,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.max,
                                 children: [
-                                  rattingBar(
-                                      tapOnly: true,
-                                      initValue: index.toDouble()),
-                                  Text(
-                                    "7 Jan",
-                                    textAlign: TextAlign.end,
-                                    style: TextStyle(
-                                        color: AppColor.greycolor,
-                                        fontSize: 13),
-                                  )
+                                  Container(
+                                    width: 45,
+                                    height: 45,
+                                    clipBehavior: Clip.antiAlias,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(100),
+                                    ),
+                                    child: Image.network(data.image,
+                                        fit: BoxFit.cover),
+                                  ),
+                                  SizedBox(width: 15),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(data.name,
+                                          style: TextStyle(
+                                              color: AppColor.textColor,
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w400)),
+                                      SizedBox(
+                                        width: width * 0.75,
+                                        child: Text(data.description,
+                                            style: TextStyle(
+                                                color: AppColor.greycolor,
+                                                fontSize: 14),
+                                            maxLines: 2),
+                                      ),
+                                      SizedBox(
+                                        width: width * 0.75,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.end,
+                                          children: [
+                                            rattingBar(
+                                                tapOnly: true,
+                                                initValue: data.rate),
+                                            Text(
+                                              DateFormat('dd MMM yyyy')
+                                                  .format(data.date),
+                                              textAlign: TextAlign.end,
+                                              style: TextStyle(
+                                                  color: AppColor.greycolor,
+                                                  fontSize: 13),
+                                            )
+                                          ],
+                                        ),
+                                      )
+                                    ],
+                                  ),
                                 ],
                               ),
-                            )
-                          ],
-                        ),
-                      ],
-                    ),
-                  );
+                            );
+                          });
+                    } else {
+                      return Center(
+                        child: constWidget()
+                            .circularProgressInd(nodatafound: true),
+                      );
+                    }
+                  } else {
+                    return Center(
+                      child:
+                          constWidget().circularProgressInd(nodatafound: false),
+                    );
+                  }
                 }),
           ),
         ],
@@ -398,7 +588,11 @@ class _rattibgPageState extends State<rattibgPage> {
 }
 
 class RattingPopUp extends StatefulWidget {
-  const RattingPopUp({Key? key}) : super(key: key);
+  final DocumentReference refShopkeeper;
+  final double rate;
+  final int rateUsers;
+
+  const RattingPopUp({Key? key, required this.refShopkeeper, required this.rate, required this.rateUsers}) : super(key: key);
 
   @override
   State<RattingPopUp> createState() => _RattingPopUpState();
@@ -469,7 +663,26 @@ class _RattingPopUpState extends State<RattingPopUp> {
               ),
               backgroundColor: MaterialStateProperty.all(AppColor.primaryColor),
             ),
-            onPressed: () => Navigator.pop(context),
+            onPressed: () async {
+              if (ratebarValue != 0) {
+                var mapdata = {
+                  'image': currentUserDocument!.imagePath,
+                  'name': currentUserDocument!.name,
+                  'rate': ratebarValue,
+                  'description': rattingMessage.text,
+                  'date': DateTime.now(),
+                  'userReference': widget.refShopkeeper,
+                };
+                widget.refShopkeeper.update({'rate':(widget.rate + ratebarValue),'ratedUser':(widget.rateUsers + 1)});
+                FirebaseFirestore.instance
+                    .collection("rate")
+                    .doc()
+                    .set(mapdata);
+                rattingMessage.clear();
+                ratebarValue = 0;
+              }
+              Navigator.pop(context);
+            },
             child: Text(
               "Submit",
               style: TextStyle(color: Colors.white, fontSize: 18),

@@ -1,14 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:geomed_assist/Models/user_model.dart';
 import 'package:geomed_assist/User_flow/HomePage.dart';
 import 'package:geomed_assist/User_flow/doctoreDetail.dart';
 import 'package:geomed_assist/constants/Appcolors.dart';
 import 'package:geomed_assist/constants/constantWidgets.dart';
+import 'package:geomed_assist/constants/constantdata.dart';
 import 'package:geomed_assist/constants/dataFile.dart';
 import 'package:geomed_assist/constants/rattingBar.dart';
 
 class allDoctores extends StatefulWidget {
-  const allDoctores({super.key});
+  final List<UserModel> doctores;
+
+  const allDoctores({super.key, required this.doctores});
 
   @override
   State<allDoctores> createState() => _allDoctoresState();
@@ -19,13 +23,10 @@ class _allDoctoresState extends State<allDoctores> {
 
   @override
   Widget build(BuildContext context) {
-    var width = MediaQuery
-        .of(context)
-        .size
-        .width;
+    var width = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: AppColor.backgroundColor,
-      appBar: constWidget().appbar(context,Name: "Doctor",backbutton: true),
+      appBar: constWidget().appbar(context, Name: "Doctor", backbutton: true),
       body: Column(
         children: [
           Container(
@@ -44,10 +45,7 @@ class _allDoctoresState extends State<allDoctores> {
             child: TextField(
               controller: serachingController,
               style: TextStyle(color: AppColor.textColor, fontSize: 15),
-              onChanged: (value) {
-                setState(() {
-                });
-              },
+              onChanged: (value) => setState(() {}),
               decoration: InputDecoration(
                 hintText: "Search here..",
                 hintStyle: TextStyle(color: AppColor.greycolor, fontSize: 15),
@@ -55,13 +53,13 @@ class _allDoctoresState extends State<allDoctores> {
                 fillColor: AppColor.backgroundColor,
                 filled: true,
                 contentPadding:
-                EdgeInsets.only(left: 15, top: 5, bottom: 5, right: 15),
+                    EdgeInsets.only(left: 15, top: 5, bottom: 5, right: 15),
                 suffixIcon:
-                Icon(Icons.search, color: AppColor.greycolor, size: 29),
+                    Icon(Icons.search, color: AppColor.greycolor, size: 29),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(50.0),
                   borderSide:
-                  BorderSide(color: AppColor.greycolor.withOpacity(0.3)),
+                      BorderSide(color: AppColor.greycolor.withOpacity(0.3)),
                 ),
                 border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(50.0),
@@ -71,7 +69,7 @@ class _allDoctoresState extends State<allDoctores> {
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(50.0),
                   borderSide:
-                  BorderSide(color: AppColor.textColor.withOpacity(0.5)),
+                      BorderSide(color: AppColor.textColor.withOpacity(0.5)),
                 ),
               ),
             ),
@@ -80,101 +78,119 @@ class _allDoctoresState extends State<allDoctores> {
             child: ListView.builder(
                 shrinkWrap: true,
                 physics: BouncingScrollPhysics(),
-                itemCount: Datas().doctores.length,
+                itemCount: widget.doctores.length,
                 itemBuilder: (context, index) {
-                  return (serachingController.text
-                      .trim()
-                      .isNotEmpty &&
-                      Datas().doctores[index]['name'].toString().toUpperCase().contains(
-                          serachingController.text.toUpperCase())) || serachingController.text
-                      .trim()
-                      .isEmpty ?
-                  Stack(
-                    alignment: Alignment.centerRight,
-                    children: [
-                      Container(
-                        margin: EdgeInsets.only(
-                            top: 10, left: 20, bottom: 10, right: 35),
-                        padding: EdgeInsets.all(10),
-                        clipBehavior: Clip.antiAlias,
-                        decoration: BoxDecoration(
-                          color: AppColor.backgroundColor,
-                          borderRadius: BorderRadius.circular(50),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.5),
-                              spreadRadius: 1,
-                              blurRadius: 8,
-                              offset:
-                              Offset(0, 3), // changes position of shadow
-                            ),
-                          ],
-                        ),
-                        child: InkWell(
-                          onTap: () =>
-                              Navigator.of(context, rootNavigator: true).push(
-                                CupertinoPageRoute<bool>(
-                                  fullscreenDialog: true,
-                                  builder: (BuildContext context) =>
-                                  new doctoreDetail(index: index),
-                                ),
+                  var data = widget.doctores[index];
+                  var visiblity = serachingController.text.isNotEmpty
+                      ? (data.name.toUpperCase().contains(
+                              serachingController.text.toUpperCase()) ||
+                          data.address.toUpperCase().contains(
+                              serachingController.text.toUpperCase()) ||
+                          data.degree!.toUpperCase().contains(
+                              serachingController.text.toUpperCase()) ||
+                          data.distanc
+                              .toString()
+                              .contains(serachingController.text) ||
+                          data.exp!
+                              .toUpperCase()
+                              .contains(serachingController.text.toUpperCase()))
+                      : true;
+                  return Visibility(
+                    visible: visiblity,
+                    child: Stack(
+                      alignment: Alignment.centerRight,
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(
+                              top: 10, left: 20, bottom: 10, right: 35),
+                          padding: EdgeInsets.all(10),
+                          clipBehavior: Clip.antiAlias,
+                          decoration: BoxDecoration(
+                            color: AppColor.backgroundColor,
+                            borderRadius: BorderRadius.circular(50),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                spreadRadius: 1,
+                                blurRadius: 8,
+                                offset:
+                                    Offset(0, 3), // changes position of shadow
                               ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              CircleAvatar(
-                                backgroundImage: NetworkImage(
-                                    Datas().doctores[index]['image']),
-                                radius: 35,
-                              ),
-                              SizedBox(width: 15),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(Datas().doctores[index]['name'],
-                                      style: TextStyle(
-                                          color: AppColor.textColor,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w400)),
-                                  SizedBox(
-                                    width: width * 0.57,
-                                    child: Text(
-                                        "Simada Naka, Shiv Darshan Society, Yoginagar Society, Surat, Gujarat 395006",
-                                        style: TextStyle(
-                                            color: AppColor.greycolor,
-                                            fontSize: 13),
-                                        maxLines: 2),
-                                  ),
-                                  SizedBox(
-                                    width: width * 0.57,
-                                    child: Row(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        rattingBar(
-                                            tapOnly: true, initValue: 2.5),
-                                        Text("5.23 km",
-                                            textAlign: TextAlign.end,
-                                            style: TextStyle(
-                                                color: AppColor.greycolor,
-                                                fontSize: 13),
-                                            maxLines: 2),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              )
                             ],
                           ),
+                          child: InkWell(
+                            onTap: () =>
+                                Navigator.of(context, rootNavigator: true).push(
+                              CupertinoPageRoute<bool>(
+                                fullscreenDialog: true,
+                                builder: (BuildContext context) =>
+                                    doctoreDetail(doctor: data),
+                              ),
+                            ),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                CircleAvatar(
+                                  backgroundImage:
+                                      NetworkImage(data.imagePath!),
+                                  radius: 35,
+                                ),
+                                SizedBox(width: 15),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(data.name,
+                                        style: TextStyle(
+                                            color: AppColor.textColor,
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w400)),
+                                    SizedBox(
+                                      width: width * 0.57,
+                                      child: Text(data.address,
+                                          style: TextStyle(
+                                              color: AppColor.greycolor,
+                                              fontSize: 13),
+                                          maxLines: 2),
+                                    ),
+                                    SizedBox(
+                                      width: width * 0.57,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          rattingBar(
+                                              tapOnly: true,
+                                              initValue:
+                                                  (data.rate! / data.rate!)),
+                                          Text(
+                                              "${calculateDistance(currentUserDocument!.latLong, currentUserDocument!.longitude, data.latLong, data.longitude)} km",
+                                              textAlign: TextAlign.end,
+                                              style: TextStyle(
+                                                  color: AppColor.greycolor,
+                                                  fontSize: 13),
+                                              maxLines: 2),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                          ),
                         ),
-                      ),
-                      Container(
-                          margin: EdgeInsets.only(right: 20),
-                          child: Icon(CupertinoIcons.phone_circle_fill,
-                              size: 45, color: AppColor.textColor))
-                    ],
-                  ) : SizedBox.shrink();
+                        InkWell(
+                          onTap: () {
+                            callNumber(contactNumber: data.contact);
+                          },
+                          child: Container(
+                              margin: EdgeInsets.only(right: 20),
+                              child: Icon(CupertinoIcons.phone_circle_fill,
+                                  size: 45, color: AppColor.textColor)),
+                        )
+                      ],
+                    ),
+                  );
                 }),
           ),
         ],

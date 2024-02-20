@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geomed_assist/Authentication/sign_in.dart';
 import 'package:geomed_assist/Firebase/firebaseAuthentications.dart';
+import 'package:geomed_assist/Store_flow/bottomNavigationBar_Shop.dart';
 import 'package:geomed_assist/User_flow/HomePage.dart';
 import 'package:geomed_assist/constants/Appcolors.dart';
 import 'package:geomed_assist/constants/ImagePicker.dart';
@@ -36,7 +37,62 @@ class _SignUpAsShopkeeperState extends State<SignUpAsShopkeeper> {
   bool passwordvisiblity = false;
   bool confirmpasswordvisiblity = false;
   bool isLoading = false;
+  TimeOfDay? startTime;
+  TimeOfDay? endTime;
+  TimeOfDay? breckStartTime;
+  TimeOfDay? breackEndendTime;
   RegExp emailRegExp = RegExp(r"^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$");
+
+
+  Future<void> _selectStartTime(BuildContext context) async {
+    final TimeOfDay? pickedTime = await showTimePicker(
+      context: context,
+      initialTime: startTime ?? TimeOfDay.now(),
+    );
+
+    if (pickedTime != null && pickedTime != startTime) {
+      setState(() {
+        startTime = pickedTime;
+      });
+    }
+  }
+
+  Future<void> _selectBrackStartTime(BuildContext context) async {
+    final TimeOfDay? pickedTime = await showTimePicker(
+      context: context,
+      initialTime: startTime ?? TimeOfDay.now(),
+    );
+
+    if (pickedTime != null && pickedTime != startTime) {
+      setState(() {
+        breckStartTime = pickedTime;
+      });
+    }
+  }
+  Future<void> _selectEndTime(BuildContext context) async {
+    final TimeOfDay? pickedTime = await showTimePicker(
+      context: context,
+      initialTime: endTime ?? TimeOfDay.now(),
+    );
+
+    if (pickedTime != null && pickedTime != endTime) {
+      setState(() {
+        endTime = pickedTime;
+      });
+    }
+  }
+  Future<void> _selectbreackEndTime(BuildContext context) async {
+    final TimeOfDay? pickedTime = await showTimePicker(
+      context: context,
+      initialTime: endTime ?? TimeOfDay.now(),
+    );
+
+    if (pickedTime != null && pickedTime != endTime) {
+      setState(() {
+        breackEndendTime = pickedTime;
+      });
+    }
+  }
 
   Future<void> getAddressLatLng() async {
     print("addressController.text ----->${addressController.text}");
@@ -56,7 +112,12 @@ class _SignUpAsShopkeeperState extends State<SignUpAsShopkeeper> {
         "longitude": location.longitude,
         "cantact": contactNumberController.text,
         "imagePath": networkImagepath,
-        "about_us": aboutUscontroller.text
+        "about_us": aboutUscontroller.text,
+        "startTime": "${startTime!.hour}:${startTime!.minute}",
+        "breckstartTime": "${breckStartTime!.hour}:${breckStartTime!.minute}",
+        "endtime":"${endTime!.hour}:${endTime!.minute}",
+        "breckendTime":"${breackEndendTime!.hour}:${breackEndendTime!.minute}",
+        "approve" :  widget.editdcreen? widget.editdcreen : false
       };
       !widget.editdcreen
           ? await firebase_auth().signUpWithEmailAndPassword(
@@ -79,8 +140,9 @@ class _SignUpAsShopkeeperState extends State<SignUpAsShopkeeper> {
                   builder: (BuildContext context) => new SignIn(),
                 ),
               )
-            : Navigator.pop(context);
+            :Navigator.push(context,MaterialPageRoute(builder: (context) => shop_bottomNavigationbar()));
       });
+      !widget.editdcreen? mapdata.addAll({"favoriteReference": []}):null;
     } catch (e) {
       print("Error getting Sign Up in : $e");
     }
@@ -93,8 +155,16 @@ class _SignUpAsShopkeeperState extends State<SignUpAsShopkeeper> {
       password.text = "123456";
       confirmpassword.text = "123456";
       addressController.text = currentUserDocument!.address!;
-      aboutUscontroller.text = currentUserDocument!.about_us!;
-      contactNumberController.text = currentUserDocument!.cantact!;
+      aboutUscontroller.text = currentUserDocument!.aboutUs!;
+      contactNumberController.text = currentUserDocument!.contact!;
+      List<String> parts = currentUserDocument!.startTime!.split(":");
+      startTime = TimeOfDay(hour: int.parse(parts[0]), minute: int.parse(parts[1]));
+      List<String> parts2 = currentUserDocument!.startTime!.split(":");
+      endTime = TimeOfDay(hour: int.parse(parts2[0]), minute: int.parse(parts2[1]));
+      List<String> parts3 = currentUserDocument!.breckstartTime!.split(":");
+      breckStartTime = TimeOfDay(hour: int.parse(parts3[0]), minute: int.parse(parts3[1]));
+      List<String> parts4 = currentUserDocument!.breckendTime!.split(":");
+      breackEndendTime = TimeOfDay(hour: int.parse(parts4[0]), minute: int.parse(parts4[1]));
     });
   }
 
@@ -411,6 +481,136 @@ class _SignUpAsShopkeeperState extends State<SignUpAsShopkeeper> {
                                           }
                                         },
                                       ),
+                                      SizedBox(height: 10),
+                                      Row(
+                                        children: [
+                                          Column(
+                                            children: [
+                                              SizedBox(
+                                                height: 45,
+                                                child: ElevatedButton(
+                                                  onPressed: () => _selectStartTime(context),
+                                                  style: ButtonStyle(
+                                                      backgroundColor: MaterialStatePropertyAll(AppColor.inputTextfill),
+                                                      shape: MaterialStatePropertyAll(
+                                                        RoundedRectangleBorder(
+                                                            borderRadius: BorderRadius.circular(10)
+                                                        ),
+                                                      )
+                                                  ),
+                                                  child: Text(startTime == null ? 'Start Time':"${startTime!.hour}:${startTime!.minute}",style: TextStyle(
+                                                      color: startTime != null ? AppColor.textColor : Colors.grey.withOpacity(0.8),
+                                                      fontSize: 17,
+                                                      fontWeight: FontWeight.w400)),
+                                                ),
+                                              ),
+                                              SizedBox(height: 3),
+                                              Text("Start Time",
+                                                  style: TextStyle(
+                                                      fontSize: 15,
+                                                      color: AppColor.textColor))
+                                            ],
+                                          ),
+                                          SizedBox(width: 15),
+                                          Text("to",
+                                              style: TextStyle(
+                                                  fontSize: 18,
+                                                  color: AppColor.textColor)),
+                                          SizedBox(width: 15),
+                                          Column(
+                                            children: [
+                                              SizedBox(
+                                                height: 45,
+                                                child: ElevatedButton(
+                                                  onPressed: () => _selectBrackStartTime(context),
+                                                  style: ButtonStyle(
+                                                      backgroundColor: MaterialStatePropertyAll(AppColor.inputTextfill),
+                                                      shape: MaterialStatePropertyAll(
+                                                        RoundedRectangleBorder(
+                                                            borderRadius: BorderRadius.circular(10)
+                                                        ),
+                                                      )
+                                                  ),
+                                                  child: Text(breckStartTime == null ? 'Break start Time':"${breckStartTime!.hour}:${breckStartTime!.minute} ",style: TextStyle(
+                                                      color: breckStartTime != null ? AppColor.textColor : Colors.grey.withOpacity(0.8),
+                                                      fontSize: 17,
+                                                      fontWeight: FontWeight.w400),),
+                                                ),
+                                              ),
+                                              SizedBox(height: 3),
+                                              Text("Break Start Time",
+                                                  style: TextStyle(
+                                                      fontSize: 15,
+                                                      color: AppColor.textColor))
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(height: 10),
+                                      Row(
+                                        children: [
+                                          Column(
+                                            children: [
+                                              SizedBox(
+                                                height: 45,
+                                                child: ElevatedButton(
+                                                  onPressed: () => _selectbreackEndTime(context),
+                                                  style: ButtonStyle(
+                                                      backgroundColor: MaterialStatePropertyAll(AppColor.inputTextfill),
+                                                      shape: MaterialStatePropertyAll(
+                                                        RoundedRectangleBorder(
+                                                            borderRadius: BorderRadius.circular(10)
+                                                        ),
+                                                      )
+                                                  ),
+                                                  child: Text(breackEndendTime == null ? 'Break End Time':"${breackEndendTime!.hour}:${breackEndendTime!.minute}",style: TextStyle(
+                                                      color: breackEndendTime != null ? AppColor.textColor : Colors.grey.withOpacity(0.8),
+                                                      fontSize: 17,
+                                                      fontWeight: FontWeight.w400)),
+                                                ),
+                                              ),
+                                              SizedBox(height: 3),
+                                              Text("Break End Time",
+                                                  style: TextStyle(
+                                                      fontSize: 15,
+                                                      color: AppColor.textColor))
+                                            ],
+                                          ),
+                                          SizedBox(width: 15),
+                                          Text("to",
+                                              style: TextStyle(
+                                                  fontSize: 18,
+                                                  color: AppColor.textColor)),
+                                          SizedBox(width: 15),
+                                          Column(
+                                            children: [
+                                              SizedBox(
+                                                height: 45,
+                                                child: ElevatedButton(
+                                                  onPressed: () => _selectEndTime(context),
+                                                  style: ButtonStyle(
+                                                      backgroundColor: MaterialStatePropertyAll(AppColor.inputTextfill),
+                                                      shape: MaterialStatePropertyAll(
+                                                        RoundedRectangleBorder(
+                                                            borderRadius: BorderRadius.circular(10)
+                                                        ),
+                                                      )
+                                                  ),
+                                                  child: Text(endTime == null ? 'End Time':"${endTime!.hour}:${endTime!.minute} ",style: TextStyle(
+                                                      color: endTime != null ? AppColor.textColor : Colors.grey.withOpacity(0.8),
+                                                      fontSize: 17,
+                                                      fontWeight: FontWeight.w400),),
+                                                ),
+                                              ),
+                                              SizedBox(height: 3),
+                                              Text("End Time",
+                                                  style: TextStyle(
+                                                      fontSize: 15,
+                                                      color: AppColor.textColor))
+                                            ],
+                                          ),
+                                        ],
+                                      ),
                                       SizedBox(height: 15),
                                       Row(
                                         children: [
@@ -447,7 +647,13 @@ class _SignUpAsShopkeeperState extends State<SignUpAsShopkeeper> {
                                         setState(() {
                                           isLoading = true;
                                         });
-                                        getAddressLatLng();
+                                        if(startTime != null && endTime != null && breackEndendTime != null && breckStartTime != null){
+                                          getAddressLatLng();
+                                        }else{
+                                          constWidget().showSnackbar(
+                                              "Please select Working times", context);
+                                        }
+
                                       }
                                     } else {
                                       constWidget().showSnackbar(

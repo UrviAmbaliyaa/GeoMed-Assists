@@ -1,41 +1,78 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+class ProductList {
+  final List<Product> products;
+  ProductList({required this.products});
+
+  factory ProductList.fromJson(List<dynamic> json) {
+    List<Product> productList = [];
+    for (var item in json) {
+      productList.add(Product.fromJson(item));
+    }
+    return ProductList(products: productList);
+  }
+
+  List<Map<String, dynamic>> toJson() {
+    return products.map((product) => product.toJson()).toList();
+  }
+}
+
 class Product {
-  final String name;
   final String image;
-  final String category;
+  final String name;
   final double price;
-  final String about;
+  final String description;
+  final bool available;
+  final String category;
+  final String status;
+  final DocumentReference referenace;
   final DocumentReference shopReference;
+  final DocumentReference categoryRef;
 
   Product({
     required this.image,
     required this.name,
-    required this.category,
     required this.price,
-    required this.about,
+    required this.status,
+    required this.description,
+    required this.available,
+    required this.category,
+    required this.referenace,
     required this.shopReference,
+    required this.categoryRef,
   });
 
+  // Factory method to create a Product instance from a map (JSON)
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
-      image: json['image'] ?? '',
-      name: json['name'] ?? '',
-      category: json['category'] ?? '',
-      price: (json['price'] ?? 0.0).toDouble(),
-      about: json['about'] ?? '',
-      shopReference: json['shoprefe'],
+      image: json['image'],
+      name: json['name'],
+      status: json['status'],
+      price: double.parse(json['price']),
+      description: json['description'],
+      available: json['available'],
+      category: json['category'],
+      referenace: json['referenace'],
+      shopReference: json['shopReference'],
+      categoryRef: json['categoryRef'],
     );
   }
 
+  // Method to convert a Product instance to a map (JSON)
   Map<String, dynamic> toJson() {
     return {
       'image': image,
       'name': name,
-      'category': category,
       'price': price,
-      'about': about,
-      'shoprefe': shopReference,
+      'status': status,
+      'description': description,
+      'available': available,
+      'category': category,
+      'referenace': referenace,
+      'shopReference': shopReference,
+      'categoryRef': categoryRef,
     };
   }
 }
+
+

@@ -10,7 +10,7 @@ import 'package:geomed_assist/User_flow/map.dart';
 import 'package:geomed_assist/constants/Appcolors.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:permission_handler/permission_handler.dart';
-
+int selectedIndex = 0;
 class bottomTabBar extends StatefulWidget {
   const bottomTabBar({super.key});
 
@@ -25,7 +25,7 @@ class _bottomTabBarState extends State<bottomTabBar> {
     CupertinoIcons.chat_bubble,
     Icons.favorite_border,
   ];
-  int _selectedIndex = 0;
+
   List manuIconsPages = [homePage(), MapScreen(), allChates(), favorits()];
   List manuIconsName = ["Home", "Map", "Chat", "Favorites"];
 
@@ -36,7 +36,7 @@ class _bottomTabBarState extends State<bottomTabBar> {
         exit(0);
       },
       child: Scaffold(
-        body: manuIconsPages[_selectedIndex],
+        body: manuIconsPages[selectedIndex],
         extendBody: true,
         bottomSheet: KeyboardVisibilityBuilder(
           builder: (p0, isKeyboardVisible) {
@@ -60,10 +60,10 @@ class _bottomTabBarState extends State<bottomTabBar> {
                     text: manuIconsName[index],
                   ),
                 ),
-                selectedIndex: _selectedIndex,
+                selectedIndex: selectedIndex,
                 onTabChange: (index) {
                   setState(() {
-                    _selectedIndex = index;
+                    selectedIndex = index;
                   });
                 },
               ),

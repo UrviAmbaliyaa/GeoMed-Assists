@@ -8,7 +8,7 @@ import 'package:geomed_assist/Store_flow/rattings_shop.dart';
 import 'package:geomed_assist/User_flow/allchates.dart';
 import 'package:geomed_assist/constants/Appcolors.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-
+int selectedIndex = 0;
 class shop_bottomNavigationbar extends StatefulWidget {
   const shop_bottomNavigationbar({super.key});
 
@@ -22,7 +22,7 @@ class _shop_bottomNavigationbarState extends State<shop_bottomNavigationbar> {
     CupertinoIcons.chat_bubble,
     CupertinoIcons.star_fill,
   ];
-  int _selectedIndex = 0;
+
   List manuIconsPages = [products(), allChates(),shop_rattings(),];
   List manuIconsName = ["Home", "Chat","Rate"];
   @override
@@ -32,7 +32,7 @@ class _shop_bottomNavigationbarState extends State<shop_bottomNavigationbar> {
         exit(0);
       },
       child: Scaffold(
-        body: manuIconsPages[_selectedIndex],
+        body: manuIconsPages[selectedIndex],
         extendBody: true,
         bottomSheet: KeyboardVisibilityBuilder(
           builder: (p0, isKeyboardVisible) {
@@ -56,10 +56,10 @@ class _shop_bottomNavigationbarState extends State<shop_bottomNavigationbar> {
                         text: manuIconsName[index],
                       ),
                     ),
-                    selectedIndex: _selectedIndex,
+                    selectedIndex: selectedIndex,
                     onTabChange: (index) {
                       setState(() {
-                        _selectedIndex = index;
+                        selectedIndex = index;
                       });
                     },
                   ),

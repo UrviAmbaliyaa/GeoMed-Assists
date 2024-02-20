@@ -12,8 +12,9 @@ class customeTextFormField extends StatefulWidget {
   final TextInputType keybordType;
   final bool passwordvisiblity;
   final Iterable<String>? autofillHint;
+  final Function()? onchageAction;
 
-  const customeTextFormField({super.key, required this.contoller, required this.validation, required this.hintTest, required this.password, required this.keybordType, required this.autofillHint, required this.sufixIcon, required this.passwordvisiblity, this.readOnly = false});
+  const customeTextFormField({super.key, required this.contoller, required this.validation, required this.hintTest, required this.password, required this.keybordType, required this.autofillHint, required this.sufixIcon, required this.passwordvisiblity, this.readOnly = false, this.onchageAction});
 
   @override
   State<customeTextFormField> createState() => _customeTextFormFieldState();
@@ -25,6 +26,9 @@ class _customeTextFormFieldState extends State<customeTextFormField> {
     return Padding(
       padding: const EdgeInsets.fromLTRB(0, 5, 0, 6),
       child: TextFormField(
+        onChanged: (value) {
+          widget.onchageAction!.call();
+        },
         controller: widget.contoller,
         keyboardType: widget.keybordType,
         autofillHints: widget.autofillHint,

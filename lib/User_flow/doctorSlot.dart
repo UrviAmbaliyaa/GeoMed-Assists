@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_calendar/flutter_advanced_calendar.dart';
+import 'package:geomed_assist/Models/user_model.dart';
 import 'package:geomed_assist/constants/Appcolors.dart';
+import 'package:geomed_assist/constants/constantdata.dart';
+import 'package:intl/intl.dart';
 
 class doctorSlot extends StatefulWidget {
-  const doctorSlot({super.key});
+  final UserModel doctor;
+  const doctorSlot({super.key, required this.doctor});
 
   @override
   State<doctorSlot> createState() => _doctorSlotState();
@@ -13,60 +17,59 @@ class _doctorSlotState extends State<doctorSlot> {
   TextEditingController serachingController = TextEditingController();
   GlobalKey<ScaffoldState> drawerKey = GlobalKey<ScaffoldState>();
   final _calendarControllerToday = AdvancedCalendarController.today();
-  final _calendarControllerCustom =
-  AdvancedCalendarController(DateTime(2022, 10, 23));
   final events = <DateTime>[
     DateTime.now(),
     DateTime(2022, 10, 10),
   ];
-  List slots = [
-    "9:00 AM",
-    "9:30 AM",
-    "10:00 AM",
-    "10:30 AM",
-    "11:00 AM",
-    "11:30 AM",
-    "12:00 PM"
-  ];
-  List slot2 = [
-    "2:00 PM",
-    "2:30 PM",
-    "3:00 PM",
-    "3:30 pM",
-    "4:00 pM",
-    "5:00 pM",
-    "5:30 pM",
-    "6:00 pM"
-  ];
+  List<String> slot1 = [];
+  List<String> slot2 = [];
+
+  manageSlot(){
+    var bStart = DateFormat("h:mm").parse(widget.doctor.breckstartTime!);
+    for(var slot in widget.doctor.availableSlot!){
+      var date = DateFormat("h:mm a").parse(slot);
+      date.isBefore(bStart) || date == bStart? slot1.add(DateFormat("h:mm a").format(date)):slot2.add(DateFormat("h:mm a").format(date));
+    }
+    setState(() {
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    manageSlot();
+  }
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: EdgeInsets.only(top: 20),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
         color: AppColor.backgroundColor
       ),
       child: Column(
         children: [
-          AdvancedCalendar(
-            controller: _calendarControllerToday,
-            events: events,
-            calendarTextStyle: TextStyle(
-                color: Colors.white, fontSize: 18, fontWeight: FontWeight.w500),
-            headerStyle: TextStyle(
-                color: Colors.white, fontSize: 18, fontWeight: FontWeight.w500),
-            todayStyle: TextStyle(
-                color: Colors.white, fontSize: 18, fontWeight: FontWeight.w500),
-            innerDot: true,
-            keepLineSize: true,
-            startWeekDay: 2,
-          ),
+          // AdvancedCalendar(
+          //   controller: _calendarControllerToday,
+          //   events: events,
+          //   calendarTextStyle: TextStyle(
+          //       color: Colors.white, fontSize: 18, fontWeight: FontWeight.w500),
+          //   headerStyle: TextStyle(
+          //       color: Colors.white, fontSize: 18, fontWeight: FontWeight.w500),
+          //   todayStyle: TextStyle(
+          //       color: Colors.white, fontSize: 18, fontWeight: FontWeight.w500),
+          //   innerDot: true,
+          //   keepLineSize: true,
+          //   startWeekDay: 2,
+          // ),
           Expanded(
             child: SingleChildScrollView(
               child: Column(
                 children: [
                   GridView.builder(
                     shrinkWrap: true,
-                    itemCount: slots.length,
+                    itemCount: slot1.length,
                     physics: NeverScrollableScrollPhysics(),
                     padding: EdgeInsets.all(20),
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -80,7 +83,7 @@ class _doctorSlotState extends State<doctorSlot> {
                             color: AppColor.textColor.withOpacity(0.5),
                             borderRadius: BorderRadius.circular(10)),
                         alignment: Alignment.center,
-                        child: Text(slots[index],
+                        child: Text(slot1[index],
                             style: TextStyle(
                                 color: AppColor.textColor,
                                 fontSize: 15,

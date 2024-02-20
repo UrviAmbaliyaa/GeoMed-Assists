@@ -50,6 +50,8 @@ dependencies:
   cloud_firestore: ^4.15.4
   firebase_core: ^2.25.4
   firebase_storage: ^11.6.5
+  intl:
+  flutter_phone_direct_caller:
 
 dev_dependencies:
   flutter_test:

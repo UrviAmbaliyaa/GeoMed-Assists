@@ -23,38 +23,40 @@ class _splashScreenState extends State<splashScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    managScreen();
 
+    managScreen();
   }
 
   managScreen() async {
     var userdata = await Hive.box("User");
     var Screens;
-    if(userdata.length != 0){
+    if (userdata != null && userdata.length != 0) {
       String id = await userdata.get('refID');
-      print("id ------>$id");
-      await firebase_auth().getUserInfo(id: id);
-      switch (currentUserDocument!.type) {
-        case "User":
-          Screens = bottomTabBar();
-        case "ShopKeeper":
-          Screens = shop_bottomNavigationbar();
-        case "Doctore":
-          Screens = bottomSheet_doctor();
+      if(id != null){
+        await firebase_auth().getUserInfo(id: id);
+        switch (currentUserDocument!.type) {
+          case "User":
+            Screens = bottomTabBar();
+          case "ShopKeeper":
+            Screens = shop_bottomNavigationbar();
+          case "Doctore":
+            Screens = bottomSheet_doctor();
+        }
       }
     }
-    print("userdata ------>${userdata.length}");
-    print(Screens);
+
     Future.delayed(
-      Duration(seconds: userdata.length == 0?3:0), // Correct the typo here
-          () => Navigator.of(context, rootNavigator: true).push(
+      Duration(seconds: userdata.length == 0 ? 3 : 0), // Correct the typo here
+      () => Navigator.of(context, rootNavigator: true).push(
         CupertinoPageRoute<bool>(
           fullscreenDialog: true,
-          builder: (BuildContext context) => userdata.length == 0?SignIn():Screens,
+          builder: (BuildContext context) =>
+          Screens == null ? SignIn() : Screens,
         ),
       ),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

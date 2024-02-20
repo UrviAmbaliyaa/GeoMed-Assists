@@ -1,32 +1,39 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_calendar/flutter_advanced_calendar.dart';
+import 'package:geomed_assist/Firebase/firebase_quaries.dart';
+import 'package:geomed_assist/Models/rateModel.dart';
+import 'package:geomed_assist/Models/user_model.dart';
 import 'package:geomed_assist/User_flow/HomePage.dart';
 import 'package:geomed_assist/User_flow/doctorSlot.dart';
+import 'package:geomed_assist/User_flow/favorites.dart';
 import 'package:geomed_assist/User_flow/message.dart';
 import 'package:geomed_assist/constants/Appcolors.dart';
 import 'package:geomed_assist/constants/constantWidgets.dart';
+import 'package:geomed_assist/constants/constantdata.dart';
 import 'package:geomed_assist/constants/dataFile.dart';
 import 'package:geomed_assist/constants/rattingBar.dart';
+import 'package:intl/intl.dart';
 
 class doctoreDetail extends StatefulWidget {
-  final int index;
+  final UserModel doctor;
 
-  const doctoreDetail({super.key, required this.index});
+  const doctoreDetail({super.key, required this.doctor});
 
   @override
   State<doctoreDetail> createState() => _doctoreDetailState();
 }
 
 class _doctoreDetailState extends State<doctoreDetail> {
-
+  bool isload = false;
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: AppColor.backgroundColor,
-      appBar: constWidget().appbar(context,
-          Name: Datas().doctores[widget.index]['name'], backbutton: true),
+      appBar: constWidget()
+          .appbar(context, Name: widget.doctor.name, backbutton: true),
       body: SingleChildScrollView(
         child: Container(
           width: width,
@@ -50,75 +57,119 @@ class _doctoreDetailState extends State<doctoreDetail> {
                       ),
                     ],
                     image: DecorationImage(
-                      image:
-                          NetworkImage(Datas().doctores[widget.index]['image']),
+                      image: NetworkImage(widget.doctor.imagePath!),
                       fit: BoxFit.cover,
                     )),
               ),
               SizedBox(height: 10),
               Text(
-                Datas().doctores[widget.index]['name'],
+                widget.doctor.name,
                 style: TextStyle(
                     color: AppColor.textColor,
                     fontSize: 18,
                     fontWeight: FontWeight.w500),
               ),
               SizedBox(height: 5),
+              StreamBuilder<UserModel?>(
+                  stream: Firebase_Quires()
+                      .getuserInfo(refId: widget.doctor.reference),
+                  builder: (context, snapshot) {
+                    return Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        rattingBar(
+                            tapOnly: true,
+                            initValue: (snapshot.connectionState ==
+                                            ConnectionState.done ||
+                                        snapshot.connectionState ==
+                                            ConnectionState.waiting) &&
+                                    snapshot.hasData
+                                ? (snapshot.data!.rate! /
+                                    snapshot.data!.ratedUser!)
+                                : 0,
+                            size: 25),
+                        Text(
+                            "${calculateDistance(currentUserDocument!.latLong, currentUserDocument!.longitude, widget.doctor.latLong, widget.doctor.longitude)} km",
+                            style: TextStyle(
+                                color: AppColor.greycolor,
+                                fontSize: 13,
+                                fontWeight: FontWeight.w500))
+                      ],
+                    );
+                  }),
               Row(
                 children: [
+                  Icon(Icons.location_on_outlined,
+                      color: AppColor.primaryColor, size: 25),
                   Expanded(
-                      child: Row(
-                    children: [
-                      rattingBar(tapOnly: true, initValue: 3.5, size: 25),
-                    ],
-                  )),
+                    child: Text(widget.doctor.address,
+                        style: TextStyle(
+                            color: AppColor.greycolor, fontSize: 15)),
+                  ),
                   InkWell(
                     splashColor: Colors.transparent,
-                    onTap: () =>
-                        Navigator.of(context, rootNavigator: true).push(
-                      CupertinoPageRoute<bool>(
-                        fullscreenDialog: true,
-                        builder: (BuildContext context) => messageScreen(),
-                      ),
+                    onTap: () async {
+                      setState(() {
+                        isload = true;
+                      });
+                      var chatRef = await FirebaseFirestore.instance
+                          .collection("chat")
+                          .where("user", isEqualTo: currentUserDocument!.reference)
+                          .where("otherUser", isEqualTo: widget.doctor.reference)
+                          .get();
+                      var chatrefereance2;
+                      if(chatRef.docs.length != 0){
+                        chatrefereance2 = chatRef.docs.first.reference;
+                      }else{
+                        Map<String, dynamic> mapdata = {
+                          "user" : currentUserDocument!.reference,
+                          "otherUser" : widget.doctor.reference,
+                          "messageList" : [],
+                          "userMessageList":[]
+                        };
+                        await FirebaseFirestore.instance
+                            .collection("chat").doc().set(mapdata);
+                        var chatRef2 = await FirebaseFirestore.instance
+                            .collection("chat")
+                            .where("user", isEqualTo: currentUserDocument!.reference)
+                            .where("otherUser", isEqualTo: widget.doctor.reference)
+                            .get();
+                        chatrefereance2 = chatRef2.docs.first.reference;
+                      }
+                      setState(() {
+                        isload = false;
+                      });
+                      Navigator.of(context, rootNavigator: true).push(
+                        CupertinoPageRoute<bool>(
+                          fullscreenDialog: true,
+                          builder: (BuildContext context) => messageScreen(chatrefe: chatrefereance2,user: widget.doctor),
+                        ),
+                      );
+                    },
+                    child: Stack(
+                      children: [
+                        !isload ? Icon(CupertinoIcons.chat_bubble,
+                            size: 30, color: AppColor.primaryColor):
+                        constWidget().circularProgressInd(nodatafound: false),
+                      ],
                     ),
-                    child: Icon(CupertinoIcons.chat_bubble,
-                        size: 30, color: AppColor.primaryColor),
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 20, right: 5),
-                    child: InkWell(
-                      splashColor: Colors.transparent,
-                      onTap: () {
-                        setState(() {
-                          favoriteItems.contains(
-                                  Datas().doctores[widget.index]['name'])
-                              ? favoriteItems.remove(
-                                  Datas().doctores[widget.index]['name'])
-                              : favoriteItems
-                                  .add(Datas().doctores[widget.index]['name']);
-                        });
-                      },
-                      child: Icon(
-                        favoriteItems.contains(
-                                Datas().doctores[widget.index]['name'])
-                            ? Icons.favorite
-                            : Icons.favorite_border,
-                        size: 30,
-                        color: AppColor.textColor,
-                      ),
-                    ),
-                  ),
+                  Favorites(
+                      reference: widget.doctor.reference,
+                      action: () => setState(() {})),
                 ],
               ),
               SizedBox(height: 10),
-              Text("contact Number: +91 12345 56789",
+              Text("contact Number: ${widget.doctor.contact}",
                   style: TextStyle(color: AppColor.textColor, fontSize: 13)),
-              Text("Education: Bachelor of Technology",
+              Text("Education: ${widget.doctor.degree}",
                   style: TextStyle(color: AppColor.textColor, fontSize: 13)),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Working : 10:00 Am to 6:00 Pm",
+                  Text(
+                      "Working : ${widget.doctor.startTime} to ${widget.doctor.endTime}",
                       style:
                           TextStyle(color: AppColor.textColor, fontSize: 13)),
                   InkWell(
@@ -130,12 +181,12 @@ class _doctoreDetailState extends State<doctoreDetail> {
                             backgroundColor: Colors.white,
                             contentPadding: EdgeInsets.zero,
                             shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20)
-                            ),
+                                borderRadius: BorderRadius.circular(20)),
                             content: SizedBox(
-                              height: MediaQuery.of(context).size.height*0.6,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.6,
                                 width: width,
-                                child: doctorSlot()),
+                                child: doctorSlot(doctor: widget.doctor)),
                           );
                         },
                       );
@@ -151,8 +202,7 @@ class _doctoreDetailState extends State<doctoreDetail> {
                 ],
               ),
               SizedBox(height: 5),
-              Text(
-                  "A one-stop destination for healthcare needs, our medical shop provides a wide range of prescription medications, over-the-counter drugs, and essential medical supplies. With a dedicated and knowledgeable staff, we ensure a seamless and reliable experience for all your health-related requirements. Conveniently located with flexible hours, we prioritize your well-being.",
+              Text(widget.doctor.aboutUs!,
                   style: TextStyle(color: AppColor.textColor, fontSize: 13)),
               SizedBox(height: 10),
               ElevatedButton(
@@ -169,83 +219,113 @@ class _doctoreDetailState extends State<doctoreDetail> {
                         return AlertDialog(
                           backgroundColor: Colors.white,
                           contentPadding: EdgeInsets.zero,
-                          content: RattingPopUp(),
+                          content: RattingPopUp(
+                              refDoctor: widget.doctor.reference,
+                              rate: widget.doctor.rate!,
+                              rateUsers: widget.doctor.ratedUser!),
                         );
                       },
                     );
                   },
                   child: Text("Ratting",
-                      style:
-                          TextStyle(color: AppColor.textColor, fontSize: 18))),
-              ListView.separated(
-                  separatorBuilder: (context, index) => Divider(
-                      color: AppColor.greycolor.withOpacity(0.5),
-                      height: 0,
-                      thickness: 2),
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemCount: Datas().doctores.length,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      padding: EdgeInsets.symmetric(vertical: 15),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Container(
-                            width: 45,
-                            height: 45,
-                            clipBehavior: Clip.antiAlias,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(100),
-                            ),
-                            child: Image.network(
-                                Datas().doctores[index]['image'],
-                                fit: BoxFit.cover),
-                          ),
-                          SizedBox(width: 15),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(Datas().doctores[index]['name'],
-                                  style: TextStyle(
-                                      color: AppColor.textColor,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w400)),
-                              SizedBox(
-                                width: width * 0.75,
-                                child: Text(
-                                    "Thank you, Neethi. Your medician has been very helpful for me.",
-                                    style: TextStyle(
-                                        color: AppColor.greycolor,
-                                        fontSize: 14),
-                                    maxLines: 2),
-                              ),
-                              SizedBox(
-                                width: width * 0.75,
+                      style: TextStyle(
+                          color: AppColor.textColor, fontSize: 18))),
+              StreamBuilder<RateList?>(
+                  stream: Firebase_Quires()
+                      .getRateDocuments(shopRef: widget.doctor.reference),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.active ||
+                        snapshot.connectionState == ConnectionState.done) {
+                      if (snapshot.hasData &&
+                          snapshot.data!.rate!.length != 0) {
+                        var maindata = snapshot.data!.rate!;
+                        return ListView.separated(
+                            separatorBuilder: (context, index) => Divider(
+                                color: AppColor.greycolor.withOpacity(0.5),
+                                height: 0,
+                                thickness: 2),
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount: maindata.length,
+                            itemBuilder: (context, index) {
+                              var data = maindata[index];
+                              return Container(
+                                padding: EdgeInsets.symmetric(vertical: 15),
                                 child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.center,
+                                  mainAxisSize: MainAxisSize.max,
                                   children: [
-                                    rattingBar(
-                                        tapOnly: true,
-                                        initValue: index.toDouble()),
-                                    Text(
-                                      "7 Jan",
-                                      textAlign: TextAlign.end,
-                                      style: TextStyle(
-                                          color: AppColor.greycolor,
-                                          fontSize: 13),
-                                    )
+                                    Container(
+                                      width: 45,
+                                      height: 45,
+                                      clipBehavior: Clip.antiAlias,
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                      ),
+                                      child: Image.network(data.image,
+                                          fit: BoxFit.cover),
+                                    ),
+                                    SizedBox(width: 15),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(data.name,
+                                            style: TextStyle(
+                                                color: AppColor.textColor,
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w400)),
+                                        SizedBox(
+                                          width: width * 0.75,
+                                          child: Text(data.description,
+                                              style: TextStyle(
+                                                  color: AppColor.greycolor,
+                                                  fontSize: 14),
+                                              maxLines: 2),
+                                        ),
+                                        SizedBox(
+                                          width: width * 0.75,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment
+                                                    .spaceBetween,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
+                                            children: [
+                                              rattingBar(
+                                                  tapOnly: true,
+                                                  initValue: data.rate),
+                                              Text(
+                                                DateFormat('dd MMM yyyy')
+                                                    .format(data.date),
+                                                textAlign: TextAlign.end,
+                                                style: TextStyle(
+                                                    color: AppColor.greycolor,
+                                                    fontSize: 13),
+                                              )
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    ),
                                   ],
                                 ),
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
-                    );
+                              );
+                            });
+                      } else {
+                        return Center(
+                          child: constWidget()
+                              .circularProgressInd(nodatafound: true),
+                        );
+                      }
+                    } else {
+                      return Center(
+                        child: constWidget()
+                            .circularProgressInd(nodatafound: false),
+                      );
+                    }
                   }),
             ],
           ),
@@ -256,7 +336,16 @@ class _doctoreDetailState extends State<doctoreDetail> {
 }
 
 class RattingPopUp extends StatefulWidget {
-  const RattingPopUp({Key? key}) : super(key: key);
+  final DocumentReference refDoctor;
+  final double rate;
+  final int rateUsers;
+
+  const RattingPopUp(
+      {Key? key,
+      required this.refDoctor,
+      required this.rate,
+      required this.rateUsers})
+      : super(key: key);
 
   @override
   State<RattingPopUp> createState() => _RattingPopUpState();
@@ -268,6 +357,8 @@ class _RattingPopUpState extends State<RattingPopUp> {
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
+    print("widget.rate ----->${widget.rate}");
+    print("widget.rate ----->${widget.refDoctor}");
     return Container(
       width: width,
       height: 275,
@@ -327,7 +418,30 @@ class _RattingPopUpState extends State<RattingPopUp> {
               ),
               backgroundColor: MaterialStateProperty.all(AppColor.primaryColor),
             ),
-            onPressed: () => Navigator.pop(context),
+            onPressed: () async {
+              if (ratebarValue != 0) {
+                var mapdata = {
+                  'image': currentUserDocument!.imagePath,
+                  'name': currentUserDocument!.name,
+                  'rate': ratebarValue,
+                  'description': rattingMessage.text,
+                  'date': DateTime.now(),
+                  'userReference': widget.refDoctor,
+                };
+                widget.refDoctor.update({
+                  'rate': (widget.rate + ratebarValue),
+                  'ratedUser': (widget.rateUsers + 1)
+                });
+                FirebaseFirestore.instance
+                    .collection("rate")
+                    .doc()
+                    .set(mapdata);
+
+                rattingMessage.clear();
+                ratebarValue = 0;
+              }
+              Navigator.pop(context);
+            },
             child: Text(
               "Submit",
               style: TextStyle(color: Colors.white, fontSize: 18),

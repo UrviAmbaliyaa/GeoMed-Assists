@@ -5,18 +5,19 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:geomed_assist/Models/user_model.dart';
 import 'package:geomed_assist/constants/constantWidgets.dart';
 import 'package:geomed_assist/constants/constantdata.dart';
 import 'package:hive/hive.dart';
 
+import '../Models/user_model.dart';
+
 class firebase_auth{
 
-  Future<String?> uploadImage(File imageFile) async {
+  Future<String?> uploadImage(File imageFile, {bool? product = false}) async {
     try {
       String fileName = DateTime.now().millisecondsSinceEpoch.toString();
       Reference storageReference =
-      await FirebaseStorage.instance.ref().child('Profiles/$fileName.jpg');
+      await FirebaseStorage.instance.ref().child('${product!?"Product":"Profiles"}/$fileName.jpg');
       await storageReference.putFile(imageFile, SettableMetadata(
         contentType: "image/jpeg",
       ));
@@ -54,6 +55,7 @@ class firebase_auth{
       userdata.put("refID",value.user!.uid);
       return true;
     } catch (e) {
+      print("E ----->$e");
       return false;
     }
   }
@@ -62,11 +64,12 @@ class firebase_auth{
     await FirebaseAuth.instance.signOut();
   }
 
-  Future<void> getUserInfo({required String id}) async {
+  Future<UserModel?> getUserInfo({required String id}) async {
    var users = await FirebaseFirestore.instance.collection("User").doc(id).get();
    var mapdata = users.data()!;
    mapdata.addAll({"reference":users.reference});
-   currentUserDocument = await user_model.fromJson(mapdata);
+   currentUserDocument = await UserModel.fromJson(mapdata);
+   return currentUserDocument;
   }
 
   updateData({required DocumentReference reference,required Map<String, dynamic> jsondata}) async {
@@ -74,10 +77,9 @@ class firebase_auth{
       await reference.update(jsondata as Map<Object, Object?>);
       Map<String, dynamic> mapdata = jsondata;
       mapdata.addAll({"reference":reference});
-      currentUserDocument = await user_model.fromJson(mapdata);
+      currentUserDocument = await UserModel.fromJson(mapdata);
     }catch(error){
       print("Error =====>${error}");
     }
   }
-
 }

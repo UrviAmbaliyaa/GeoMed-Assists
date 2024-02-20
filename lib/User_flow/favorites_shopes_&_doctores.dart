@@ -1,9 +1,15 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:geomed_assist/Firebase/firebase_quaries.dart';
+import 'package:geomed_assist/Models/user_model.dart';
 import 'package:geomed_assist/User_flow/HomePage.dart';
 import 'package:geomed_assist/User_flow/doctoreDetail.dart';
+import 'package:geomed_assist/User_flow/favorites.dart';
 import 'package:geomed_assist/User_flow/shopDetailScreen.dart';
 import 'package:geomed_assist/constants/Appcolors.dart';
+import 'package:geomed_assist/constants/constantWidgets.dart';
+import 'package:geomed_assist/constants/constantdata.dart';
 import 'package:geomed_assist/constants/dataFile.dart';
 import 'package:geomed_assist/constants/rattingBar.dart';
 
@@ -67,130 +73,167 @@ class favoriteShopes extends StatefulWidget {
 }
 
 class _favoriteShopesState extends State<favoriteShopes> {
+  List favorite = [];
+
+  Future<List<UserModel>> dataFavoriteShopes(maindata) async {
+    List<UserModel> userdata = [];
+    for (var doc in maindata.favoriteReference!) {
+      var value = await doc.get();
+      if (value.data() != null) {
+        Map<String, dynamic> data = value.data() as Map<String, dynamic>;
+        data.addAll({'reference': value.reference});
+        var docdata = UserModel.fromJson(data);
+        docdata.type == "ShopKeeper" && docdata.approve == true
+            ? userdata.add(docdata)
+            : null;
+      }
+    }
+    return userdata;
+  }
 
   @override
   Widget build(BuildContext context) {
-    var width = MediaQuery
-        .of(context)
-        .size
-        .width;
-    var favorites = Datas().shopes.where((element) => favoriteItems.contains(element['name'])).toList();
+    var width = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: Colors.transparent,
-      body: Column(
-        children: [
-          SizedBox(height: 10),
-          Expanded(
-            child: GridView.builder(
-                shrinkWrap: true,
-                physics: BouncingScrollPhysics(),
-                itemCount: favorites.length,
-                padding: EdgeInsets.only(left: 20, right: 20),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 20,
-                    mainAxisSpacing: 20,
-                    childAspectRatio: 0.77),
-                itemBuilder: (context, index) {
-                  return Stack(
-                    alignment: Alignment.topRight,
-                    children: [
-                      InkWell(
-                        onTap: () =>
-                            Navigator.of(context, rootNavigator: true).push(
-                              CupertinoPageRoute<bool>(
-                                fullscreenDialog: true,
-                                builder: (BuildContext context) =>
-                                new shopDetailScreen(index: index),
-                              ),
-                            ),
-                        child: Container(
-                          width: width * 0.5,
-                          margin: EdgeInsets.only(bottom: 5, left: 5, top: 5),
-                          padding: EdgeInsets.all(2),
-                          clipBehavior: Clip.antiAlias,
-                          decoration: BoxDecoration(
-                            color: AppColor.backgroundColor,
-                            borderRadius: BorderRadius.circular(15.0),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.5),
-                                spreadRadius: 1,
-                                blurRadius: 8,
-                                offset:
-                                Offset(0, 3), // changes position of shadow
-                              ),
-                            ],
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Image.network(favorites[index]['image'],
-                                  height: width * 0.28,
-                                  fit: BoxFit.cover,
-                                  width: double.infinity),
-                              Padding(
-                                padding:
-                                EdgeInsets.only(top: 6, left: 6, right: 6),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(favorites[index]['name'],
-                                        style: TextStyle(
-                                            color: AppColor.textColor,
-                                            fontSize: 14),
-                                        maxLines: 2),
-                                    Text(
-                                        "Simada Naka, Shiv Darshan Society, Yoginagar Society, Surat, Gujarat 395006",
-                                        style: TextStyle(
-                                            color: AppColor.greycolor,
-                                            fontSize: 13),
-                                        maxLines: 2),
-                                    Row(
-                                      children: [
-                                        rattingBar(
-                                            tapOnly: true, initValue: 2.5),
-                                        Expanded(
-                                          child: Text("5.23 km",
-                                              textAlign: TextAlign.end,
-                                              style: TextStyle(
-                                                  color: AppColor.greycolor,
-                                                  fontSize: 13),
-                                              maxLines: 2),
+      body: StreamBuilder(
+          stream: currentUserDocument!.reference.snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.active ||
+                snapshot.connectionState == ConnectionState.done) {
+              if (snapshot.hasData &&
+                  snapshot.data!.get('favoriteReference') != null) {
+                Map<String, dynamic> data =
+                    snapshot.data!.data() as Map<String, dynamic>;
+                data.addAll({'reference': snapshot.data!.reference});
+                var maindata = UserModel.fromJson(data);
+                return FutureBuilder<List<UserModel>>(
+                  future: dataFavoriteShopes(maindata),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      var userdata = snapshot.data;
+                      return GridView.builder(
+                          shrinkWrap: true,
+                          physics: BouncingScrollPhysics(),
+                          itemCount: userdata!.length,
+                          padding: EdgeInsets.only(left: 20, right: 20),
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  crossAxisSpacing: 20,
+                                  mainAxisSpacing: 20,
+                                  childAspectRatio: 0.77),
+                          itemBuilder: (context, index) {
+                            var data = userdata[index];
+                            return Stack(
+                              alignment: Alignment.topRight,
+                              children: [
+                                InkWell(
+                                  onTap: () =>
+                                      Navigator.of(context, rootNavigator: true)
+                                          .push(
+                                    CupertinoPageRoute<bool>(
+                                      fullscreenDialog: true,
+                                      builder: (BuildContext context) =>
+                                          shopDetailScreen(data: data),
+                                    ),
+                                  ),
+                                  child: Container(
+                                    width: width * 0.5,
+                                    margin: EdgeInsets.only(
+                                        bottom: 5, left: 5, top: 5),
+                                    padding: EdgeInsets.all(2),
+                                    clipBehavior: Clip.antiAlias,
+                                    decoration: BoxDecoration(
+                                      color: AppColor.backgroundColor,
+                                      borderRadius: BorderRadius.circular(15.0),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.withOpacity(0.5),
+                                          spreadRadius: 1,
+                                          blurRadius: 8,
+                                          offset: Offset(0,
+                                              3), // changes position of shadow
                                         ),
                                       ],
-                                    )
-                                  ],
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Image.network(data.imagePath!,
+                                            height: width * 0.28,
+                                            fit: BoxFit.cover,
+                                            width: double.infinity),
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                              top: 6, left: 6, right: 6),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(data.name,
+                                                  style: TextStyle(
+                                                      color: AppColor.textColor,
+                                                      fontSize: 14),
+                                                  maxLines: 2),
+                                              Text(data.address,
+                                                  style: TextStyle(
+                                                      color: AppColor.greycolor,
+                                                      fontSize: 13),
+                                                  maxLines: 2),
+                                              Row(
+                                                children: [
+                                                  rattingBar(
+                                                      tapOnly: true,
+                                                      initValue: 2.5),
+                                                  Expanded(
+                                                    child: Text(
+                                                        "${calculateDistance(currentUserDocument!.latLong, currentUserDocument!.longitude, data.latLong, data.longitude)} km",
+                                                        textAlign:
+                                                            TextAlign.end,
+                                                        style: TextStyle(
+                                                            color: AppColor
+                                                                .greycolor,
+                                                            fontSize: 13),
+                                                        maxLines: 2),
+                                                  ),
+                                                ],
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: InkWell(
-                          onTap: () {
-                            setState(() {
-                              favoriteItems
-                                  .remove(favorites[index]['name']);
-                            });
-                          },
-                          child: Icon(
-                            Icons.favorite,
-                            size: 28,
-                            color: AppColor.backgroundColor,
-                          ),
-                        ),
-                      )
-                    ],
-                  );
-                }),
-          ),
-        ],
-      ),
+                                Favorites(
+                                    reference: data.reference,
+                                    action: () => setState(() {})),
+                              ],
+                            );
+                          });
+                    } else {
+                      return Center(
+                        child: constWidget()
+                            .circularProgressInd(nodatafound: false),
+                      );
+                    }
+                  },
+                );
+              } else {
+                return Center(
+                  child: constWidget().circularProgressInd(nodatafound: true),
+                );
+              }
+            } else {
+              return Center(
+                child: constWidget().circularProgressInd(nodatafound: false),
+              );
+            }
+          }),
     );
   }
 }
@@ -205,103 +248,135 @@ class favoriteDoctor extends StatefulWidget {
 class _favoriteDoctorState extends State<favoriteDoctor> {
   @override
   Widget build(BuildContext context) {
-    var width = MediaQuery
-        .of(context)
-        .size
-        .width;
-    var favorites = Datas().doctores.where((element) => favoriteItems.contains(element['name'])).toList();
+    var width = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: Colors.transparent,
-      body: ListView.builder(
-          shrinkWrap: true,
-          physics: BouncingScrollPhysics(),
-          itemCount: favorites.length,
-          itemBuilder: (context, index) {
-            return InkWell(
-              onTap: () => Navigator.of(context, rootNavigator: true).push(
-                CupertinoPageRoute<bool>(
-                  fullscreenDialog: true,
-                  builder: (BuildContext context) => new doctoreDetail(index: index),
-                ),
-              ),
-              child: Container(
-                margin: EdgeInsets.only(top: 10,left: 20,bottom: 10,right:20),
-                padding: EdgeInsets.only(top: 10,left: 10,bottom: 10),
-                clipBehavior: Clip.antiAlias,
-                decoration: BoxDecoration(
-                  color: AppColor.backgroundColor,
-                  borderRadius: BorderRadius.circular(50),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 1,
-                      blurRadius: 8,
-                      offset: Offset(0, 3), // changes position of shadow
-                    ),
-                  ],
-                ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    CircleAvatar(
-                      backgroundImage: NetworkImage(favorites[index]['image']),
-                      radius: 35,
-                    ),
-                    SizedBox(width: 15),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(favorites[index]['name'],style: TextStyle(color: AppColor.textColor,fontSize: 18,fontWeight: FontWeight.w400)),
-                        SizedBox(
-                          width: width*0.55,
-                          child: Text("Simada Naka, Shiv Darshan Society, Yoginagar Society, Surat, Gujarat 395006",
-                              style: TextStyle(
-                                  color: AppColor.greycolor,
-                                  fontSize: 13),
-                              maxLines: 2),
-                        ),
-                        SizedBox(
-                          width: width*0.55,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              rattingBar(tapOnly: true, initValue: 2.5),
-                              Text("5.23 km",
-                                  textAlign: TextAlign.end,
-                                  style: TextStyle(
-                                      color: AppColor.greycolor,
-                                      fontSize: 13),
-                                  maxLines: 2),
-                            ],
-                          ),
-                        ),
+      body: StreamBuilder(
+          stream: currentUserDocument!.reference.snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.active ||
+                snapshot.connectionState == ConnectionState.done) {
+              if (snapshot.hasData && snapshot.data != null) {
+                Map<String, dynamic> data =
+                snapshot.data!.data() as Map<String, dynamic>;
+                data.addAll({'reference': snapshot.data!.reference});
+                var maindata = UserModel.fromJson(data);
+                return ListView.builder(
+                    shrinkWrap: true,
+                    physics: BouncingScrollPhysics(),
+                    itemCount: maindata.favoriteReference!.length,
+                    itemBuilder: (context, index) {
+                      var data = maindata.favoriteReference![index];
+                        return StreamBuilder(
+                          stream: data.snapshots(),
+                          builder: (context, snapshot) {
+                            if(snapshot.hasData){
+                              Map<String, dynamic> data1 =
+                              snapshot.data!.data() as Map<String, dynamic>;
+                              data1.addAll({'reference': snapshot.data!.reference});
+                              var data = UserModel.fromJson(data1);
+                              return Visibility(
+                                visible: data.type == "Doctore",
+                                child: InkWell(
+                                  onTap: () =>
+                                      Navigator.of(context, rootNavigator: true).push(
+                                        CupertinoPageRoute<bool>(
+                                          fullscreenDialog: true,
+                                          builder: (BuildContext context) =>
+                                              doctoreDetail(doctor: data),
+                                        ),
+                                      ),
+                                  child: Container(
+                                    margin: EdgeInsets.only(
+                                        top: 10, left: 20, bottom: 10, right: 20),
+                                    padding:
+                                    EdgeInsets.only(top: 10, left: 10, bottom: 10),
+                                    clipBehavior: Clip.antiAlias,
+                                    decoration: BoxDecoration(
+                                      color: AppColor.backgroundColor,
+                                      borderRadius: BorderRadius.circular(50),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.withOpacity(0.5),
+                                          spreadRadius: 1,
+                                          blurRadius: 8,
+                                          offset: Offset(
+                                              0, 3), // changes position of shadow
+                                        ),
+                                      ],
+                                    ),
+                                    child: Row(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      mainAxisSize: MainAxisSize.max,
+                                      children: [
+                                        CircleAvatar(
+                                          backgroundImage:
+                                          NetworkImage(data.imagePath!),
+                                          radius: 35,
+                                        ),
+                                        SizedBox(width: 15),
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(data.name,
+                                                style: TextStyle(
+                                                    color: AppColor.textColor,
+                                                    fontSize: 18,
+                                                    fontWeight: FontWeight.w400)),
+                                            SizedBox(
+                                              width: width * 0.55,
+                                              child: Text(data.address,
+                                                  style: TextStyle(
+                                                      color: AppColor.greycolor,
+                                                      fontSize: 13),
+                                                  maxLines: 2),
+                                            ),
+                                            SizedBox(
+                                              width: width * 0.55,
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  rattingBar(
+                                                      tapOnly: true, initValue: 2.5),
+                                                  Text(
+                                                      "${calculateDistance(currentUserDocument!.latLong, currentUserDocument!.longitude, data.latLong, data.longitude)} km",
+                                                      textAlign: TextAlign.end,
+                                                      style: TextStyle(
+                                                          color: AppColor.greycolor,
+                                                          fontSize: 13),
+                                                      maxLines: 2),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Favorites(
+                                            reference: data.reference,
+                                            action: () => setState(() {})),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }else {
+                              return SizedBox.shrink();
+                            }
+                          }
+                        );
 
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: InkWell(
-                        onTap: () {
-                          setState(() {
-                            favoriteItems
-                                .remove(favorites[index]['name']);
-                          });
-                        },
-                        child: Icon(
-                          Icons.favorite,
-                          size: 28,
-                          color: AppColor.textColor,
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            );
+                    });
+              } else {
+                return Center(
+                  child: constWidget().circularProgressInd(nodatafound: true),
+                );
+              }
+            } else {
+              return Center(
+                child: constWidget().circularProgressInd(nodatafound: false),
+              );
+            }
           }),
     );
   }
 }
-
-

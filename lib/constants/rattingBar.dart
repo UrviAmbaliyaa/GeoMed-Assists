@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:geomed_assist/constants/Appcolors.dart';
+import 'package:geomed_assist/constants/constantdata.dart';
+
+double ratebarValue = 0;
 
 class rattingBar extends StatefulWidget {
   final bool tapOnly;
@@ -20,7 +23,7 @@ class _rattingBarState extends State<rattingBar> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         RatingBar.builder(
-          initialRating: widget.initValue,
+          initialRating: widget.initValue.isNaN ? 0 : widget.initValue,
           minRating: 1,
           ignoreGestures: widget.tapOnly,
           direction: Axis.horizontal,
@@ -33,10 +36,10 @@ class _rattingBarState extends State<rattingBar> {
             color: Colors.amber,
           ),
           onRatingUpdate: (rating) {
-            print(rating);
+            ratebarValue = rating;
           },
         ),
-        widget.tapOnly? Text(" ${(widget.initValue*20).toInt()}%",style: TextStyle(color: AppColor.greycolor, fontSize: 10)):SizedBox.shrink(),
+        widget.tapOnly? Text(" ${(widget.initValue.isNaN ? 0 : widget.initValue*20).toInt()}%",style: TextStyle(color: AppColor.greycolor, fontSize: 10)):SizedBox.shrink(),
       ],
     );
   }

@@ -2,7 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:geomed_assist/Authentication/SignUpAsShopkeeper.dart';
+import 'package:geomed_assist/Firebase/firebase_quaries.dart';
+import 'package:geomed_assist/Models/product.dart';
 import 'package:geomed_assist/Store_flow/addProducts.dart';
+import 'package:geomed_assist/User_flow/requests.dart';
 import 'package:geomed_assist/User_flow/shopDetailScreen.dart';
 import 'package:geomed_assist/constants/Appcolors.dart';
 import 'package:geomed_assist/constants/constantWidgets.dart';
@@ -124,113 +127,272 @@ class _productsState extends State<products> {
             ),
           ),
           Expanded(
-              child: GridView.builder(
-                  shrinkWrap: true,
-                  padding: EdgeInsets.only(left: 20, right: 20),
-                  physics: BouncingScrollPhysics(),
-                  itemCount: Datas().category.length,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 15,
-                      mainAxisSpacing: 15,
-                      childAspectRatio: 0.7),
-                  itemBuilder: (context, index) {
-                    return InkWell(
-                      onTap: () {
-                        showBottomSheet(
-                            context: context,
-                            clipBehavior: Clip.antiAlias,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(50),
-                                    topRight: Radius.circular(50))),
-                            builder: (context) {
-                              return Container(
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.7,
-                                  child: productDetail(index: index));
-                            });
-                      },
-                      child: Stack(
-                        children: [
-                          Container(
-                            margin: EdgeInsets.only(bottom: 5, left: 5, top: 5),
-                            padding: EdgeInsets.all(2),
-                            clipBehavior: Clip.antiAlias,
-                            decoration: BoxDecoration(
-                              color: AppColor.backgroundColor,
-                              borderRadius: BorderRadius.circular(15.0),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.5),
-                                  spreadRadius: 1,
-                                  blurRadius: 8,
-                                  offset: Offset(
-                                      0, 3), // changes position of shadow
-                                ),
-                              ],
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Image.network(Datas().category[index]['image'],
-                                    height: width * 0.3,
-                                    fit: BoxFit.cover,
-                                    width: double.infinity),
-                                Padding(
-                                  padding: EdgeInsets.all(5),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                          "djadj hdqjrnq iuoh3r c tchiu jth kjewhljwhfn fuehfuif kjhejh",
-                                          style: TextStyle(
-                                              color: AppColor.textColor,
-                                              fontSize: 16),
-                                          maxLines: 2),
-                                      Text(
-                                          "Category: gwertw ${Datas().category[index]['name']}",
-                                          style: TextStyle(
-                                              color: AppColor.greycolor,
-                                              fontSize: 13),
-                                          maxLines: 2),
-                                      Row(
+              child: StreamBuilder<ProductList?>(
+                  stream: Firebase_Quires().getProductDocuments(
+                      shopRef: currentUserDocument!.reference, available: true,forCategories: false),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.active ||
+                        snapshot.connectionState == ConnectionState.done) {
+                      if (snapshot.hasData &&
+                          snapshot.data!.products.length != 0) {
+                        List<Product> dataSN = serachingController.text.isEmpty
+                            ? snapshot.data!.products
+                            : snapshot.data!.products
+                                .where((element) => (element.name
+                                        .toUpperCase()
+                                        .contains(serachingController.text
+                                            .toUpperCase()) ||
+                                    element.category.toUpperCase().contains(
+                                        serachingController.text
+                                            .toUpperCase()) ||
+                                    element.price
+                                        .toString()
+                                        .toUpperCase()
+                                        .contains(serachingController.text
+                                            .toUpperCase())))
+                                .toList();
+                        return GridView.builder(
+                            shrinkWrap: true,
+                            padding: EdgeInsets.only(left: 20, right: 20),
+                            physics: BouncingScrollPhysics(),
+                            itemCount: dataSN.length,
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    crossAxisSpacing: 15,
+                                    mainAxisSpacing: 15,
+                                    childAspectRatio: 0.7),
+                            itemBuilder: (context, index) {
+                              var data = dataSN[0];
+                              return Stack(
+                                children: [
+                                  Container(
+                                    margin: EdgeInsets.only(
+                                        bottom: 5, left: 5, top: 5),
+                                    padding: EdgeInsets.all(2),
+                                    clipBehavior: Clip.antiAlias,
+                                    decoration: BoxDecoration(
+                                      color: AppColor.backgroundColor,
+                                      borderRadius: BorderRadius.circular(15.0),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.withOpacity(0.5),
+                                          spreadRadius: 1,
+                                          blurRadius: 8,
+                                          offset: Offset(0,
+                                              3), // changes position of shadow
+                                        ),
+                                      ],
+                                    ),
+                                    child: SingleChildScrollView(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
-                                          Expanded(
-                                            child: Text("Price: 10.5\$",
-                                                style: TextStyle(
-                                                    color: AppColor.greycolor,
-                                                    fontSize: 13),
-                                                maxLines: 2),
+                                          GestureDetector(
+                                            onTap: () {
+                                              showBottomSheet(
+                                                  context: context,
+                                                  clipBehavior: Clip.antiAlias,
+                                                  shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.only(
+                                                              topLeft: Radius
+                                                                  .circular(50),
+                                                              topRight: Radius
+                                                                  .circular(
+                                                                      50))),
+                                                  builder: (context) {
+                                                    return Container(
+                                                        height: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .height *
+                                                            0.7,
+                                                        child: productDetail(
+                                                            data: data));
+                                                  });
+                                            },
+                                            child: Image.network(data.image,
+                                                height: width * 0.3,
+                                                fit: BoxFit.cover,
+                                                width: double.infinity),
                                           ),
-                                          InkWell(
-                                              onTap: () {
-                                                Navigator.of(context, rootNavigator: true).push(
-                                                  CupertinoPageRoute<bool>(
-                                                    fullscreenDialog: true,
-                                                    builder: (BuildContext context) =>
-                                                    new addProduct(edit: true),
+                                          Padding(
+                                            padding: EdgeInsets.all(5),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              children: [
+                                                Text(data.name,
+                                                    style: TextStyle(
+                                                        color:
+                                                            AppColor.textColor,
+                                                        fontSize: 16),
+                                                    maxLines: 2),
+                                                Text("Diseas: ${data.category}",
+                                                    style: TextStyle(
+                                                        color:
+                                                            AppColor.greycolor,
+                                                        fontSize: 13),
+                                                    maxLines: 2),
+                                                Row(
+                                                  children: [
+                                                    Expanded(
+                                                      child: Text(
+                                                          "Price: ${data.price}\$",
+                                                          style: TextStyle(
+                                                              color: AppColor
+                                                                  .greycolor,
+                                                              fontSize: 13),
+                                                          maxLines: 2),
+                                                    ),
+                                                    InkWell(
+                                                        onTap: () {
+                                                          Navigator.of(context,
+                                                                  rootNavigator:
+                                                                      true)
+                                                              .push(
+                                                            CupertinoPageRoute<
+                                                                bool>(
+                                                              fullscreenDialog:
+                                                                  true,
+                                                              builder: (BuildContext
+                                                                      context) =>
+                                                                  new addProduct(
+                                                                      edit:
+                                                                          true,
+                                                                      product:
+                                                                          data),
+                                                            ),
+                                                          );
+                                                        },
+                                                        child: Icon(Icons.edit,
+                                                            color: AppColor
+                                                                .textColor,
+                                                            size: 25)),
+                                                    SizedBox(width: 10),
+                                                    InkWell(
+                                                        onTap: () async {
+                                                          showDialog(
+                                                            context: context,
+                                                            builder:
+                                                                (BuildContext
+                                                                    context) {
+                                                              return AlertDialog(
+                                                                backgroundColor:
+                                                                    Colors
+                                                                        .white,
+                                                                contentPadding:
+                                                                    EdgeInsets
+                                                                        .zero,
+                                                                content:
+                                                                    Container(
+                                                                  height: 200,
+                                                                  padding:
+                                                                      EdgeInsets
+                                                                          .all(
+                                                                              25),
+                                                                  alignment:
+                                                                      Alignment
+                                                                          .center,
+                                                                  child: Column(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .spaceBetween,
+                                                                    children: [
+                                                                      Text(
+                                                                          "Are you sure, You want to Delete the \"${data.name}\" Product.",
+                                                                          style: TextStyle(
+                                                                              color: AppColor.backgroundColor,
+                                                                              fontSize: 18,
+                                                                              fontWeight: FontWeight.w500),
+                                                                          textAlign: TextAlign.center),
+                                                                      Row(
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.center,
+                                                                        children: [
+                                                                          Expanded(
+                                                                            child: ElevatedButton(
+                                                                                style: ButtonStyle(shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))), backgroundColor: MaterialStatePropertyAll(AppColor.primaryColor)),
+                                                                                onPressed: () {
+                                                                                  Navigator.pop(context);
+                                                                                },
+                                                                                child: Text("Cancel", style: TextStyle(color: AppColor.textColor, fontSize: 18))),
+                                                                          ),
+                                                                          SizedBox(
+                                                                              width: 30),
+                                                                          Expanded(
+                                                                            child: ElevatedButton(
+                                                                                style: ButtonStyle(shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))), backgroundColor: MaterialStatePropertyAll(AppColor.primaryColor)),
+                                                                                onPressed: () async {
+                                                                                  await Firebase_Quires().crudOperations(available: true, categoryReferance: data.categoryRef, crudType: "del", image: data.image, description: data.description, name: data.name, price: data.price.toString(), productID: data.referenace.id);
+                                                                                  Navigator.pop(context);
+                                                                                },
+                                                                                child: Text("Delete", style: TextStyle(color: AppColor.textColor, fontSize: 18))),
+                                                                          )
+                                                                        ],
+                                                                      )
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              );
+                                                            },
+                                                          );
+                                                        },
+                                                        child: Icon(
+                                                            Icons.delete,
+                                                            color: Colors.red,
+                                                            size: 25)),
+                                                  ],
+                                                ),
+                                                Padding(
+                                                  padding: EdgeInsets.symmetric(horizontal: 5),
+                                                  child: Row(
+                                                    children: [
+                                                      Container(
+                                                        width: 10,
+                                                        height: 10,
+                                                        margin: EdgeInsets.only(right: 5),
+                                                        decoration: BoxDecoration(
+                                                            borderRadius: BorderRadius.circular(100),
+                                                            color: data.available ? Colors.green : Colors.red
+                                                        ),
+                                                      ),
+                                                      Row(
+                                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                        children: [
+                                                          Text(data.available ? "Available" : "Not Available",
+                                                              style: TextStyle(
+                                                                  color: data.available ? Colors.green : Colors.red,
+                                                                  fontSize: 13),
+                                                              maxLines: 2),
+                                                        ],
+                                                      ),
+
+                                                    ],
                                                   ),
-                                                );
-                                              },
-                                              child: Icon(Icons.edit,
-                                                  color: AppColor.textColor, size: 25)),
-                                          SizedBox(width: 10),
-                                          InkWell(
-                                              onTap: () {},
-                                              child: Icon(Icons.delete, color: Colors.red, size: 25)),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
                                         ],
                                       ),
-                                    ],
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
+                                ],
+                              );
+                            });
+                      } else {
+                        return constWidget()
+                            .circularProgressInd(nodatafound: true);
+                      }
+                    } else {
+                      return constWidget()
+                          .circularProgressInd(nodatafound: false);
+                    }
                   })),
         ],
       ),
@@ -323,6 +485,31 @@ class _productsState extends State<products> {
                                 children: [
                                   Text(
                                     'Add Product',
+                                    style: TextStyle(
+                                        color: AppColor.textColor,
+                                        fontSize: 18),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          InkWell(
+                            onTap: () {
+                              drawerKey.currentState?.closeDrawer();
+                              Navigator.of(context, rootNavigator: true).push(
+                                CupertinoPageRoute<bool>(
+                                  fullscreenDialog: true,
+                                  builder: (BuildContext context) =>
+                                      requests(),
+                                ),
+                              );
+                            },
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(vertical: 10),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    'Product Request',
                                     style: TextStyle(
                                         color: AppColor.textColor,
                                         fontSize: 18),

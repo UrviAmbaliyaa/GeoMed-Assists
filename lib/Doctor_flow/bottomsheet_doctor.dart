@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:geomed_assist/Doctor_flow/HomeScreen_doctore.dart';
+import 'package:geomed_assist/Doctor_flow/Products.dart';
 import 'package:geomed_assist/Store_flow/rattings_shop.dart';
 import 'package:geomed_assist/User_flow/allchates.dart';
 import 'package:geomed_assist/constants/Appcolors.dart';
@@ -22,9 +23,9 @@ class _bottomSheet_doctorState extends State<bottomSheet_doctor> {
     CupertinoIcons.chat_bubble,
     CupertinoIcons.star_fill,
   ];
-  int _selectedIndex = 0;
-  List manuIconsPages = [homeScreen_doctor(), allChates(),shop_rattings(),];
-  List manuIconsName = ["Home", "Chat","Rate"];
+  int selectedIndex = 0;
+  List manuIconsPages = [allProducts(), allChates(),shop_rattings(),];
+  List manuIconsName = ["Home","Chat","Rate"];
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -32,7 +33,7 @@ class _bottomSheet_doctorState extends State<bottomSheet_doctor> {
         exit(0);
       },
       child: Scaffold(
-        body: manuIconsPages[_selectedIndex],
+        body: manuIconsPages[selectedIndex],
         extendBody: true,
         bottomSheet: KeyboardVisibilityBuilder(
           builder: (p0, isKeyboardVisible) {
@@ -56,10 +57,10 @@ class _bottomSheet_doctorState extends State<bottomSheet_doctor> {
                         text: manuIconsName[index],
                       ),
                     ),
-                    selectedIndex: _selectedIndex,
+                    selectedIndex: selectedIndex,
                     onTabChange: (index) {
                       setState(() {
-                        _selectedIndex = index;
+                        selectedIndex = index;
                       });
                     },
                   ),
