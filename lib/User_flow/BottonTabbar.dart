@@ -21,55 +21,49 @@ class bottomTabBar extends StatefulWidget {
 class _bottomTabBarState extends State<bottomTabBar> {
   List icons = [
     CupertinoIcons.home,
-    Icons.map_outlined,
     CupertinoIcons.chat_bubble,
     Icons.favorite_border,
   ];
 
-  List manuIconsPages = [homePage(), MapScreen(), allChates(), favorits()];
-  List manuIconsName = ["Home", "Map", "Chat", "Favorites"];
+  List manuIconsPages = [homePage(), allChates(), favorits()];
+  List manuIconsName = ["Home", "Chat", "Favorites"];
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () {
-        exit(0);
-      },
-      child: Scaffold(
-        body: manuIconsPages[selectedIndex],
-        extendBody: true,
-        bottomSheet: KeyboardVisibilityBuilder(
-          builder: (p0, isKeyboardVisible) {
-            return !isKeyboardVisible ? SafeArea(
-                child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
-              child: GNav(
-                rippleColor: Colors.grey[300]!,
-                hoverColor: Colors.grey[100]!,
-                gap: 8,
-                activeColor: Colors.white,
-                iconSize: 24,
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                duration: Duration(milliseconds: 400),
-                tabBackgroundColor: AppColor.backgroundColor,
-                color: Colors.black,
-                tabs: List.generate(
-                  icons.length,
-                  (index) => GButton(
-                    icon: icons[index],
-                    text: manuIconsName[index],
-                  ),
+    return Scaffold(
+      body: manuIconsPages[selectedIndex],
+      extendBody: true,
+      bottomSheet: KeyboardVisibilityBuilder(
+        builder: (p0, isKeyboardVisible) {
+          return !isKeyboardVisible ? SafeArea(
+              child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
+            child: GNav(
+              rippleColor: Colors.grey[300]!,
+              hoverColor: Colors.grey[100]!,
+              gap: 8,
+              activeColor: Colors.white,
+              iconSize: 24,
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              duration: Duration(milliseconds: 400),
+              tabBackgroundColor: AppColor.backgroundColor,
+              color: Colors.black,
+              tabs: List.generate(
+                icons.length,
+                (index) => GButton(
+                  icon: icons[index],
+                  text: manuIconsName[index],
                 ),
-                selectedIndex: selectedIndex,
-                onTabChange: (index) {
-                  setState(() {
-                    selectedIndex = index;
-                  });
-                },
               ),
-            )) : SizedBox.shrink();
-          },
-        ),
+              selectedIndex: selectedIndex,
+              onTabChange: (index) {
+                setState(() {
+                  selectedIndex = index;
+                });
+              },
+            ),
+          )) : SizedBox.shrink();
+        },
       ),
     );
   }

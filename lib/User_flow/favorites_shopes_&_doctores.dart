@@ -191,7 +191,7 @@ class _favoriteShopesState extends State<favoriteShopes> {
                                                       initValue: 2.5),
                                                   Expanded(
                                                     child: Text(
-                                                        "${calculateDistance(currentUserDocument!.latLong, currentUserDocument!.longitude, data.latLong, data.longitude)} km",
+                                                        "${calculateDistance(currentUserDocument!.latLong, currentUserDocument!.longitude, data.latLong, data.longitude)} mile",
                                                         textAlign:
                                                             TextAlign.end,
                                                         style: TextStyle(
@@ -340,7 +340,7 @@ class _favoriteDoctorState extends State<favoriteDoctor> {
                                                   rattingBar(
                                                       tapOnly: true, initValue: 2.5),
                                                   Text(
-                                                      "${calculateDistance(currentUserDocument!.latLong, currentUserDocument!.longitude, data.latLong, data.longitude)} km",
+                                                      "${calculateDistance(currentUserDocument!.latLong, currentUserDocument!.longitude, data.latLong, data.longitude)} mile",
                                                       textAlign: TextAlign.end,
                                                       style: TextStyle(
                                                           color: AppColor.greycolor,

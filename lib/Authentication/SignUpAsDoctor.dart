@@ -25,15 +25,16 @@ class SignUpAsDoctor extends StatefulWidget {
 
 class _SignUpAsDoctorState extends State<SignUpAsDoctor> {
   @override
-  final emailController = TextEditingController();
-  final namecontroller = TextEditingController();
-  final aboutUscontroller = TextEditingController();
-  final experiancecontroller = TextEditingController();
-  final degreececontroller = TextEditingController();
-  final password = TextEditingController();
-  final confirmpassword = TextEditingController();
-  final addressController = TextEditingController();
-  final contactNumberController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController namecontroller = TextEditingController();
+  TextEditingController aboutUscontroller = TextEditingController();
+  TextEditingController experiancecontroller = TextEditingController();
+  TextEditingController degreececontroller = TextEditingController();
+  TextEditingController password = TextEditingController();
+  TextEditingController confirmpassword = TextEditingController();
+  TextEditingController addressController = TextEditingController();
+  TextEditingController contactNumberController = TextEditingController();
+  TextEditingController zipCodeController = TextEditingController();
   final formKey = GlobalKey<FormState>();
   bool passwordvisiblity = false;
   bool confirmpasswordvisiblity = false;
@@ -118,12 +119,13 @@ class _SignUpAsDoctorState extends State<SignUpAsDoctor> {
         "latLong": location.latitude,
         "longitude": location.longitude,
         "cantact": contactNumberController.text,
+        "zipCode": zipCodeController.text,
         "imagePath": networkImagepath,
         "startTime": "${startTime!.hour}:${startTime!.minute}",
         "breckstartTime": "${breckStartTime!.hour}:${breckStartTime!.minute}",
         "endtime":"${endTime!.hour}:${endTime!.minute}",
         "breckendTime":"${breackEndendTime!.hour}:${breackEndendTime!.minute}",
-        "approve" : widget.editdcreen? widget.editdcreen : false
+        "approve" : widget.editdcreen? widget.editdcreen : true
       };
       !widget.editdcreen? mapdata.addAll({"favoriteReference": [],"availableSlot": []}):null;
       !widget.editdcreen
@@ -152,8 +154,9 @@ class _SignUpAsDoctorState extends State<SignUpAsDoctor> {
       confirmpassword.text = "123456";
       experiancecontroller.text = currentUserDocument!.exp!;
       degreececontroller.text = currentUserDocument!.degree!;
-      addressController.text = currentUserDocument!.address!;
+      addressController.text = currentUserDocument!.address;
       aboutUscontroller.text = currentUserDocument!.aboutUs!;
+      zipCodeController.text = currentUserDocument!.zipCode!;
       contactNumberController.text = currentUserDocument!.contact!;
       List<String> parts = currentUserDocument!.startTime!.split(":");
       startTime = TimeOfDay(hour: int.parse(parts[0]), minute: int.parse(parts[1]));
@@ -350,7 +353,7 @@ class _SignUpAsDoctorState extends State<SignUpAsDoctor> {
                                            keybordType:
                                            TextInputType.visiblePassword,
                                            password: true,
-                                           passwordvisiblity: passwordvisiblity,
+                                           passwordvisiblity: !passwordvisiblity,
                                            sufixIcon: InkWell(
                                                onTap: () {
                                                  setState(() {
@@ -386,7 +389,7 @@ class _SignUpAsDoctorState extends State<SignUpAsDoctor> {
                                            TextInputType.visiblePassword,
                                            password: true,
                                            passwordvisiblity:
-                                           confirmpasswordvisiblity,
+                                          !confirmpasswordvisiblity,
                                            sufixIcon: InkWell(
                                                onTap: () {
                                                  setState(() {
@@ -488,6 +491,36 @@ class _SignUpAsDoctorState extends State<SignUpAsDoctor> {
                                       SizedBox(height: 15),
                                       Row(
                                         children: [
+                                          Text("Zip Code",
+                                              style: TextStyle(
+                                                  fontSize: 18,
+                                                  color: AppColor.textColor)),
+                                        ],
+                                      ),
+                                      customeTextFormField(
+                                        autofillHint: [],
+                                        contoller: zipCodeController,
+                                        hintTest: 'Enter Zip Code',
+                                        keybordType: TextInputType.number,
+                                        password: false,
+                                        passwordvisiblity: false,
+                                        sufixIcon: SizedBox.shrink(),
+                                        validation: (value) {
+                                          if (zipCodeController.text ==
+                                              '') {
+                                            return 'This is a required field';
+                                          } else if (zipCodeController
+                                              .text
+                                              .trim()
+                                              .length <
+                                              5) {
+                                            return 'Zip code length should be grater than 5.';
+                                          }
+                                        },
+                                      ),
+                                      SizedBox(height: 15),
+                                      Row(
+                                        children: [
                                           Text("Contact",
                                               style: TextStyle(
                                                   fontSize: 18,
@@ -511,7 +544,7 @@ class _SignUpAsDoctorState extends State<SignUpAsDoctor> {
                                           } else if (contactNumberController
                                                   .text
                                                   .trim()
-                                                  .length ==
+                                                  .length <
                                               10) {
                                             return 'contact Number length should be 10';
                                           }
@@ -528,8 +561,12 @@ class _SignUpAsDoctorState extends State<SignUpAsDoctor> {
                                       ),
                                       SizedBox(height: 10),
                                       Row(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+
                                             children: [
                                               SizedBox(
                                                 height: 45,
@@ -556,12 +593,15 @@ class _SignUpAsDoctorState extends State<SignUpAsDoctor> {
                                                       color: AppColor.textColor))
                                             ],
                                           ),
-                                          SizedBox(width: 15),
-                                          Text("to",
-                                              style: TextStyle(
-                                                  fontSize: 18,
-                                                  color: AppColor.textColor)),
-                                          SizedBox(width: 15),
+                                          SizedBox(width: 8),
+                                          Padding(
+                                            padding: const EdgeInsets.only(top: 8),
+                                            child: Text("to",
+                                                style: TextStyle(
+                                                    fontSize: 18,
+                                                    color: AppColor.textColor)),
+                                          ),
+                                          SizedBox(width: 5),
                                           Column(
                                             children: [
                                               SizedBox(
@@ -585,7 +625,7 @@ class _SignUpAsDoctorState extends State<SignUpAsDoctor> {
                                               SizedBox(height: 3),
                                               Text("Break Start Time",
                                                   style: TextStyle(
-                                                      fontSize: 15,
+                                                      fontSize: 18,
                                                       color: AppColor.textColor))
                                             ],
                                           ),
@@ -593,8 +633,11 @@ class _SignUpAsDoctorState extends State<SignUpAsDoctor> {
                                       ),
                                       SizedBox(height: 10),
                                       Row(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.start,
                                         children: [
                                           Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
                                               SizedBox(
                                                 height: 45,
@@ -621,11 +664,14 @@ class _SignUpAsDoctorState extends State<SignUpAsDoctor> {
                                                       color: AppColor.textColor))
                                             ],
                                           ),
-                                          SizedBox(width: 15),
-                                          Text("to",
-                                              style: TextStyle(
-                                                  fontSize: 18,
-                                                  color: AppColor.textColor)),
+                                          SizedBox(width: 13),
+                                          Padding(
+                                            padding: const EdgeInsets.only(top: 8),
+                                            child: Text("to",
+                                                style: TextStyle(
+                                                    fontSize: 13,
+                                                    color: AppColor.textColor)),
+                                          ),
                                           SizedBox(width: 15),
                                           Column(
                                             children: [

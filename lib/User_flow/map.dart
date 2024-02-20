@@ -1,10 +1,18 @@
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geomed_assist/Firebase/firebase_quaries.dart';
 import 'package:geomed_assist/Models/user_model.dart';
+import 'package:geomed_assist/User_flow/BottonTabbar.dart';
+import 'package:geomed_assist/User_flow/doctoreDetail.dart';
+import 'package:geomed_assist/User_flow/shopDetailScreen.dart';
 import 'package:geomed_assist/constants/Appcolors.dart';
 import 'package:geomed_assist/constants/constantWidgets.dart';
+import 'package:geomed_assist/constants/constantdata.dart';
 import 'package:geomed_assist/constants/customTextField.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -23,11 +31,10 @@ class _MapScreenState extends State<MapScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    getMarkers();
   }
 
   Future<void> getMarkers() async {
-    print("==========================================");
-
     Position position = await Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.high,
     );
@@ -39,13 +46,14 @@ class _MapScreenState extends State<MapScreen> {
         id: "0",
         latlong: LatLng(position.latitude, position.longitude),
         title: "Current Location",
-        address: "You are here..");
+        address: "You are here..",
+    );
     markers.add(marker1);
     shops_doctores =
-        await Firebase_Quires().getShopKeepe_Doctore(shopkeeper: true).first ??
+        await Firebase_Quires().getShopKeepe_Doctore(shopkeeper: true,fromMap: true).first ??
             [];
     shops_doctores.addAll(
-        await Firebase_Quires().getShopKeepe_Doctore(shopkeeper: false).first ??
+        await Firebase_Quires().getShopKeepe_Doctore(shopkeeper: false,fromMap: true).first ??
             []);
     for (UserModel doc in shops_doctores) {
       LatLng lng = LatLng(doc.latLong, doc.longitude);
@@ -53,7 +61,9 @@ class _MapScreenState extends State<MapScreen> {
           id: doc.reference.id,
           latlong: lng,
           title: doc.name,
-          address: doc.address);
+          address: doc.address,
+          data: doc
+      );
       markers.add(marker);
     }
     setState(() {});
@@ -63,9 +73,9 @@ class _MapScreenState extends State<MapScreen> {
       {required String id,
       required LatLng latlong,
       required String title,
-      required String address}) {
-    print("latlong ---->${latlong}");
-
+      required String address,
+      UserModel? data
+      }) {
     return Marker(
       markerId: MarkerId(id),
       position: latlong,
@@ -73,16 +83,28 @@ class _MapScreenState extends State<MapScreen> {
         title: title,
         snippet: address,
       ),
+      onTap: () {
+        print("===========================================?");
+        id != 0 ? Navigator.of(context, rootNavigator: true).push(
+          CupertinoPageRoute<bool>(
+            fullscreenDialog: true,
+            builder: (BuildContext context) =>
+            data!.type == "ShopKeeper" ? shopDetailScreen(data: data) : doctoreDetail(doctor: data),
+          ),
+        ):null;
+      },
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColor.backgroundColor,
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.only(bottom: 50),
+    return WillPopScope(
+      onWillPop: () async{
+        exit(0);
+      },
+      child: Scaffold(
+        backgroundColor: AppColor.backgroundColor,
+        body: SafeArea(
           child: Stack(
             children: [
               GoogleMap(
@@ -93,53 +115,79 @@ class _MapScreenState extends State<MapScreen> {
                 markers: markers,
                 initialCameraPosition: CameraPosition(
                   target: LatLng(0, 0),
-                  zoom: 13.0,
+                  zoom: 12.0,
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(top: 20, left: 20, right: 20),
-                child: customeTextFormField(
-                  autofillHint: [AutofillHints.fullStreetAddress],
-                  readOnly: false,
-                  contoller: searchController,
-                  hintTest: 'Search Location',
-                  keybordType: TextInputType.streetAddress,
-                  password: false,
-                  passwordvisiblity: false,
-                  sufixIcon: Icon(Icons.location_on_outlined,
-                      size: 30, color: AppColor.textColor),
-                  validation: (value) {},
-                  onchageAction: () =>
-                      Future.delayed(Duration(seconds: 1), () async {
-                    if (searchController.text.trim().length != 0) {
-                      var searchdata = shops_doctores.where((element) {
-                        return element.address.toUpperCase().contains(
-                                searchController.text.trim().toUpperCase()) ||
-                            element.name.toUpperCase().contains(
-                                searchController.text.trim().toUpperCase());
-                      });
-                      if (searchController.text
-                          .toUpperCase()
-                          .contains("CURRENT")) {
-                        Position position = await Geolocator.getCurrentPosition(
-                          desiredAccuracy: LocationAccuracy.high,
-                        );
+                padding: EdgeInsets.only(top: 15,left: 20,right: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                      width: MediaQuery.sizeOf(context).width * 0.68,
+                      child: customeTextFormField(
+                        autofillHint: [],
+                        readOnly: false,
+                        contoller: searchController,
+                        hintTest: 'Enter Zip Code',
+                        keybordType: TextInputType.number,
+                        password: false,
+                        passwordvisiblity: false,
+                        sufixIcon: Icon(Icons.location_on_outlined,
+                            size: 30, color: AppColor.textColor),
+                        validation: (value) {
+                        },
+                        onchageAction: () =>
+                            Future.delayed(Duration(seconds: 3), () async {
+                              if (searchController.text.trim().length >= 5) {
+                                markers.clear();
+                                var searchdata = shops_doctores.where((element) {
+                                  return element.zipCode == searchController.text.trim();
+                                });
+                                selectedZipCode = searchController.text;
 
-                        _searchLocation(
-                            location: LatLng(position.latitude,
-                                position.longitude),
-                            id: "0");
-                      }
-                      searchdata.length != 0
-                          ? _searchLocation(
-                              location: LatLng(searchdata.first.latLong,
-                                  searchdata.first.longitude),
-                              id: searchdata.first.reference.id)
-                          : null;
-                    }
-                  }),
+                                for (UserModel doc in searchdata) {
+                                  LatLng lng = LatLng(doc.latLong, doc.longitude);
+                                  var marker = addMarker(
+                                      id: doc.reference.id,
+                                      latlong: lng,
+                                      title: doc.name,
+                                      address: doc.address,
+                                      data: doc
+                                  );
+                                  markers.add(marker);
+                                }
+                                _searchLocation(
+                                    location: LatLng(searchdata.first.latLong,
+                                        searchdata.first.longitude),
+                                    id: searchdata.first.reference.id);
+                              }
+                            }),
+                      ),
+                    ),
+                    ElevatedButton(
+                        onPressed: (){
+                          Navigator.of(context, rootNavigator: true).push(
+                            CupertinoPageRoute<bool>(
+                              fullscreenDialog: true,
+                              builder: (BuildContext context) => bottomTabBar()
+                            ),
+                          );
+                        },
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStatePropertyAll(AppColor.inputTextfill),
+                          padding: MaterialStatePropertyAll(EdgeInsets.symmetric(vertical: 10,horizontal: 14)),
+                          shape: MaterialStatePropertyAll(
+                              RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12)
+                              )
+                          )
+                        ),
+                        child: Text("See All",style: TextStyle(color: AppColor.textColor,fontSize: 18,fontWeight: FontWeight.w500),))
+                  ],
                 ),
               ),
+      
             ],
           ),
         ),

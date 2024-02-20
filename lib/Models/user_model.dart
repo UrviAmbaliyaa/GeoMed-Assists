@@ -25,6 +25,7 @@ class UserModel {
   String? endTime;
   String? breckendTime;
   String? lunchTime;
+  String? zipCode;
   bool approve;
   double distanc;
   List? availableSlot;
@@ -40,6 +41,7 @@ class UserModel {
     this.availableSlot,
     this.ratedUser,
     this.imagePath,
+    this.zipCode,
     required this.name,
     this.weight,
     required this.type,
@@ -72,6 +74,7 @@ class UserModel {
       name: json['name'],
       weight: json['weight'],
       type: json['type'],
+      zipCode: json['zipCode'],
       email: json['email'],
       age: json['age'],
       degree: json['degree'],
@@ -112,6 +115,7 @@ class UserModel {
       'type': type,
       'email': email,
       'age': age,
+      'zipCode': zipCode,
       'degree': degree,
       'exp': exp,
       "availableSlot":availableSlot,

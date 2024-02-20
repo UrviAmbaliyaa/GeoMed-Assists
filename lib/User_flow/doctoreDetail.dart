@@ -90,7 +90,7 @@ class _doctoreDetailState extends State<doctoreDetail> {
                                 : 0,
                             size: 25),
                         Text(
-                            "${calculateDistance(currentUserDocument!.latLong, currentUserDocument!.longitude, widget.doctor.latLong, widget.doctor.longitude)} km",
+                            "${calculateDistance(currentUserDocument!.latLong, currentUserDocument!.longitude, widget.doctor.latLong, widget.doctor.longitude)} mile",
                             style: TextStyle(
                                 color: AppColor.greycolor,
                                 fontSize: 13,

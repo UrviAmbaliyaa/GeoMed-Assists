@@ -10,6 +10,7 @@ import 'package:geomed_assist/User_flow/allDoctores.dart';
 import 'package:geomed_assist/User_flow/allShopes.dart';
 import 'package:geomed_assist/User_flow/doctoreDetail.dart';
 import 'package:geomed_assist/User_flow/favorites.dart';
+import 'package:geomed_assist/User_flow/map.dart';
 import 'package:geomed_assist/User_flow/requests.dart';
 import 'package:geomed_assist/User_flow/shopDetailScreen.dart';
 import 'package:geomed_assist/constants/Appcolors.dart';
@@ -161,7 +162,7 @@ class _homePageState extends State<homePage> {
 
   shopWidget() {
     return StreamBuilder<List<UserModel>?>(
-        stream: Firebase_Quires().getShopKeepe_Doctore(shopkeeper: true),
+        stream: Firebase_Quires().getShopKeepe_Doctore(shopkeeper: true,fromMap: false),
         builder: (context, snapshot) {
           return Container(
             width: double.infinity,
@@ -285,7 +286,7 @@ class _homePageState extends State<homePage> {
                                                                 initValue: (snapshot.connectionState == ConnectionState.done || snapshot.connectionState == ConnectionState.waiting) && snapshot.hasData ? (snapshot.data!.rate! /snapshot.data!.ratedUser!):0,
                                                                 size: 15),
                                                             Text(
-                                                                "${calculateDistance(currentUserDocument!.latLong, currentUserDocument!.longitude, data.latLong, data.longitude)} km",
+                                                                "${calculateDistance(currentUserDocument!.latLong, currentUserDocument!.longitude, data.latLong, data.longitude)} mile",
                                                                 style: TextStyle(
                                                                     color: AppColor.greycolor,
                                                                     fontSize: 13,
@@ -326,7 +327,7 @@ class _homePageState extends State<homePage> {
 
   doctorWidget() {
     return StreamBuilder<List<UserModel>?>(
-        stream: Firebase_Quires().getShopKeepe_Doctore(shopkeeper: false),
+        stream: Firebase_Quires().getShopKeepe_Doctore(shopkeeper: false,fromMap: false),
         builder: (context, snapshot) {
           print(snapshot.connectionState);
           return Container(
@@ -455,7 +456,7 @@ class _homePageState extends State<homePage> {
                                                                 initValue: (snapshot.connectionState == ConnectionState.done || snapshot.connectionState == ConnectionState.waiting) && snapshot.hasData ? (snapshot.data!.rate! /snapshot.data!.ratedUser!):0,
                                                                 size: 15),
                                                             Text(
-                                                                "${calculateDistance(currentUserDocument!.latLong, currentUserDocument!.longitude, data.latLong, data.longitude)} km",
+                                                                "${calculateDistance(currentUserDocument!.latLong, currentUserDocument!.longitude, data.latLong, data.longitude)} mile ",
                                                                 style: TextStyle(
                                                                     color: AppColor.greycolor,
                                                                     fontSize: 13,
@@ -537,6 +538,21 @@ class _homePageState extends State<homePage> {
                       ),
                     ],
                   ),
+                ),
+                IconButton(
+                  onPressed: () {
+                    Navigator.of(context, rootNavigator: true).push(
+                      CupertinoPageRoute<bool>(
+                          fullscreenDialog: true,
+                          builder: (BuildContext context) => MapScreen()
+                      ),
+                    );
+                  },
+                  icon: Icon(
+                    CupertinoIcons.map_fill,
+                    color: AppColor.textColor,
+                  ),
+                  tooltip: "Drawer",
                 ),
                 IconButton(
                   onPressed: () => drawerKey.currentState?.openDrawer(),

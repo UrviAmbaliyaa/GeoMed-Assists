@@ -33,6 +33,7 @@ class _SignUpAsShopkeeperState extends State<SignUpAsShopkeeper> {
   final aboutUscontroller = TextEditingController();
   final contactNumberController = TextEditingController();
   final aboutUsController = TextEditingController();
+  TextEditingController zipCodeController = TextEditingController();
   final formKey = GlobalKey<FormState>();
   bool passwordvisiblity = false;
   bool confirmpasswordvisiblity = false;
@@ -110,6 +111,7 @@ class _SignUpAsShopkeeperState extends State<SignUpAsShopkeeper> {
         "address": addressController.text,
         "latLong": location.latitude,
         "longitude": location.longitude,
+        "zipCode": zipCodeController.text,
         "cantact": contactNumberController.text,
         "imagePath": networkImagepath,
         "about_us": aboutUscontroller.text,
@@ -117,7 +119,7 @@ class _SignUpAsShopkeeperState extends State<SignUpAsShopkeeper> {
         "breckstartTime": "${breckStartTime!.hour}:${breckStartTime!.minute}",
         "endtime":"${endTime!.hour}:${endTime!.minute}",
         "breckendTime":"${breackEndendTime!.hour}:${breackEndendTime!.minute}",
-        "approve" :  widget.editdcreen? widget.editdcreen : false
+        "approve" :  widget.editdcreen? widget.editdcreen : true
       };
       !widget.editdcreen
           ? await firebase_auth().signUpWithEmailAndPassword(
@@ -132,6 +134,7 @@ class _SignUpAsShopkeeperState extends State<SignUpAsShopkeeper> {
         addressController.clear();
         contactNumberController.clear();
         aboutUscontroller.clear();
+        zipCodeController.clear();
         imagepath = null;
         widget.editdcreen == false
             ? Navigator.of(context, rootNavigator: true).push(
@@ -154,8 +157,9 @@ class _SignUpAsShopkeeperState extends State<SignUpAsShopkeeper> {
       namecontroller.text = currentUserDocument!.name;
       password.text = "123456";
       confirmpassword.text = "123456";
-      addressController.text = currentUserDocument!.address!;
+      addressController.text = currentUserDocument!.address;
       aboutUscontroller.text = currentUserDocument!.aboutUs!;
+      zipCodeController.text = currentUserDocument!.zipCode!;
       contactNumberController.text = currentUserDocument!.contact!;
       List<String> parts = currentUserDocument!.startTime!.split(":");
       startTime = TimeOfDay(hour: int.parse(parts[0]), minute: int.parse(parts[1]));
@@ -351,7 +355,7 @@ class _SignUpAsShopkeeperState extends State<SignUpAsShopkeeper> {
                                                       .visiblePassword,
                                                   password: true,
                                                   passwordvisiblity:
-                                                      passwordvisiblity,
+                                                      !passwordvisiblity,
                                                   sufixIcon: InkWell(
                                                       onTap: () {
                                                         setState(() {
@@ -395,7 +399,7 @@ class _SignUpAsShopkeeperState extends State<SignUpAsShopkeeper> {
                                                       .visiblePassword,
                                                   password: true,
                                                   passwordvisiblity:
-                                                      confirmpasswordvisiblity,
+                                                      !confirmpasswordvisiblity,
                                                   sufixIcon: InkWell(
                                                       onTap: () {
                                                         setState(() {
@@ -452,6 +456,36 @@ class _SignUpAsShopkeeperState extends State<SignUpAsShopkeeper> {
                                       SizedBox(height: 15),
                                       Row(
                                         children: [
+                                          Text("Zip Code",
+                                              style: TextStyle(
+                                                  fontSize: 18,
+                                                  color: AppColor.textColor)),
+                                        ],
+                                      ),
+                                      customeTextFormField(
+                                        autofillHint: [],
+                                        contoller: zipCodeController,
+                                        hintTest: 'Enter Zip Code',
+                                        keybordType: TextInputType.number,
+                                        password: false,
+                                        passwordvisiblity: false,
+                                        sufixIcon: SizedBox.shrink(),
+                                        validation: (value) {
+                                          if (zipCodeController.text ==
+                                              '') {
+                                            return 'This is a required field';
+                                          } else if (zipCodeController
+                                              .text
+                                              .trim()
+                                              .length <
+                                              5) {
+                                            return 'Zip code length should be grater than 5.';
+                                          }
+                                        },
+                                      ),
+                                      SizedBox(height: 15),
+                                      Row(
+                                        children: [
                                           Text("Contact",
                                               style: TextStyle(
                                                   fontSize: 18,
@@ -475,7 +509,7 @@ class _SignUpAsShopkeeperState extends State<SignUpAsShopkeeper> {
                                           } else if (contactNumberController
                                                   .text
                                                   .trim()
-                                                  .length !=
+                                                  .length <
                                               10) {
                                             return 'contact Number length should be 10';
                                           }

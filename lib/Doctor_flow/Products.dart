@@ -126,137 +126,140 @@ class _allProductsState extends State<allProducts> {
                 ),
               ),
             ),
-            StreamBuilder<ProductList?>(
-                stream: Firebase_Quires().getAllProducts(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.active ||
-                      snapshot.connectionState == ConnectionState.done) {
-                    if (snapshot.hasData && snapshot.data!.products.length != 0) {
-                      var maindata = serachingController.text.trim().length != 0 ?
-                      snapshot.data!.products.where((element) {
-                        return (element.name.toUpperCase().contains(serachingController.text.toUpperCase())) ||
-                            (element.category.toUpperCase().contains(serachingController.text.toUpperCase())) ||
-                            (element.price.toString().contains(serachingController.text.toUpperCase())) ||
-                            (serachingController.text.toUpperCase().contains("AVAILABLE") && element.available);
-                      }).toList()
-                          : snapshot.data!.products;
-                      return GridView.builder(
-                          shrinkWrap: true,
-                          physics: BouncingScrollPhysics(),
-                          itemCount: maindata.length,
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              crossAxisSpacing: 15,
-                              mainAxisSpacing: 15,
-                              childAspectRatio: 0.66),
-                          itemBuilder: (context, index) {
-                            var data = maindata[index];
-                            return InkWell(
-                              onTap: () {
-                                showBottomSheet(
-                                    context: context,
-                                    clipBehavior: Clip.antiAlias,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(50),
-                                            topRight: Radius.circular(50))),
-                                    builder: (context) {
-                                      return productDetail(data: data);
-                                    });
-                              },
-                              child: Container(
-                                margin: EdgeInsets.only(bottom: 5, left: 5, top: 5),
-                                padding: EdgeInsets.only(bottom: 5),
-                                clipBehavior: Clip.antiAlias,
-                                decoration: BoxDecoration(
-                                  color: AppColor.backgroundColor,
-                                  borderRadius: BorderRadius.circular(15.0),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.5),
-                                      spreadRadius: 1,
-                                      blurRadius: 8,
-                                      offset:
-                                      Offset(0, 3), // changes position of shadow
-                                    ),
-                                  ],
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Image.network(data.image,
-                                        height: width * 0.3,
-                                        fit: BoxFit.cover,
-                                        width: double.infinity),
-                                    Padding(
-                                      padding: EdgeInsets.symmetric(horizontal: 5),
-                                      child: Text(data.name,
-                                          style: TextStyle(
-                                              color: AppColor.textColor,
-                                              fontSize: 16),
-                                          maxLines: 2),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.symmetric(horizontal: 5),
-                                      child: Text("Category: ${data.category}",
-                                          style: TextStyle(
-                                              color: AppColor.greycolor,
-                                              fontSize: 13),
-                                          maxLines: 2),
-                                    ),
-
-                                    Padding(
-                                      padding: EdgeInsets.symmetric(horizontal: 5),
-                                      child: Text("Price: ${data.price}\$",
-                                          style: TextStyle(
-                                              color: AppColor.greycolor,
-                                              fontSize: 13),
-                                          maxLines: 2),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.symmetric(horizontal: 5),
-                                      child: Row(
-                                        children: [
-                                          Container(
-                                            width: 10,
-                                            height: 10,
-                                            margin: EdgeInsets.only(right: 5),
-                                            decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.circular(100),
-                                                color: data.available ? Colors.green : Colors.red
-                                            ),
-                                          ),
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(data.available ? "Available" : "Not Available",
-                                                  style: TextStyle(
-                                                      color: data.available ? Colors.green : Colors.red,
-                                                      fontSize: 13),
-                                                  maxLines: 2),
-                                            ],
-                                          ),
-
-                                        ],
+            Expanded(
+              child: StreamBuilder<ProductList?>(
+                  stream: Firebase_Quires().getAllProducts(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.active ||
+                        snapshot.connectionState == ConnectionState.done) {
+                      if (snapshot.hasData && snapshot.data!.products.length != 0) {
+                        var maindata = serachingController.text.trim().length != 0 ?
+                        snapshot.data!.products.where((element) {
+                          return (element.name.toUpperCase().contains(serachingController.text.toUpperCase())) ||
+                              (element.category.toUpperCase().contains(serachingController.text.toUpperCase())) ||
+                              (element.price.toString().contains(serachingController.text.toUpperCase())) ||
+                              (serachingController.text.toUpperCase().contains("AVAILABLE") && element.available);
+                        }).toList()
+                            : snapshot.data!.products;
+                        return GridView.builder(
+                            shrinkWrap: true,
+                            padding: EdgeInsets.only(bottom: 70),
+                            physics: BouncingScrollPhysics(),
+                            itemCount: maindata.length,
+                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 15,
+                                mainAxisSpacing: 15,
+                                childAspectRatio: 0.66),
+                            itemBuilder: (context, index) {
+                              var data = maindata[index];
+                              return InkWell(
+                                onTap: () {
+                                  showBottomSheet(
+                                      context: context,
+                                      clipBehavior: Clip.antiAlias,
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.only(
+                                              topLeft: Radius.circular(50),
+                                              topRight: Radius.circular(50))),
+                                      builder: (context) {
+                                        return productDetail(data: data);
+                                      });
+                                },
+                                child: Container(
+                                  margin: EdgeInsets.only(bottom: 5, left: 5, top: 5),
+                                  padding: EdgeInsets.only(bottom: 5),
+                                  clipBehavior: Clip.antiAlias,
+                                  decoration: BoxDecoration(
+                                    color: AppColor.backgroundColor,
+                                    borderRadius: BorderRadius.circular(15.0),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.5),
+                                        spreadRadius: 1,
+                                        blurRadius: 8,
+                                        offset:
+                                        Offset(0, 3), // changes position of shadow
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Image.network(data.image,
+                                          height: width * 0.3,
+                                          fit: BoxFit.cover,
+                                          width: double.infinity),
+                                      Padding(
+                                        padding: EdgeInsets.symmetric(horizontal: 5),
+                                        child: Text(data.name,
+                                            style: TextStyle(
+                                                color: AppColor.textColor,
+                                                fontSize: 16),
+                                            maxLines: 2),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.symmetric(horizontal: 5),
+                                        child: Text("Category: ${data.category}",
+                                            style: TextStyle(
+                                                color: AppColor.greycolor,
+                                                fontSize: 13),
+                                            maxLines: 2),
+                                      ),
+
+                                      Padding(
+                                        padding: EdgeInsets.symmetric(horizontal: 5),
+                                        child: Text("Price: ${data.price}\$",
+                                            style: TextStyle(
+                                                color: AppColor.greycolor,
+                                                fontSize: 13),
+                                            maxLines: 2),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.symmetric(horizontal: 5),
+                                        child: Row(
+                                          children: [
+                                            Container(
+                                              width: 10,
+                                              height: 10,
+                                              margin: EdgeInsets.only(right: 5),
+                                              decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(100),
+                                                  color: data.available ? Colors.green : Colors.red
+                                              ),
+                                            ),
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Text(data.available ? "Available" : "Not Available",
+                                                    style: TextStyle(
+                                                        color: data.available ? Colors.green : Colors.red,
+                                                        fontSize: 13),
+                                                    maxLines: 2),
+                                              ],
+                                            ),
+
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            );
-                          });
+                              );
+                            });
+                      } else {
+                        return Center(
+                          child: constWidget().circularProgressInd(nodatafound: true),
+                        );
+                      }
                     } else {
                       return Center(
-                        child: constWidget().circularProgressInd(nodatafound: true),
+                        child: constWidget().circularProgressInd(nodatafound: false),
                       );
                     }
-                  } else {
-                    return Center(
-                      child: constWidget().circularProgressInd(nodatafound: false),
-                    );
-                  }
-                }),
+                  }),
+            ),
           ],
         ),
       ),

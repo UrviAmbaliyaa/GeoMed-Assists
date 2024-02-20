@@ -5,6 +5,9 @@ import 'package:geomed_assist/Models/user_model.dart';
 
 UserModel? currentUserDocument;
 
+String selectedZipCode = '';
+
+
 const earthRadius = 6371; // Radius of the Earth in kilometers
 
 double calculateDistance(
@@ -27,7 +30,7 @@ double calculateDistance(
     final c = 2 * atan2(sqrt(a), sqrt(1 - a));
 
     // Distance in kilometers
-    final distance = earthRadius * c;
+    final distance = (earthRadius * c)*0.62;
 
     return double.parse(distance.toStringAsFixed(2));
   } else {

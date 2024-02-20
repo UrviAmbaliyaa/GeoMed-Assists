@@ -166,7 +166,7 @@ class _shopDetailScreenState extends State<shopDetailScreen> {
                         ],
                       ),
                       Text(
-                          "${calculateDistance(currentUserDocument!.latLong, currentUserDocument!.longitude, widget.data.latLong, widget.data.longitude)} km",
+                          "${calculateDistance(currentUserDocument!.latLong, currentUserDocument!.longitude, widget.data.latLong, widget.data.longitude)} mile",
                           style: TextStyle(
                               color: AppColor.greycolor,
                               fontSize: 13,
@@ -335,16 +335,12 @@ class _productsPageState extends State<productsPage> {
                           onTap: () {
                             showBottomSheet(
                                 context: context,
-                                clipBehavior: Clip.antiAlias,
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.only(
                                         topLeft: Radius.circular(50),
                                         topRight: Radius.circular(50))),
-                                builder: (context) {
-                                  return Container(
-                                      height: MediaQuery.of(context).size.height *
-                                          0.7,
-                                      child: productDetail(data: data));
+                                builder: (context2) {
+                                  return productDetail(data: data);
                                 });
                           },
                           child: Container(

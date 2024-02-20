@@ -90,10 +90,12 @@ class Firebase_Quires {
   Stream<ProductList?> getProductDocuments(
       {required DocumentReference shopRef, required bool available, required bool forCategories,String? cateName}) async* {
     try {
+      print("productListFromFB ================================>");
       var productListFromFB = await FirebaseFirestore.instance
           .collection("product")
           .where(forCategories?"categoryRef": "shopReference", isEqualTo: shopRef)
           .get();
+      print("productListFromFB ------>$productListFromFB");
       List<Product> productList = [];
       for (var doc in productListFromFB.docs) {
         Map<String, dynamic> data = doc.data();
@@ -157,13 +159,18 @@ class Firebase_Quires {
   }
 
   Stream<List<UserModel>?> getShopKeepe_Doctore(
-      {required bool shopkeeper}) async* {
+      {required bool shopkeeper,required bool fromMap}) async* {
     try {
-      var user = await FirebaseFirestore.instance
+      var user = !fromMap ? await FirebaseFirestore.instance
           .collection("User")
           .where("approve", isEqualTo: true)
           .where("type", isEqualTo: shopkeeper ? "ShopKeeper" : "Doctore")
-          .get();
+          .where('zipCode',isEqualTo: selectedZipCode).get() :
+      await FirebaseFirestore.instance
+          .collection("User")
+          .where("approve", isEqualTo: true)
+          .where("type", isEqualTo: shopkeeper ? "ShopKeeper" : "Doctore").get();
+
 
       List<UserModel> userList = [];
       for (var doc in user.docs) {
@@ -189,6 +196,7 @@ class Firebase_Quires {
       required String description,
       required bool available,
       required String crudType,
+      required String status,
       required DocumentReference categoryReferance
 
       }) async {
@@ -202,6 +210,7 @@ class Firebase_Quires {
             'available': available,
             'categoryRef': categoryReferance,
             'shopReference': currentUserDocument!.reference,
+             'status' : "Accept"
           }
         : {};
     switch (crudType) {

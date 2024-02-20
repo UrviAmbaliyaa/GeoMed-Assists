@@ -35,18 +35,16 @@ class _productDetailState extends State<productDetail> {
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: AppColor.textColor,
-      body: SingleChildScrollView(
-        controller: scrollController,
-        padding: EdgeInsets.only(top: 20),
-        child: Container(
-          width: width,
-          padding: EdgeInsets.only(left: 20, right: 20, top: 10),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20),
-              topRight: Radius.circular(20),
-            ),
+      body: Container(
+        width: width,
+        padding: EdgeInsets.only(left: 20, right: 20, top: 10),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
           ),
+        ),
+        child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
@@ -174,7 +172,7 @@ class _productDetailState extends State<productDetail> {
                   Text(widget.data.description,
                       style: TextStyle(
                           color: AppColor.backgroundColor, fontSize: 13)),
-
+          
                   SizedBox(height: 30),
                   currentUserDocument!.type != "Admin" &&
                       currentUserDocument!.type != "ShopKeeper"
@@ -276,7 +274,7 @@ class _productDetailState extends State<productDetail> {
                   SizedBox(height: 80),
                 ],
               ),
-        
+          
             ],
           ),
         ),

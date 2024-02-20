@@ -22,16 +22,17 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
-  final emailController = TextEditingController();
-  final namecontroller = TextEditingController();
-  final agecontroller = TextEditingController();
-  final weightcontroller = TextEditingController();
-  final gendercontroller = TextEditingController();
-  final password = TextEditingController();
-  final confirmpassword = TextEditingController();
-  final addressController = TextEditingController();
-  final contactNumberController = TextEditingController();
-  final formKey = GlobalKey<FormState>();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController namecontroller = TextEditingController();
+  TextEditingController agecontroller = TextEditingController();
+  TextEditingController weightcontroller = TextEditingController();
+  TextEditingController gendercontroller = TextEditingController();
+  TextEditingController password = TextEditingController();
+  TextEditingController confirmpassword = TextEditingController();
+  TextEditingController addressController = TextEditingController();
+  TextEditingController contactNumberController = TextEditingController();
+  TextEditingController zipCodeController = TextEditingController();
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
   bool passwordvisiblity = false;
   bool confirmpasswordvisiblity = false;
   bool isLoading = false;
@@ -44,6 +45,7 @@ class _SignUpState extends State<SignUp> {
       agecontroller.text = currentUserDocument!.age!;
       password.text = "123456";
       confirmpassword.text = "123456";
+      zipCodeController.text = currentUserDocument!.zipCode!;
       weightcontroller.text = currentUserDocument!.weight!;
       gendercontroller.text = currentUserDocument!.gender!;
       addressController.text = currentUserDocument!.address!;
@@ -72,6 +74,7 @@ class _SignUpState extends State<SignUp> {
         "latLong" :  location.latitude,
         "longitude" :  location.longitude,
         "imagePath" :  networkImagepath,
+        "zipCode" :  zipCodeController.text,
         "approve" : true
       };
       !widget.editdcreen? mapdata.addAll({"favoriteReference": []}):null;
@@ -281,7 +284,7 @@ class _SignUpState extends State<SignUp> {
                                             keybordType:
                                             TextInputType.visiblePassword,
                                             password: true,
-                                            passwordvisiblity: passwordvisiblity,
+                                            passwordvisiblity: !passwordvisiblity,
                                             sufixIcon: InkWell(
                                                 onTap: () {
                                                   setState(() {
@@ -317,7 +320,7 @@ class _SignUpState extends State<SignUp> {
                                             TextInputType.visiblePassword,
                                             password: true,
                                             passwordvisiblity:
-                                            confirmpasswordvisiblity,
+                                            !confirmpasswordvisiblity,
                                             sufixIcon: InkWell(
                                                 onTap: () {
                                                   setState(() {

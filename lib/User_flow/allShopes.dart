@@ -165,7 +165,7 @@ class _allShopesState extends State<allShopes> {
                                                   (data.rate! / data.ratedUser!)),
                                           Expanded(
                                             child: Text(
-                                                "${calculateDistance(currentUserDocument!.latLong, currentUserDocument!.longitude, data.latLong, data.longitude)} km",
+                                                "${calculateDistance(currentUserDocument!.latLong, currentUserDocument!.longitude, data.latLong, data.longitude)} mile",
                                                 textAlign: TextAlign.end,
                                                 style: TextStyle(
                                                     color: AppColor.greycolor,

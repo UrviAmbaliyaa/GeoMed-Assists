@@ -5,6 +5,7 @@ import 'package:geomed_assist/Doctor_flow/bottomsheet_doctor.dart';
 import 'package:geomed_assist/Firebase/firebaseAuthentications.dart';
 import 'package:geomed_assist/Store_flow/bottomNavigationBar_Shop.dart';
 import 'package:geomed_assist/User_flow/BottonTabbar.dart';
+import 'package:geomed_assist/User_flow/map.dart';
 import 'package:geomed_assist/constants/Appcolors.dart';
 import 'package:geomed_assist/constants/constantdata.dart';
 import 'package:hive/hive.dart';
@@ -32,11 +33,12 @@ class _splashScreenState extends State<splashScreen> {
     var Screens;
     if (userdata != null && userdata.length != 0) {
       String id = await userdata.get('refID');
-      if(id != null){
+      print("id ----->$id");
+      if(id.trim().length != 0){
         await firebase_auth().getUserInfo(id: id);
         switch (currentUserDocument!.type) {
           case "User":
-            Screens = bottomTabBar();
+            Screens = MapScreen();
           case "ShopKeeper":
             Screens = shop_bottomNavigationbar();
           case "Doctore":

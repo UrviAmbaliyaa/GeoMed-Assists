@@ -8,6 +8,7 @@ import 'package:geomed_assist/Models/ChatModel.dart';
 import 'package:geomed_assist/Models/user_model.dart';
 import 'package:geomed_assist/Store_flow/bottomNavigationBar_Shop.dart';
 import 'package:geomed_assist/User_flow/BottonTabbar.dart';
+import 'package:geomed_assist/User_flow/map.dart';
 import 'package:geomed_assist/constants/Appcolors.dart';
 import 'package:geomed_assist/constants/constantdata.dart';
 import 'package:intl/intl.dart';
@@ -121,7 +122,7 @@ class _messageScreenState extends State<messageScreen> {
           var Screens;
           switch (currentUserDocument!.type) {
             case "User":
-              Screens = bottomTabBar();
+              Screens = MapScreen();
             case "ShopKeeper":
               Screens = shop_bottomNavigationbar();
             case "Doctore":

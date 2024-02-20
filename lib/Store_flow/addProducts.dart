@@ -15,8 +15,10 @@ import 'package:geomed_assist/constants/dataFile.dart';
 class addProduct extends StatefulWidget {
   final bool edit;
   final Product? product;
+  final List<categoryModel>? categories;
 
-  const addProduct({super.key, required this.edit, this.product});
+  const addProduct(
+      {super.key, required this.edit, this.product, this.categories});
 
   @override
   State<addProduct> createState() => _addProductState();
@@ -29,9 +31,6 @@ class _addProductState extends State<addProduct> {
   final TextEditingController aboutController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   bool isLoading = false;
-  List<categoryModel>? categories = [];
-  // List<String> catList =
-  //     Datas().category.map((e) => e['name'].toString()).toList();
 
   @override
   void dispose() {
@@ -40,27 +39,18 @@ class _addProductState extends State<addProduct> {
     imagepath = null;
   }
 
-  initalizeData() {
+  initalizeData() async {
     !widget.edit
         ? setState(() {
-            categorylController.text = categories!.first.name;
+            categorylController.text = widget.categories!.map((e) => e.name.toString()).toList().first;
           })
         : setState(() {
             nameController.text = widget.product!.name;
-            categorylController.text = categories!.where((element) => element.refereance == widget.product!.category).first.name;
+            categorylController.text = widget.product!.category;
             priceController.text = widget.product!.price.toString();
             aboutController.text = widget.product!.description;
           });
-  }
 
-  getCategories() async {
-    List<categoryModel>? categories = [];
-    Stream<List<categoryModel>?> datas = await Firebase_Quires().getCategory();
-    await for (List<categoryModel>? event in datas) {
-      setState(() {
-        categories = event;
-      });
-    }
   }
 
   @override
@@ -181,7 +171,10 @@ class _addProductState extends State<addProduct> {
                   ),
                   style: TextStyle(color: AppColor.textColor),
                   dropdownColor: AppColor.backgroundColor.withOpacity(0.8),
-                  items: categories!.map((e) => e.name.toString()).toList().map<DropdownMenuItem<String>>((String value) {
+                  items: widget.categories!
+                      .map((e) => e.name.toString())
+                      .toList()
+                      .map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
                       child: Text(value),
@@ -268,7 +261,11 @@ class _addProductState extends State<addProduct> {
                                   .uploadImage(File(imagepath!), product: true);
                           await Firebase_Quires().crudOperations(
                               available: true,
-                              categoryReferance: categories!.where((element) => element.name == categorylController.text).first.refereance,
+                              categoryReferance: widget.categories!
+                                  .where((element) =>
+                                      element.name == categorylController.text)
+                                  .first
+                                  .refereance,
                               crudType: widget.edit ? "update" : "add",
                               image: imagepathFB!,
                               description: aboutController.text,
@@ -276,7 +273,9 @@ class _addProductState extends State<addProduct> {
                               price: priceController.text,
                               productID: widget.edit
                                   ? widget.product!.referenace.id
-                                  : "0");
+                                  : "0",
+                              status: widget.edit ? "Accept":"Pending",
+                          );
                           nameController.clear();
                           categorylController.clear();
                           priceController.clear();

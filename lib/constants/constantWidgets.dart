@@ -20,8 +20,6 @@ class constWidget {
   }
 
   Logout(context) async {
-    // var userdata = await Hive.box("User");
-
     firebase_auth().SignOut();
     var userdata = await Hive.box("User");
     userdata.clear();

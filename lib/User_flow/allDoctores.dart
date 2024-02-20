@@ -164,7 +164,7 @@ class _allDoctoresState extends State<allDoctores> {
                                               initValue:
                                                   (data.rate! / data.rate!)),
                                           Text(
-                                              "${calculateDistance(currentUserDocument!.latLong, currentUserDocument!.longitude, data.latLong, data.longitude)} km",
+                                              "${calculateDistance(currentUserDocument!.latLong, currentUserDocument!.longitude, data.latLong, data.longitude)} mile",
                                               textAlign: TextAlign.end,
                                               style: TextStyle(
                                                   color: AppColor.greycolor,
