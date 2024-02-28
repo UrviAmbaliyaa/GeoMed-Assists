@@ -1,18 +1,15 @@
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geomed_assist/Authentication/sign_in.dart';
 import 'package:geomed_assist/Doctor_flow/bottomsheet_doctor.dart';
 import 'package:geomed_assist/Firebase/firebaseAuthentications.dart';
-import 'package:geomed_assist/User_flow/HomePage.dart';
 import 'package:geomed_assist/constants/Appcolors.dart';
 import 'package:geomed_assist/constants/ImagePicker.dart';
 import 'package:geomed_assist/constants/constantWidgets.dart';
 import 'package:geomed_assist/constants/constantdata.dart';
 import 'package:geomed_assist/constants/customTextField.dart';
-import 'package:hive/hive.dart';
 
 class SignUpAsDoctor extends StatefulWidget {
   final bool editdcreen;
@@ -125,9 +122,9 @@ class _SignUpAsDoctorState extends State<SignUpAsDoctor> {
         "breckstartTime": "${breckStartTime!.hour}:${breckStartTime!.minute}",
         "endtime":"${endTime!.hour}:${endTime!.minute}",
         "breckendTime":"${breackEndendTime!.hour}:${breackEndendTime!.minute}",
-        "approve" : widget.editdcreen? widget.editdcreen : true
+        "approve" : widget.editdcreen? widget.editdcreen : "Pending"
       };
-      !widget.editdcreen? mapdata.addAll({"favoriteReference": [],"availableSlot": []}):null;
+      !widget.editdcreen? mapdata.addAll({"favoriteReference": [],"availableSlot": [],"create": DateTime.now()}):null;
       !widget.editdcreen
           ? await firebase_auth().signUpWithEmailAndPassword(
               emailController.text, password.text, mapdata, context)
@@ -154,7 +151,7 @@ class _SignUpAsDoctorState extends State<SignUpAsDoctor> {
       confirmpassword.text = "123456";
       experiancecontroller.text = currentUserDocument!.exp!;
       degreececontroller.text = currentUserDocument!.degree!;
-      addressController.text = currentUserDocument!.address;
+      addressController.text = currentUserDocument!.address!;
       aboutUscontroller.text = currentUserDocument!.aboutUs!;
       zipCodeController.text = currentUserDocument!.zipCode!;
       contactNumberController.text = currentUserDocument!.contact!;

@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_advanced_calendar/flutter_advanced_calendar.dart';
 import 'package:geomed_assist/Firebase/firebase_quaries.dart';
 import 'package:geomed_assist/Models/rateModel.dart';
 import 'package:geomed_assist/Models/user_model.dart';
@@ -103,7 +102,7 @@ class _doctoreDetailState extends State<doctoreDetail> {
                   Icon(Icons.location_on_outlined,
                       color: AppColor.primaryColor, size: 25),
                   Expanded(
-                    child: Text(widget.doctor.address,
+                    child: Text(widget.doctor.address!,
                         style: TextStyle(
                             color: AppColor.greycolor, fontSize: 15)),
                   ),
@@ -205,7 +204,7 @@ class _doctoreDetailState extends State<doctoreDetail> {
               Text(widget.doctor.aboutUs!,
                   style: TextStyle(color: AppColor.textColor, fontSize: 13)),
               SizedBox(height: 10),
-              ElevatedButton(
+              currentUserDocument!.approve == "approve" ? ElevatedButton(
                   style: ButtonStyle(
                       minimumSize: MaterialStatePropertyAll(Size(width, 45)),
                       shape: MaterialStatePropertyAll(RoundedRectangleBorder(
@@ -229,8 +228,8 @@ class _doctoreDetailState extends State<doctoreDetail> {
                   },
                   child: Text("Ratting",
                       style: TextStyle(
-                          color: AppColor.textColor, fontSize: 18))),
-              StreamBuilder<RateList?>(
+                          color: AppColor.textColor, fontSize: 18))):SizedBox.shrink(),
+              currentUserDocument!.approve == "approve" ? StreamBuilder<RateList?>(
                   stream: Firebase_Quires()
                       .getRateDocuments(shopRef: widget.doctor.reference),
                   builder: (context, snapshot) {
@@ -326,7 +325,7 @@ class _doctoreDetailState extends State<doctoreDetail> {
                             .circularProgressInd(nodatafound: false),
                       );
                     }
-                  }),
+                  }):SizedBox.shrink(),
             ],
           ),
         ),

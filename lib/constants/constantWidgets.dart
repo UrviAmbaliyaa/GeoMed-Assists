@@ -1,13 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geomed_assist/Authentication/sign_in.dart';
-import 'package:geomed_assist/Doctor_flow/bottomsheet_doctor.dart';
 import 'package:geomed_assist/Firebase/firebaseAuthentications.dart';
-import 'package:geomed_assist/Store_flow/bottomNavigationBar_Shop.dart';
-import 'package:geomed_assist/User_flow/BottonTabbar.dart';
 import 'package:geomed_assist/constants/Appcolors.dart';
-import 'package:geomed_assist/constants/constantdata.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 
 class constWidget {
   showSnackbar(String message, context) {
@@ -21,8 +16,6 @@ class constWidget {
 
   Logout(context) async {
     firebase_auth().SignOut();
-    var userdata = await Hive.box("User");
-    userdata.clear();
     Navigator.of(context, rootNavigator: true).push(
       CupertinoPageRoute<bool>(
         fullscreenDialog: true,

@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:geomed_assist/Models/user_model.dart';
 import 'package:geomed_assist/constants/Appcolors.dart';
 import 'package:geomed_assist/constants/constantdata.dart';
-import 'package:hive/hive.dart';
 
 class Favorites extends StatefulWidget {
   final DocumentReference reference;
@@ -21,9 +21,13 @@ class _FavoritesState extends State<Favorites> {
         stream: currentUserDocument!.reference.snapshots(),
         builder: (context, snapshot) {
           if(snapshot.hasData){
-            List favorite = snapshot.data!.get("favoriteReference") != null
-                ? snapshot.data!.get("favoriteReference")
-                : [];
+            Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
+            data.addAll({
+              "reference":
+              snapshot.data!.reference
+            });
+            var userdata = UserModel.fromJson(data);
+            List favorite = userdata.favoriteReference!;
             return Padding(
               padding: const EdgeInsets.all(8.0),
               child: InkWell(

@@ -1,14 +1,9 @@
-import 'dart:developer';
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:geomed_assist/constants/constantWidgets.dart';
 import 'package:geomed_assist/constants/constantdata.dart';
-import 'package:hive/hive.dart';
-
 import '../Models/user_model.dart';
 
 class firebase_auth{
@@ -51,11 +46,8 @@ class firebase_auth{
         password: password,
       );
       await getUserInfo(id: value.user!.uid);
-      var userdata = await Hive.box("User");
-      userdata.put("refID",value.user!.uid);
       return true;
     } catch (e) {
-      print("E ----->$e");
       return false;
     }
   }

@@ -9,8 +9,7 @@ import 'package:geomed_assist/User_flow/favorites_shopes_&_doctores.dart';
 import 'package:geomed_assist/User_flow/map.dart';
 import 'package:geomed_assist/constants/Appcolors.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:permission_handler/permission_handler.dart';
-int selectedIndex = 0;
+
 class bottomTabBar extends StatefulWidget {
   const bottomTabBar({super.key});
 
@@ -24,7 +23,7 @@ class _bottomTabBarState extends State<bottomTabBar> {
     CupertinoIcons.chat_bubble,
     Icons.favorite_border,
   ];
-
+  int selectedIndex = 0;
   List manuIconsPages = [homePage(), allChates(), favorits()];
   List manuIconsName = ["Home", "Chat", "Favorites"];
 

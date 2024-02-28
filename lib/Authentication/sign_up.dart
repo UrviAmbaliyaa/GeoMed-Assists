@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
@@ -11,7 +12,6 @@ import 'package:geomed_assist/constants/ImagePicker.dart';
 import 'package:geomed_assist/constants/constantWidgets.dart';
 import 'package:geomed_assist/constants/constantdata.dart';
 import 'package:geomed_assist/constants/customTextField.dart';
-import 'package:hive/hive.dart';
 
 class SignUp extends StatefulWidget {
   final bool editdcreen;
@@ -24,14 +24,9 @@ class SignUp extends StatefulWidget {
 class _SignUpState extends State<SignUp> {
   TextEditingController emailController = TextEditingController();
   TextEditingController namecontroller = TextEditingController();
-  TextEditingController agecontroller = TextEditingController();
-  TextEditingController weightcontroller = TextEditingController();
-  TextEditingController gendercontroller = TextEditingController();
   TextEditingController password = TextEditingController();
   TextEditingController confirmpassword = TextEditingController();
-  TextEditingController addressController = TextEditingController();
   TextEditingController contactNumberController = TextEditingController();
-  TextEditingController zipCodeController = TextEditingController();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   bool passwordvisiblity = false;
   bool confirmpasswordvisiblity = false;
@@ -42,13 +37,9 @@ class _SignUpState extends State<SignUp> {
     setState(() {
       emailController.text = currentUserDocument!.email;
       namecontroller.text = currentUserDocument!.name;
-      agecontroller.text = currentUserDocument!.age!;
       password.text = "123456";
       confirmpassword.text = "123456";
-      zipCodeController.text = currentUserDocument!.zipCode!;
-      weightcontroller.text = currentUserDocument!.weight!;
-      gendercontroller.text = currentUserDocument!.gender!;
-      addressController.text = currentUserDocument!.address!;
+      contactNumberController.text = currentUserDocument!.contact!;
     });
   }
 
@@ -57,9 +48,6 @@ class _SignUpState extends State<SignUp> {
       setState(() {
         isLoading = true;
       });
-      List<Location> locations =
-          await locationFromAddress(addressController.text);
-      Location location = locations.first;
       var networkImagepath = imagepath != null
           ? await firebase_auth().uploadImage(File(imagepath!))
           : currentUserDocument!.imagePath;
@@ -67,17 +55,11 @@ class _SignUpState extends State<SignUp> {
         "type" :  "User",
         "name" :  namecontroller.text,
         "email" :  emailController.text,
-        "gender" :  gendercontroller.text,
-        "age" :  agecontroller.text,
-        "weight" :  weightcontroller.text,
-        "address" :  addressController.text,
-        "latLong" :  location.latitude,
-        "longitude" :  location.longitude,
         "imagePath" :  networkImagepath,
-        "zipCode" :  zipCodeController.text,
-        "approve" : true
+        "cantact": contactNumberController.text,
+        "approve" :  widget.editdcreen? widget.editdcreen : "Accepted"
       };
-      !widget.editdcreen? mapdata.addAll({"favoriteReference": []}):null;
+      !widget.editdcreen? mapdata.addAll({"favoriteReference": [],"create": DateTime.now()}):null;
       !widget.editdcreen
           ? await firebase_auth().signUpWithEmailAndPassword(
           emailController.text, password.text, mapdata, context)
@@ -87,10 +69,6 @@ class _SignUpState extends State<SignUp> {
         emailController.clear();
         password.clear();
         confirmpassword.clear();
-        gendercontroller.clear();
-        agecontroller.clear();
-        weightcontroller.clear();
-        addressController.clear();
         imagepath = null;
         isLoading = false;
       });
@@ -130,6 +108,7 @@ class _SignUpState extends State<SignUp> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
+
     return Scaffold(
       backgroundColor: AppColor.purplecolor,
       body: Stack(
@@ -152,7 +131,7 @@ class _SignUpState extends State<SignUp> {
                 children: [
                   Container(
                     width: double.infinity,
-                    height: widget.editdcreen == false? width * 0.4 : width * 0.1 ,
+                    height: width * 0.4,
                     alignment: Alignment.bottomCenter,
                   ),
                   Form(
@@ -343,11 +322,14 @@ class _SignUpState extends State<SignUp> {
                                             },
                                           ),
                                           SizedBox(height: 15),
+
+                                          SizedBox(height: 15),
+
                                         ],
                                       ):SizedBox.shrink(),
                                       Row(
                                         children: [
-                                          Text("Address",
+                                          Text("Contact",
                                               style: TextStyle(
                                                   fontSize: 18,
                                                   color: AppColor.textColor)),
@@ -355,148 +337,26 @@ class _SignUpState extends State<SignUp> {
                                       ),
                                       customeTextFormField(
                                         autofillHint: [
-                                          AutofillHints.fullStreetAddress
+                                          AutofillHints.telephoneNumber
                                         ],
-                                        contoller: addressController,
-                                        hintTest: 'Address',
-                                        keybordType:
-                                            TextInputType.streetAddress,
+                                        contoller: contactNumberController,
+                                        hintTest: 'Contact Number',
+                                        keybordType: TextInputType.number,
                                         password: false,
                                         passwordvisiblity: false,
                                         sufixIcon: SizedBox.shrink(),
                                         validation: (value) {
-                                          if (addressController.text == '') {
+                                          if (contactNumberController.text ==
+                                              '') {
                                             return 'This is a required field';
+                                          } else if (contactNumberController
+                                              .text
+                                              .trim()
+                                              .length <
+                                              10) {
+                                            return 'contact Number length should be 10';
                                           }
                                         },
-                                      ),
-                                      SizedBox(height: 15),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text("Gender",
-                                                  style: TextStyle(
-                                                      fontSize: 18,
-                                                      color:
-                                                          AppColor.textColor)),
-                                              Container(
-                                                width: width * 0.23,
-                                                child: customeTextFormField(
-                                                  autofillHint: [
-                                                    AutofillHints.gender
-                                                  ],
-                                                  contoller: gendercontroller,
-                                                  hintTest: 'Gender',
-                                                  keybordType:
-                                                      TextInputType.name,
-                                                  password: false,
-                                                  passwordvisiblity: false,
-                                                  sufixIcon: SizedBox.shrink(),
-                                                  validation: (value) {
-                                                    if (gendercontroller.text ==
-                                                        '') {
-                                                      return 'This is a required field';
-                                                    } else if (!(gendercontroller
-                                                                .text
-                                                                .trim()
-                                                                .toUpperCase() ==
-                                                            "FEMALE" ||
-                                                        gendercontroller.text
-                                                                .trim()
-                                                                .toUpperCase() ==
-                                                            "MALE" ||
-                                                        gendercontroller.text
-                                                                .trim()
-                                                                .toUpperCase() ==
-                                                            "OTHER")) {
-                                                      return "The Gender should be Female, male or Other";
-                                                    }
-                                                  },
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text("Age",
-                                                  style: TextStyle(
-                                                      fontSize: 18,
-                                                      color:
-                                                          AppColor.textColor)),
-                                              Container(
-                                                width: width * 0.23,
-                                                child: customeTextFormField(
-                                                  autofillHint: [
-                                                    AutofillHints.countryCode
-                                                  ],
-                                                  contoller: agecontroller,
-                                                  hintTest: 'Age',
-                                                  keybordType:
-                                                      TextInputType.number,
-                                                  password: false,
-                                                  passwordvisiblity: false,
-                                                  sufixIcon: SizedBox.shrink(),
-                                                  validation: (value) {
-                                                    var regs =
-                                                        RegExp(r'^[0-9]+$');
-                                                    if (agecontroller.text ==
-                                                        '') {
-                                                      return 'This is a required field';
-                                                    } else if (!regs.hasMatch(
-                                                        agecontroller.text)) {
-                                                      return "Invalide value.";
-                                                    }
-                                                  },
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text("Weight",
-                                                  style: TextStyle(
-                                                      fontSize: 18,
-                                                      color:
-                                                          AppColor.textColor)),
-                                              Container(
-                                                width: width * 0.25,
-                                                child: customeTextFormField(
-                                                  autofillHint: [
-                                                    AutofillHints.countryCode
-                                                  ],
-                                                  contoller: weightcontroller,
-                                                  hintTest: '25 km',
-                                                  keybordType:
-                                                      TextInputType.number,
-                                                  password: false,
-                                                  passwordvisiblity: false,
-                                                  sufixIcon: SizedBox.shrink(),
-                                                  validation: (value) {
-                                                    var reg = RegExp(
-                                                        r'^[0-9]+(?:\.[0-9]+)?$');
-                                                    if (weightcontroller.text ==
-                                                        '') {
-                                                      return 'This is a required field';
-                                                    } else if (!reg.hasMatch(
-                                                        weightcontroller
-                                                            .text)) {
-                                                      return "Invalide value.";
-                                                    }
-                                                  },
-                                                ),
-                                              ),
-                                            ],
-                                          )
-                                        ],
                                       ),
                                     ],
                                   ),

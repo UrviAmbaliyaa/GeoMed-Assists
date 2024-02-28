@@ -12,7 +12,6 @@ import 'package:geomed_assist/constants/ImagePicker.dart';
 import 'package:geomed_assist/constants/constantWidgets.dart';
 import 'package:geomed_assist/constants/constantdata.dart';
 import 'package:geomed_assist/constants/customTextField.dart';
-import 'package:hive/hive.dart';
 
 class SignUpAsShopkeeper extends StatefulWidget {
   final bool editdcreen;
@@ -96,7 +95,6 @@ class _SignUpAsShopkeeperState extends State<SignUpAsShopkeeper> {
   }
 
   Future<void> getAddressLatLng() async {
-    print("addressController.text ----->${addressController.text}");
     try {
       List<Location> locations =
           await locationFromAddress(addressController.text);
@@ -119,8 +117,9 @@ class _SignUpAsShopkeeperState extends State<SignUpAsShopkeeper> {
         "breckstartTime": "${breckStartTime!.hour}:${breckStartTime!.minute}",
         "endtime":"${endTime!.hour}:${endTime!.minute}",
         "breckendTime":"${breackEndendTime!.hour}:${breackEndendTime!.minute}",
-        "approve" :  widget.editdcreen? widget.editdcreen : true
+        "approve" :  widget.editdcreen? widget.editdcreen : "Pending"
       };
+      !widget.editdcreen? mapdata.addAll({"favoriteReference": [],"availableSlot": [],"create": DateTime.now()}):null;
       !widget.editdcreen
           ? await firebase_auth().signUpWithEmailAndPassword(
               emailController.text, password.text, mapdata, context)
@@ -157,7 +156,7 @@ class _SignUpAsShopkeeperState extends State<SignUpAsShopkeeper> {
       namecontroller.text = currentUserDocument!.name;
       password.text = "123456";
       confirmpassword.text = "123456";
-      addressController.text = currentUserDocument!.address;
+      addressController.text = currentUserDocument!.address!;
       aboutUscontroller.text = currentUserDocument!.aboutUs!;
       zipCodeController.text = currentUserDocument!.zipCode!;
       contactNumberController.text = currentUserDocument!.contact!;

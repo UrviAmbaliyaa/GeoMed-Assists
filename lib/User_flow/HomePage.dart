@@ -53,22 +53,19 @@ class _homePageState extends State<homePage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text("Disease", style: title),
-                    snapshot.hasData && snapshot.data!.length > 10
-                        ? InkWell(
+                   InkWell(
                             onTap: () =>
                                 Navigator.of(context, rootNavigator: true).push(
                               CupertinoPageRoute<bool>(
                                 fullscreenDialog: true,
                                 builder: (BuildContext context) =>
-                                    new allCategories(
-                                        categories: snapshot.data!),
+                                    new allCategories(),
                               ),
                             ),
                             child: Text("See All",
                                 style: TextStyle(
                                     color: AppColor.textColor, fontSize: 13)),
-                          )
-                        : SizedBox.shrink(),
+                          ),
                   ],
                 ),
                 Container(
@@ -175,8 +172,7 @@ class _homePageState extends State<homePage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text("Shops", style: title),
-                    snapshot.hasData && snapshot.data!.length < 10
-                        ? InkWell(
+                    InkWell(
                             onTap: () =>
                                 Navigator.of(context, rootNavigator: true).push(
                               CupertinoPageRoute<bool>(
@@ -189,7 +185,6 @@ class _homePageState extends State<homePage> {
                                 style: TextStyle(
                                     color: AppColor.textColor, fontSize: 13)),
                           )
-                        : SizedBox.shrink(),
                   ],
                 ),
                 Container(
@@ -210,7 +205,7 @@ class _homePageState extends State<homePage> {
                             var data = snapshot.data![index];
                             var visiblity = serachingController.text.isNotEmpty?
                                     (data.name.toUpperCase().contains(serachingController.text.toUpperCase()) ||
-                                        data.address.toUpperCase().contains(serachingController.text.toUpperCase()) ||
+                                        data.address!.toUpperCase().contains(serachingController.text.toUpperCase()) ||
                                         data.distanc.toString().contains(serachingController.text)
                                     ): true;
                             return Visibility(
@@ -269,7 +264,7 @@ class _homePageState extends State<homePage> {
                                                           color: AppColor.textColor,
                                                           fontSize: 16),
                                                       maxLines: 1),
-                                                  Text(data.address,
+                                                  Text(data.address!,
                                                       style: TextStyle(
                                                           color: AppColor.greycolor,
                                                           fontSize: 13),
@@ -341,8 +336,7 @@ class _homePageState extends State<homePage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text("Doctors", style: title),
-                    snapshot.hasData && snapshot.data!.length < 10
-                        ? InkWell(
+                    InkWell(
                             onTap: () =>
                                 Navigator.of(context, rootNavigator: true).push(
                               CupertinoPageRoute<bool>(
@@ -354,8 +348,7 @@ class _homePageState extends State<homePage> {
                             child: Text("See All",
                                 style: TextStyle(
                                     color: AppColor.textColor, fontSize: 13)),
-                          )
-                        : SizedBox.shrink(),
+                          ),
                   ],
                 ),
                 Container(
@@ -376,7 +369,7 @@ class _homePageState extends State<homePage> {
                             var data = snapshot.data![index];
                             var visiblity = serachingController.text.isNotEmpty?
                             (data.name.toUpperCase().contains(serachingController.text.toUpperCase()) ||
-                                data.address.toUpperCase().contains(serachingController.text.toUpperCase()) ||
+                                data.address!.toUpperCase().contains(serachingController.text.toUpperCase()) ||
                                 data.degree!.toUpperCase().contains(serachingController.text.toUpperCase()) ||
                                 data.distanc.toString().contains(serachingController.text) ||
                                 data.exp!.toUpperCase().contains(serachingController.text.toUpperCase())
@@ -652,7 +645,7 @@ class _homePageState extends State<homePage> {
                               style: TextStyle(
                                   color: AppColor.textColor, fontSize: 23)),
                           Text(
-                            currentUserDocument!.address,
+                            currentUserDocument!.address!,
                             style: TextStyle(
                               color: AppColor.greycolor,
                               fontSize: 15,

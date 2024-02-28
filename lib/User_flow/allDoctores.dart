@@ -84,7 +84,7 @@ class _allDoctoresState extends State<allDoctores> {
                   var visiblity = serachingController.text.isNotEmpty
                       ? (data.name.toUpperCase().contains(
                               serachingController.text.toUpperCase()) ||
-                          data.address.toUpperCase().contains(
+                          data.address!.toUpperCase().contains(
                               serachingController.text.toUpperCase()) ||
                           data.degree!.toUpperCase().contains(
                               serachingController.text.toUpperCase()) ||
@@ -147,7 +147,7 @@ class _allDoctoresState extends State<allDoctores> {
                                             fontWeight: FontWeight.w400)),
                                     SizedBox(
                                       width: width * 0.57,
-                                      child: Text(data.address,
+                                      child: Text(data.address!,
                                           style: TextStyle(
                                               color: AppColor.greycolor,
                                               fontSize: 13),

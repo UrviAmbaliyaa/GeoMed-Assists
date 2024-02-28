@@ -37,11 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   image_picker: ^1.0.7
   geocoding:
-  hive:
-  hive_flutter:
   google_nav_bar: ^5.0.6
-  flutter_advanced_calendar:
-  permission_handler:
   google_maps_flutter:
   geolocator:
   flutter_rating_bar:
@@ -52,6 +48,8 @@ dependencies:
   firebase_storage: ^11.6.5
   intl:
   flutter_phone_direct_caller:
+  animated_toggle_switch:
+  expandable:
 
 dev_dependencies:
   flutter_test:

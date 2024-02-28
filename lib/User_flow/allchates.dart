@@ -6,9 +6,6 @@ import 'package:geomed_assist/Models/user_model.dart';
 import 'package:geomed_assist/constants/Appcolors.dart';
 import 'package:geomed_assist/constants/constantWidgets.dart';
 import 'package:geomed_assist/constants/constantdata.dart';
-import 'package:geomed_assist/constants/dataFile.dart';
-import 'package:geomed_assist/constants/rattingBar.dart';
-import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 
 import 'message.dart';

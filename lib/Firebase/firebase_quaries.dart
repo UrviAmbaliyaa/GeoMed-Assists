@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geomed_assist/Models/ChatModel.dart';
 import 'package:geomed_assist/Models/ProductRequest.dart';
@@ -7,8 +5,6 @@ import 'package:geomed_assist/Models/categoryModel.dart';
 import 'package:geomed_assist/Models/product.dart';
 import 'package:geomed_assist/Models/rateModel.dart';
 import 'package:geomed_assist/Models/user_model.dart';
-import 'package:geomed_assist/Store_flow/addProducts.dart';
-
 import '../constants/constantdata.dart';
 
 class Firebase_Quires {
@@ -25,10 +21,10 @@ class Firebase_Quires {
           Map<String, dynamic> data = user.data() as Map<String, dynamic>;
           data.addAll({'reference': user.reference});
           var docdata = await UserModel.fromJson(data);
-          shopkeeper && docdata.type == "ShopKeeper" && docdata.approve == true
+          shopkeeper && docdata.type == "ShopKeeper" && docdata.approve == "Accepted"
               ? userList.add(docdata)
               : null;
-          !shopkeeper && docdata.type == "Doctore" && docdata.approve == true
+          !shopkeeper && docdata.type == "Doctore" && docdata.approve == "Accepted"
               ? userList.add(docdata)
               : null;
         }
@@ -93,7 +89,7 @@ class Firebase_Quires {
       print("productListFromFB ================================>");
       var productListFromFB = await FirebaseFirestore.instance
           .collection("product")
-          .where(forCategories?"categoryRef": "shopReference", isEqualTo: shopRef)
+          .where(forCategories?"categoryRef": "shopReference", isEqualTo: shopRef).where("status",isEqualTo:"Accept")
           .get();
       print("productListFromFB ------>$productListFromFB");
       List<Product> productList = [];
@@ -178,7 +174,7 @@ class Firebase_Quires {
         data.addAll({"reference": doc.reference});
         userList.add(UserModel.fromJson(data as Map<String, dynamic>));
       }
-      userList.sort((a, b) => a.distanc.compareTo(b.distanc));
+      userList.sort((a, b) => a.distanc!.compareTo(b.distanc!));
       yield userList;
     } catch (e) {
       print("Error fetching products: $e");

@@ -1,10 +1,13 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:geomed_assist/Admin_Panel/categories_add.dart';
 import 'package:geomed_assist/Firebase/firebase_quaries.dart';
 import 'package:geomed_assist/Models/categoryModel.dart';
 import 'package:geomed_assist/Models/product.dart';
 import 'package:geomed_assist/User_flow/shopDetailScreen.dart';
 import 'package:geomed_assist/constants/Appcolors.dart';
 import 'package:geomed_assist/constants/constantWidgets.dart';
+import 'package:geomed_assist/constants/constantdata.dart';
 import 'package:geomed_assist/constants/dataFile.dart';
 
 import '../productDetail.dart';
@@ -26,8 +29,69 @@ class _categoryDetailState extends State<categoryDetail> {
     var width = MediaQuery.of(context).size.width;
     return Scaffold(
         backgroundColor: AppColor.backgroundColor,
-        appBar: constWidget()
-            .appbar(context, Name: widget.category.name, backbutton: true),
+        appBar: AppBar(
+          backgroundColor: AppColor.backgroundColor,
+          elevation: 0,
+          primary: true,
+          leadingWidth: 70,
+          automaticallyImplyLeading: false,
+          leading: Align(
+            child: InkWell(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Icon(Icons.arrow_back,
+                    color: AppColor.textColor, size: 30)),
+          ),
+          centerTitle: true,
+          title: Text(
+            widget.category.name,
+            style: TextStyle(
+                color: AppColor.textColor,
+                fontSize: 18,
+                fontWeight: FontWeight.w500),
+            textAlign: TextAlign.center,
+          ),
+          actions: [
+            currentUserDocument!.type == "Admin"
+                ? CupertinoButton(
+              child: Stack(
+                children: [
+                  Container(
+                    width: 20,
+                    height: 20,
+                    margin: EdgeInsets.only(top: 5, right: 5),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        border: Border.all(
+                            color: Colors.white.withOpacity(0.6),
+                            width: 2)),
+                  ),
+                  Container(
+                      width: 25,
+                      height: 25,
+                      alignment: Alignment.topRight,
+                      child:
+                      Icon(Icons.edit, size: 20, color: Colors.white)),
+                ],
+              ),
+              onPressed: () async {
+                Navigator.of(context, rootNavigator: true).push(
+                  CupertinoPageRoute<bool>(
+                    fullscreenDialog: true,
+                    builder: (BuildContext context) => addCategories(
+                    edit: true,
+                    categories: widget.category,
+                    ),
+                  ),
+                );
+              },
+            )
+                : SizedBox.shrink()
+          ],
+        ),
+
+
         body: SingleChildScrollView(
           child: Container(
             width: width,
@@ -151,7 +215,7 @@ class _categoryDetailState extends State<categoryDetail> {
                                 snapshot.connectionState ==
                                     ConnectionState.done) {
                               if (snapshot.hasData &&
-                                  snapshot.data!.products.length != 0) {
+                                  snapshot.data!.products.length != 0 ) {
                                 var maindata = serachingController.text
                                             .trim()
                                             .length !=

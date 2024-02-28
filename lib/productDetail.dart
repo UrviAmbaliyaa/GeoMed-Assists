@@ -143,26 +143,27 @@ class _productDetailState extends State<productDetail> {
                                         "Shop Name: ${snapshot.data!.name}",
                                         style: TextStyle(
                                             color: AppColor.backgroundColor,
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w500),
+                                            fontSize: 15,
+                                        ),
                                       ),
                                       Text(
                                         "Address: ${snapshot.data!.address}",
                                         style: TextStyle(
                                             color: AppColor.backgroundColor,
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w500),
+                                            fontSize: 15,
+                                        ),
                                       ),
                                       Text(
                                           "contact Number: ${snapshot.data!.contact}",
                                           style: TextStyle(
-                                              color: AppColor.textColor,
+                                              color: AppColor.backgroundColor,
                                               fontSize: 13)),
                                       Text(
                                           "Working time: ${snapshot.data!.startTime} to ${snapshot.data!.endTime}",
                                           style: TextStyle(
-                                              color: AppColor.textColor,
+                                              color: AppColor.backgroundColor,
                                               fontSize: 13)),
+                                      SizedBox(height: 20)
                                     ],
                                   )
                                 : SizedBox.shrink();

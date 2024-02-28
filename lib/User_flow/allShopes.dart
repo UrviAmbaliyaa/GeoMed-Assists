@@ -29,7 +29,7 @@ class _allShopesState extends State<allShopes> {
             return element.name
                     .toUpperCase()
                     .contains(serachingController.text.toUpperCase()) ||
-                element.address
+                element.address!
                     .toUpperCase()
                     .contains(serachingController.text.toUpperCase()) ||
                 element.distanc.toString().contains(serachingController.text);
@@ -152,7 +152,7 @@ class _allShopesState extends State<allShopes> {
                                               color: AppColor.textColor,
                                               fontSize: 14),
                                           maxLines: 2),
-                                      Text(data.address,
+                                      Text(data.address!,
                                           style: TextStyle(
                                               color: AppColor.greycolor,
                                               fontSize: 13),

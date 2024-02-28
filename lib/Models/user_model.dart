@@ -4,10 +4,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geomed_assist/constants/constantdata.dart';
 
 class UserModel {
-  String address;
+  String? address;
   String? gender;
-  double latLong;
-  double longitude;
+  double? latLong;
+  double? longitude;
   double? rate;
   int? ratedUser;
   String? imagePath; // Nullable
@@ -26,17 +26,19 @@ class UserModel {
   String? breckendTime;
   String? lunchTime;
   String? zipCode;
-  bool approve;
-  double distanc;
+  String? cancelReason;
+  String approve;
+  double? distanc;
   List? availableSlot;
+  DateTime register;
   DocumentReference reference;
   List<DocumentReference>? favoriteReference;
 
   UserModel({
-    required this.address,
+    this.address,
     this.gender,
-    required this.latLong,
-    required this.longitude,
+    this.latLong,
+    this.longitude,
     this.rate,
     this.availableSlot,
     this.ratedUser,
@@ -56,19 +58,21 @@ class UserModel {
     this.endTime,
     this.breckendTime,
     this.lunchTime,
+    this.cancelReason,
     required this.approve,
-    required this.distanc,
+    this.distanc,
     required this.reference,
+    required this.register,
     this.favoriteReference = const [],
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-      address: json['address'],
+      address: json['address'] ?? '',
       gender: json['gender'],
-      latLong: json['latLong'].toDouble(),
-      longitude: json['longitude'].toDouble(),
-      rate: json['rate']?.toDouble() ?? 0.0,
+      latLong: json['latLong'] != null? json['latLong'].toDouble() : 0.0,
+      longitude: json['longitude'] != null ?json['longitude'].toDouble() : 0.0,
+      rate: json['rate'] != null ? json['rate']?.toDouble() : 0.0,
       ratedUser: json['ratedUser'] ?? 0,
       imagePath: json['imagePath'],
       name: json['name'],
@@ -86,15 +90,17 @@ class UserModel {
       endTime: json['endtime'] ?? '',
       breckendTime: json['breckendTime'] ?? '',
       lunchTime: json['lunchTime'],
-      approve: json['approve'] ?? false,
-      distanc: currentUserDocument != null
+      cancelReason: json['cancelReason'] ?? '',
+      approve: json['approve'],
+      distanc: json['latLong'] != null ? currentUserDocument != null
           ? calculateDistance(
               currentUserDocument!.latLong,
               currentUserDocument!.longitude,
               json['latLong'].toDouble(),
               json['longitude'].toDouble())
-          : 0,
+          : 0 ?? 0.0:0.0,
       reference: json['reference'],
+      register: json['register'].toDate(),
       availableSlot:json['availableSlot'] ?? [],
       favoriteReference: List<DocumentReference>.from(
               json['favoriteReference']?.map((x) => x) ?? []) ?? [],
@@ -126,9 +132,11 @@ class UserModel {
       'endtime': endTime,
       'breckendTime': breckendTime,
       'lunchTime': lunchTime,
+      'cancelReason': cancelReason,
       'approve': approve,
       'distanc': distanc,
       'reference': reference,
+      'register': register,
       'favoriteReference': favoriteReference!.map((x) => x) ?? [],
     };
   }

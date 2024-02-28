@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:geomed_assist/Admin_Panel/bottom_navigationBar/bottombar_Admin.dart';
 import 'package:geomed_assist/Authentication/forgotpassword.dart';
 import 'package:geomed_assist/Authentication/sign_up.dart';
 import 'package:geomed_assist/Authentication/signupAs.dart';
@@ -7,15 +9,13 @@ import 'package:geomed_assist/Doctor_flow/HomeScreen_doctore.dart';
 import 'package:geomed_assist/Doctor_flow/bottomsheet_doctor.dart';
 import 'package:geomed_assist/Firebase/firebaseAuthentications.dart';
 import 'package:geomed_assist/Store_flow/bottomNavigationBar_Shop.dart';
+import 'package:geomed_assist/UnAuthorized.dart';
 import 'package:geomed_assist/User_flow/BottonTabbar.dart';
 import 'package:geomed_assist/User_flow/map.dart';
 import 'package:geomed_assist/constants/Appcolors.dart';
 import 'package:geomed_assist/constants/constantWidgets.dart';
 import 'package:geomed_assist/constants/constantdata.dart';
 import 'package:geomed_assist/constants/customTextField.dart';
-import 'package:hive/hive.dart';
-
-import '../User_flow/HomePage.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({super.key});
@@ -148,11 +148,13 @@ class _SignInState extends State<SignIn> {
                               var Screens;
                               switch (currentUserDocument!.type) {
                                 case "User":
-                                  Screens = MapScreen();
+                                  Screens = currentUserDocument!.approve == "Accepted" ? MapScreen() :unAuthorized();
                                 case "ShopKeeper":
-                                  Screens = shop_bottomNavigationbar();
+                                  Screens = currentUserDocument!.approve == "Accepted" ? shop_bottomNavigationbar() :unAuthorized();
                                 case "Doctore":
-                                  Screens = bottomSheet_doctor();
+                                  Screens = currentUserDocument!.approve == "Accepted" ? bottomSheet_doctor() :unAuthorized();
+                                case "Admin":
+                                  Screens = admin_bottomTabBar();
                               }
                               Navigator.of(context, rootNavigator: true).push(
                                 CupertinoPageRoute<bool>(
@@ -161,6 +163,7 @@ class _SignInState extends State<SignIn> {
                                       Screens,
                                 ),
                               );
+
                             } else {
                               constWidget().showSnackbar(
                                   "Invalide Authentication Id and Password, Please Enter right Authentication Id and Password",

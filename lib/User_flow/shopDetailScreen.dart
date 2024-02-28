@@ -16,7 +16,6 @@ import 'package:geomed_assist/constants/constantdata.dart';
 import 'package:geomed_assist/constants/dataFile.dart';
 import 'package:geomed_assist/constants/rattingBar.dart';
 import 'package:geomed_assist/productDetail.dart';
-import 'package:hive/hive.dart';
 
 class shopDetailScreen extends StatefulWidget {
   final UserModel data;
@@ -101,7 +100,7 @@ class _shopDetailScreenState extends State<shopDetailScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(widget.data.address,
+                                Text(widget.data.address!,
                                     style:
                                     TextStyle(color: AppColor.greycolor, fontSize: 15)),
                               ],
@@ -187,7 +186,7 @@ class _shopDetailScreenState extends State<shopDetailScreen> {
               Text(widget.data.aboutUs!,
                   style: TextStyle(color: AppColor.textColor, fontSize: 13)),
               SizedBox(height: 10),
-              Row(
+              currentUserDocument!.approve == "approve" ?Row(
                 children: [
                   Expanded(
                     child: InkWell(
@@ -219,9 +218,10 @@ class _shopDetailScreenState extends State<shopDetailScreen> {
                     ),
                   ),
                 ],
-              ),
-              Divider(thickness: 2, color: AppColor.greycolor.withOpacity(0.5)),
-              Container(
+              ):SizedBox.shrink(),
+              currentUserDocument!.approve == "approve"  ?
+              Divider(thickness: 2, color: AppColor.greycolor.withOpacity(0.5)):SizedBox.shrink(),
+              currentUserDocument!.approve == "approve"  ?Container(
                 height: MediaQuery.of(context).size.height * 0.83,
                 child: PageView.builder(
                   itemCount: 2,
@@ -233,7 +233,7 @@ class _shopDetailScreenState extends State<shopDetailScreen> {
                         : rattibgPage(refShopkeeper: widget.data.reference,rate: widget.data.rate!,rateUsers: widget.data.ratedUser!);
                   },
                 ),
-              ),
+              ):SizedBox.shrink(),
             ],
           ),
         ),
@@ -333,15 +333,13 @@ class _productsPageState extends State<productsPage> {
                         var data = maindata[index];
                         return InkWell(
                           onTap: () {
-                            showBottomSheet(
-                                context: context,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(50),
-                                        topRight: Radius.circular(50))),
-                                builder: (context2) {
-                                  return productDetail(data: data);
-                                });
+                            Navigator.of(context, rootNavigator: true).push(
+                              CupertinoPageRoute<bool>(
+                                fullscreenDialog: true,
+                                builder: (BuildContext context) =>
+                                new productDetail(data: data),
+                              ),
+                            );
                           },
                           child: Container(
                             margin: EdgeInsets.only(bottom: 5, left: 5, top: 5),

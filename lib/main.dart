@@ -1,18 +1,13 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:geomed_assist/Splashscreen.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:permission_handler/permission_handler.dart';
+
+
 
 Future<void> main() async {
   try{
     WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp();
-    await Permission.location.request();
-    await Permission.locationAlways.request();
-    await Permission.locationWhenInUse.request();
-    await Hive.initFlutter();
-    await Hive.openBox("User");
   }catch(error){
     print("Error ====>$error");
   }

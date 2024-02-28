@@ -83,7 +83,7 @@ class _favoriteShopesState extends State<favoriteShopes> {
         Map<String, dynamic> data = value.data() as Map<String, dynamic>;
         data.addAll({'reference': value.reference});
         var docdata = UserModel.fromJson(data);
-        docdata.type == "ShopKeeper" && docdata.approve == true
+        docdata.type == "ShopKeeper" && docdata.approve == "Accepted"
             ? userdata.add(docdata)
             : null;
       }
@@ -179,7 +179,7 @@ class _favoriteShopesState extends State<favoriteShopes> {
                                                       color: AppColor.textColor,
                                                       fontSize: 14),
                                                   maxLines: 2),
-                                              Text(data.address,
+                                              Text(data.address!,
                                                   style: TextStyle(
                                                       color: AppColor.greycolor,
                                                       fontSize: 13),
@@ -325,7 +325,7 @@ class _favoriteDoctorState extends State<favoriteDoctor> {
                                                     fontWeight: FontWeight.w400)),
                                             SizedBox(
                                               width: width * 0.55,
-                                              child: Text(data.address,
+                                              child: Text(data.address!,
                                                   style: TextStyle(
                                                       color: AppColor.greycolor,
                                                       fontSize: 13),

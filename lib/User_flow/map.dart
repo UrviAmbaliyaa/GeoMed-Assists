@@ -56,12 +56,12 @@ class _MapScreenState extends State<MapScreen> {
         await Firebase_Quires().getShopKeepe_Doctore(shopkeeper: false,fromMap: true).first ??
             []);
     for (UserModel doc in shops_doctores) {
-      LatLng lng = LatLng(doc.latLong, doc.longitude);
+      LatLng lng = LatLng(doc.latLong!, doc.longitude!);
       var marker = addMarker(
           id: doc.reference.id,
           latlong: lng,
           title: doc.name,
-          address: doc.address,
+          address: doc.address!,
           data: doc
       );
       markers.add(marker);
@@ -147,19 +147,19 @@ class _MapScreenState extends State<MapScreen> {
                                 selectedZipCode = searchController.text;
 
                                 for (UserModel doc in searchdata) {
-                                  LatLng lng = LatLng(doc.latLong, doc.longitude);
+                                  LatLng lng = LatLng(doc.latLong!, doc.longitude!);
                                   var marker = addMarker(
                                       id: doc.reference.id,
                                       latlong: lng,
                                       title: doc.name,
-                                      address: doc.address,
+                                      address: doc.address!,
                                       data: doc
                                   );
                                   markers.add(marker);
                                 }
                                 _searchLocation(
-                                    location: LatLng(searchdata.first.latLong,
-                                        searchdata.first.longitude),
+                                    location: LatLng(searchdata.first.latLong!,
+                                        searchdata.first.longitude!),
                                     id: searchdata.first.reference.id);
                               }
                             }),

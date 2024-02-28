@@ -7,6 +7,7 @@ import 'package:geomed_assist/Firebase/firebase_quaries.dart';
 import 'package:geomed_assist/Models/categoryModel.dart';
 import 'package:geomed_assist/Models/product.dart';
 import 'package:geomed_assist/Store_flow/addProducts.dart';
+import 'package:geomed_assist/Store_flow/productRequests.dart';
 import 'package:geomed_assist/User_flow/requests.dart';
 import 'package:geomed_assist/User_flow/shopDetailScreen.dart';
 import 'package:geomed_assist/constants/Appcolors.dart';
@@ -195,27 +196,13 @@ class _productsState extends State<products> {
                                         children: [
                                           GestureDetector(
                                             onTap: () {
-                                              showBottomSheet(
-                                                  context: context,
-                                                  clipBehavior: Clip.antiAlias,
-                                                  shape: RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.only(
-                                                              topLeft: Radius
-                                                                  .circular(50),
-                                                              topRight: Radius
-                                                                  .circular(
-                                                                      50))),
-                                                  builder: (context) {
-                                                    return Container(
-                                                        height: MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .height *
-                                                            0.7,
-                                                        child: productDetail(
-                                                            data: data));
-                                                  });
+                                              Navigator.of(context, rootNavigator: true).push(
+                                                CupertinoPageRoute<bool>(
+                                                  fullscreenDialog: true,
+                                                  builder: (BuildContext context) =>
+                                                  new productDetail(data: data),
+                                                ),
+                                              );
                                             },
                                             child: Image.network(data.image,
                                                 height: width * 0.3,
@@ -506,6 +493,30 @@ class _productsState extends State<products> {
                                 children: [
                                   Text(
                                     'Add Product',
+                                    style: TextStyle(
+                                        color: AppColor.textColor,
+                                        fontSize: 18),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          InkWell(
+                            onTap: () async {
+                              Navigator.of(context, rootNavigator: true).push(
+                                CupertinoPageRoute<bool>(
+                                  fullscreenDialog: true,
+                                  builder: (BuildContext context) =>
+                                      ProductRequest(),
+                                ),
+                              );
+                            },
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(vertical: 10),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    'Product Request',
                                     style: TextStyle(
                                         color: AppColor.textColor,
                                         fontSize: 18),

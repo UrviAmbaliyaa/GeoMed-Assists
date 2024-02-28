@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_advanced_calendar/flutter_advanced_calendar.dart';
 import 'package:geomed_assist/Models/user_model.dart';
 import 'package:geomed_assist/constants/Appcolors.dart';
 import 'package:geomed_assist/constants/constantdata.dart';
@@ -16,7 +15,6 @@ class doctorSlot extends StatefulWidget {
 class _doctorSlotState extends State<doctorSlot> {
   TextEditingController serachingController = TextEditingController();
   GlobalKey<ScaffoldState> drawerKey = GlobalKey<ScaffoldState>();
-  final _calendarControllerToday = AdvancedCalendarController.today();
   final events = <DateTime>[
     DateTime.now(),
     DateTime(2022, 10, 10),

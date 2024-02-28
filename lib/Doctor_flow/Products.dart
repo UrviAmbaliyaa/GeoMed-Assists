@@ -54,7 +54,7 @@ class _allProductsState extends State<allProducts> {
                         style:
                         TextStyle(color: AppColor.textColor, fontSize: 20)),
                     Text(
-                      currentUserDocument!.address,
+                      currentUserDocument!.address!,
                       style: TextStyle(
                         color: AppColor.greycolor,
                         fontSize: 13,
@@ -290,7 +290,7 @@ class _allProductsState extends State<allProducts> {
                               style: TextStyle(
                                   color: AppColor.textColor, fontSize: 23)),
                           Text(
-                            currentUserDocument!.address,
+                            currentUserDocument!.address!,
                             style: TextStyle(
                               color: AppColor.greycolor,
                               fontSize: 15,

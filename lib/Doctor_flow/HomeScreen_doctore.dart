@@ -1,13 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_advanced_calendar/flutter_advanced_calendar.dart';
-import 'package:geomed_assist/Authentication/SignUpAsDoctor.dart';
-import 'package:geomed_assist/User_flow/requests.dart';
 import 'package:geomed_assist/constants/Appcolors.dart';
 import 'package:geomed_assist/constants/constantWidgets.dart';
 import 'package:geomed_assist/constants/constantdata.dart';
-import 'package:geomed_assist/privacy_Policy.dart';
-import 'package:geomed_assist/terms&conditions.dart';
 import 'package:intl/intl.dart';
 
 class homeScreen_doctor extends StatefulWidget {
@@ -19,7 +14,7 @@ class homeScreen_doctor extends StatefulWidget {
 
 class _homeScreen_doctorState extends State<homeScreen_doctor> {
   TextEditingController serachingController = TextEditingController();
-  final _calendarControllerToday = AdvancedCalendarController.today();
+  // final _calendarControllerToday = AdvancedCalendarController.today();
   final events = <DateTime>[
     DateTime.now(),
     DateTime(2022, 10, 10),
