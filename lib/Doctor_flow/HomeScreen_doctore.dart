@@ -14,6 +14,7 @@ class homeScreen_doctor extends StatefulWidget {
 
 class _homeScreen_doctorState extends State<homeScreen_doctor> {
   TextEditingController serachingController = TextEditingController();
+
   // final _calendarControllerToday = AdvancedCalendarController.today();
   final events = <DateTime>[
     DateTime.now(),
@@ -26,33 +27,41 @@ class _homeScreen_doctorState extends State<homeScreen_doctor> {
   DateTime parseDateTime(String dateTimeString) {
     return DateFormat("HH:mm").parse(dateTimeString);
   }
+
   Future<void> calculateSlotTime() async {
     var data = await currentUserDocument!.reference.get();
     selectSlotTime = data['availableSlot'];
-    DateTime startDateTime = DateFormat("HH:mm").parse(currentUserDocument!.startTime!);
-    DateTime breakStartDateTime = DateFormat("HH:mm").parse(currentUserDocument!.breckstartTime!);
-    DateTime breakEndDateTime = DateFormat("HH:mm").parse(currentUserDocument!.breckendTime!);
-    DateTime endDateTime = DateFormat("HH:mm").parse(currentUserDocument!.endTime!);
-    List<DateTime> firstList = generateTimeList(startDateTime, breakStartDateTime, 30);
-    List<DateTime> secondList = generateTimeList(breakEndDateTime, endDateTime, 30);
+    DateTime startDateTime =
+        DateFormat("HH:mm").parse(currentUserDocument!.startTime!);
+    DateTime breakStartDateTime =
+        DateFormat("HH:mm").parse(currentUserDocument!.breckstartTime!);
+    DateTime breakEndDateTime =
+        DateFormat("HH:mm").parse(currentUserDocument!.breckendTime!);
+    DateTime endDateTime =
+        DateFormat("HH:mm").parse(currentUserDocument!.endTime!);
+    List<DateTime> firstList =
+        generateTimeList(startDateTime, breakStartDateTime, 30);
+    List<DateTime> secondList =
+        generateTimeList(breakEndDateTime, endDateTime, 30);
     firstList.forEach((time) {
       slots.add(DateFormat("h:mm a").format(time));
     });
     secondList.forEach((time) {
       slot2.add(DateFormat("h:mm a").format(time));
     });
-    setState(() {
-    });
+    setState(() {});
   }
 
-  List<DateTime> generateTimeList(DateTime startTime, DateTime endTime, int intervalMinutes) {
+  List<DateTime> generateTimeList(
+      DateTime startTime, DateTime endTime, int intervalMinutes) {
     List<DateTime> timeList = [];
     DateTime currentTime = startTime;
     while (currentTime.isBefore(endTime)) {
       timeList.add(currentTime);
       currentTime = currentTime.add(Duration(minutes: intervalMinutes));
     }
-    currentTime = currentTime.add(Duration(minutes: (currentTime.minute - endTime.minute)));
+    currentTime = currentTime
+        .add(Duration(minutes: (currentTime.minute - endTime.minute)));
     timeList.add(currentTime);
     return timeList;
   }
@@ -70,7 +79,7 @@ class _homeScreen_doctorState extends State<homeScreen_doctor> {
     return Scaffold(
       appBar: constWidget().appbar(context, Name: "Slot", backbutton: true),
       backgroundColor: AppColor.backgroundColor,
-      body:  Column(
+      body: Column(
         children: [
           // AdvancedCalendar(
           //   controller: _calendarControllerToday,
@@ -85,7 +94,11 @@ class _homeScreen_doctorState extends State<homeScreen_doctor> {
           //   keepLineSize: true,
           //   startWeekDay: 2,
           // ),
-          Text(DateFormat("dd MMM yyyy").format(DateTime.now()),style: TextStyle(color: AppColor.textColor,fontSize: 20,fontWeight: FontWeight.w500)),
+          Text(DateFormat("dd MMM yyyy").format(DateTime.now()),
+              style: TextStyle(
+                  color: AppColor.textColor,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w500)),
           Expanded(
             child: SingleChildScrollView(
               child: Column(
@@ -102,15 +115,19 @@ class _homeScreen_doctorState extends State<homeScreen_doctor> {
                         childAspectRatio: 2.3),
                     itemBuilder: (context, index) {
                       return InkWell(
+                        splashColor: Colors.transparent,
                         onTap: () {
                           setState(() {
-                            selectSlotTime.contains(slots[index]) ? selectSlotTime.remove(slots[index]) : selectSlotTime.add(slots[index]);
+                            selectSlotTime.contains(slots[index])
+                                ? selectSlotTime.remove(slots[index])
+                                : selectSlotTime.add(slots[index]);
                           });
                         },
-                        splashColor: Colors.transparent,
                         child: Container(
                           decoration: BoxDecoration(
-                              color: selectSlotTime.contains(slots[index])?AppColor.primaryColor : AppColor.textColor.withOpacity(0.5),
+                              color: selectSlotTime.contains(slots[index])
+                                  ? AppColor.primaryColor
+                                  : AppColor.textColor.withOpacity(0.5),
                               borderRadius: BorderRadius.circular(10)),
                           alignment: Alignment.center,
                           child: Text(slots[index],
@@ -147,15 +164,20 @@ class _homeScreen_doctorState extends State<homeScreen_doctor> {
                         childAspectRatio: 2.3),
                     itemBuilder: (context, index) {
                       return InkWell(
+                        splashColor: Colors.transparent,
                         onTap: () {
                           setState(() {
-                            selectSlotTime.contains(slot2[index]) ? selectSlotTime.remove(slot2[index]) : selectSlotTime.add(slot2[index]);
+                            selectSlotTime.contains(slot2[index])
+                                ? selectSlotTime.remove(slot2[index])
+                                : selectSlotTime.add(slot2[index]);
                           });
                         },
-                        splashColor: Colors.transparent,
+
                         child: Container(
                           decoration: BoxDecoration(
-                              color:  selectSlotTime.contains(slot2[index]) ? AppColor.primaryColor : AppColor.textColor.withOpacity(0.5),
+                              color: selectSlotTime.contains(slot2[index])
+                                  ? AppColor.primaryColor
+                                  : AppColor.textColor.withOpacity(0.5),
                               borderRadius: BorderRadius.circular(10)),
                           alignment: Alignment.center,
                           child: Text(slot2[index],
@@ -168,21 +190,26 @@ class _homeScreen_doctorState extends State<homeScreen_doctor> {
                     },
                   ),
                   SizedBox(height: 10),
-                  Container(width: width,
+                  Container(
+                    width: width,
                     height: 50,
-                    margin: EdgeInsets.only(bottom: 100,right: 20,left: 20),
+                    margin: EdgeInsets.only(bottom: 100, right: 20, left: 20),
                     decoration: BoxDecoration(
-                      color: AppColor.primaryColor,
-                      borderRadius: BorderRadius.circular(10)
-                    ),
+                        color: AppColor.primaryColor,
+                        borderRadius: BorderRadius.circular(10)),
                     child: ElevatedButton(
                       onPressed: () {
-                        currentUserDocument!.reference.update({"availableSlot":selectSlotTime});
+                        currentUserDocument!.reference
+                            .update({"availableSlot": selectSlotTime});
                       },
                       style: ButtonStyle(
-                        backgroundColor: MaterialStatePropertyAll(AppColor.primaryColor)
-                      ),
-                      child: Text("Save",style: TextStyle(color: Colors.white,fontSize: 18,fontWeight: FontWeight.w500)),
+                          backgroundColor:
+                              MaterialStatePropertyAll(AppColor.primaryColor)),
+                      child: Text("Save",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500)),
                     ),
                   ),
                 ],

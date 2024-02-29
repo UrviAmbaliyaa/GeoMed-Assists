@@ -37,6 +37,7 @@ class _categoryDetailState extends State<categoryDetail> {
           automaticallyImplyLeading: false,
           leading: Align(
             child: InkWell(
+                splashColor: Colors.transparent,
                 onTap: () {
                   Navigator.pop(context);
                 },
@@ -248,6 +249,7 @@ class _categoryDetailState extends State<categoryDetail> {
                                     itemBuilder: (context, index) {
                                       var data = maindata[index];
                                       return InkWell(
+                splashColor: Colors.transparent,
                                         onTap: () {
                                           showBottomSheet(
                                               context: context,

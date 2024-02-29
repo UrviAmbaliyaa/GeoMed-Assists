@@ -91,6 +91,7 @@ class _forgotpasswordState extends State<forgotpassword> {
                         ),
                       ),
                       InkWell(
+                splashColor: Colors.transparent,
                         onTap: () {
                           var validate = formKey.currentState!.validate();
                           if (validate) {
@@ -121,6 +122,7 @@ class _forgotpasswordState extends State<forgotpassword> {
                       style:
                           TextStyle(color: AppColor.textColor, fontSize: 18)),
                   InkWell(
+                splashColor: Colors.transparent,
                       onTap: () {
                         Navigator.of(context, rootNavigator: true).push(
                           CupertinoPageRoute<bool>(

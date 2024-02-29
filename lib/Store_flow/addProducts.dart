@@ -76,6 +76,7 @@ class _addProductState extends State<addProduct> {
             child: Column(
               children: [
                 InkWell(
+                splashColor: Colors.transparent,
                   onTap: () {
                     showModalBottomSheet(
                       context: context,
@@ -248,6 +249,7 @@ class _addProductState extends State<addProduct> {
                 ),
                 SizedBox(height: 20),
                 InkWell(
+                splashColor: Colors.transparent,
                     onTap: () async {
                       if (imagepath != null || widget.edit) {
                         bool? validation = formKey.currentState?.validate();

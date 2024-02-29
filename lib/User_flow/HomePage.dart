@@ -54,6 +54,7 @@ class _homePageState extends State<homePage> {
                   children: [
                     Text("Disease", style: title),
                    InkWell(
+                splashColor: Colors.transparent,
                             onTap: () =>
                                 Navigator.of(context, rootNavigator: true).push(
                               CupertinoPageRoute<bool>(
@@ -91,6 +92,7 @@ class _homePageState extends State<homePage> {
                             return Visibility(
                               visible: isvisible,
                               child: InkWell(
+                splashColor: Colors.transparent,
                                 onTap: () =>
                                     Navigator.of(context, rootNavigator: true)
                                         .push(
@@ -173,6 +175,7 @@ class _homePageState extends State<homePage> {
                   children: [
                     Text("Shops", style: title),
                     InkWell(
+                splashColor: Colors.transparent,
                             onTap: () =>
                                 Navigator.of(context, rootNavigator: true).push(
                               CupertinoPageRoute<bool>(
@@ -211,6 +214,7 @@ class _homePageState extends State<homePage> {
                             return Visibility(
                               visible: visiblity,
                               child: InkWell(
+                splashColor: Colors.transparent,
                                 onTap: () =>
                                     Navigator.of(context, rootNavigator: true)
                                         .push(
@@ -337,6 +341,7 @@ class _homePageState extends State<homePage> {
                   children: [
                     Text("Doctors", style: title),
                     InkWell(
+                splashColor: Colors.transparent,
                             onTap: () =>
                                 Navigator.of(context, rootNavigator: true).push(
                               CupertinoPageRoute<bool>(
@@ -379,6 +384,7 @@ class _homePageState extends State<homePage> {
                               child: Container(
                                 margin: EdgeInsets.only(right: 15),
                                 child: InkWell(
+                splashColor: Colors.transparent,
                                   onTap: () =>
                                       Navigator.of(context, rootNavigator: true)
                                           .push(
@@ -666,6 +672,7 @@ class _homePageState extends State<homePage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           InkWell(
+                splashColor: Colors.transparent,
                             onTap: () {
                               drawerKey.currentState?.closeDrawer();
                               Navigator.of(context, rootNavigator: true).push(
@@ -691,6 +698,7 @@ class _homePageState extends State<homePage> {
                             ),
                           ),
                           InkWell(
+                splashColor: Colors.transparent,
                             onTap: () {
                               drawerKey.currentState?.closeDrawer();
                               Navigator.of(context, rootNavigator: true).push(
@@ -716,6 +724,7 @@ class _homePageState extends State<homePage> {
                             ),
                           ),
                           InkWell(
+                splashColor: Colors.transparent,
                             onTap: () {
                               drawerKey.currentState?.closeDrawer();
                               Navigator.of(context, rootNavigator: true).push(
@@ -741,6 +750,7 @@ class _homePageState extends State<homePage> {
                             ),
                           ),
                           InkWell(
+                splashColor: Colors.transparent,
                             onTap: () {
                               drawerKey.currentState?.closeDrawer();
                               Navigator.of(context, rootNavigator: true).push(
@@ -772,6 +782,7 @@ class _homePageState extends State<homePage> {
                 ),
               ),
               InkWell(
+                splashColor: Colors.transparent,
                 onTap: () {
                   drawerKey.currentState?.closeDrawer();
                   constWidget().Logout(context);

@@ -28,7 +28,14 @@ class _admin_bottomTabBarState extends State<admin_bottomTabBar> {
   List manuIconsPages = [userRequests(), product_admin(), allCategories()];
   List manuIconsName = ["Request", "Product", "Disease"];
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+  }
+  @override
   Widget build(BuildContext context) {
+    AppColor.chagecolorForAdmin();
     return Scaffold(
       body: manuIconsPages[selectedIndex],
       extendBody: true,

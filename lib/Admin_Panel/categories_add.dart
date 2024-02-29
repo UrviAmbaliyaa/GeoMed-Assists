@@ -80,6 +80,7 @@ class _addCategoriesState extends State<addCategories> {
                 ),
                 SizedBox(height: 10),
                 InkWell(
+                splashColor: Colors.transparent,
                   onTap: () {
                     showModalBottomSheet(
                       context: context,
@@ -178,6 +179,7 @@ class _addCategoriesState extends State<addCategories> {
                 ),
                 SizedBox(height: 20),
                 InkWell(
+                splashColor: Colors.transparent,
                     onTap: () async {
                       if (imagepath != null || widget.edit) {
                         bool? validation = formKey.currentState?.validate();

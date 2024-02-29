@@ -291,6 +291,7 @@ alertPopu(
                 if (validate) {
                   user.reference.update(
                       {"cancelReason": controller.text, "approve": "Reject"});
+                  Navigator.pop(context);
                 }
               },
               style: ButtonStyle(

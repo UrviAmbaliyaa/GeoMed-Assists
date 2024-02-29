@@ -8,6 +8,7 @@ import 'package:geomed_assist/Models/categoryModel.dart';
 import 'package:geomed_assist/Models/product.dart';
 import 'package:geomed_assist/Store_flow/addProducts.dart';
 import 'package:geomed_assist/Store_flow/productRequests.dart';
+import 'package:geomed_assist/Store_flow/productStatus.dart';
 import 'package:geomed_assist/User_flow/requests.dart';
 import 'package:geomed_assist/User_flow/shopDetailScreen.dart';
 import 'package:geomed_assist/constants/Appcolors.dart';
@@ -241,6 +242,7 @@ class _productsState extends State<products> {
                                                           maxLines: 2),
                                                     ),
                                                     InkWell(
+                splashColor: Colors.transparent,
                                                         onTap: () async {
                                                           List<categoryModel>? categories2 = [];
                                                           Stream<List<categoryModel>?> datas = await Firebase_Quires().getCategory();
@@ -273,6 +275,7 @@ class _productsState extends State<products> {
                                                             size: 25)),
                                                     SizedBox(width: 10),
                                                     InkWell(
+                splashColor: Colors.transparent,
                                                         onTap: () async {
                                                           showDialog(
                                                             context: context,
@@ -442,6 +445,7 @@ class _productsState extends State<products> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           InkWell(
+                splashColor: Colors.transparent,
                             onTap: () {
                               drawerKey.currentState?.closeDrawer();
                               Navigator.of(context, rootNavigator: true).push(
@@ -467,6 +471,7 @@ class _productsState extends State<products> {
                             ),
                           ),
                           InkWell(
+                splashColor: Colors.transparent,
                             onTap: () async {
                               drawerKey.currentState?.closeDrawer();
                               var category =
@@ -478,7 +483,6 @@ class _productsState extends State<products> {
                                 categorytList
                                     .add(categoryModel.fromJson(docdata));
                               }
-                              print("=============================>${categorytList.length}");
                               Navigator.of(context, rootNavigator: true).push(
                                 CupertinoPageRoute<bool>(
                                   fullscreenDialog: true,
@@ -501,7 +505,34 @@ class _productsState extends State<products> {
                               ),
                             ),
                           ),
+                          // productStatus
                           InkWell(
+                splashColor: Colors.transparent,
+                            onTap: ()  {
+                              Navigator.of(context, rootNavigator: true).push(
+                                CupertinoPageRoute<bool>(
+                                  fullscreenDialog: true,
+                                  builder: (BuildContext context) =>
+                                  new productStatus(),
+                                ),
+                              );
+                            },
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(vertical: 10),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    'Product Status',
+                                    style: TextStyle(
+                                        color: AppColor.textColor,
+                                        fontSize: 18),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          InkWell(
+                splashColor: Colors.transparent,
                             onTap: () async {
                               Navigator.of(context, rootNavigator: true).push(
                                 CupertinoPageRoute<bool>(
@@ -526,6 +557,7 @@ class _productsState extends State<products> {
                             ),
                           ),
                           InkWell(
+                splashColor: Colors.transparent,
                             onTap: () {
                               drawerKey.currentState?.closeDrawer();
                               Navigator.of(context, rootNavigator: true).push(
@@ -551,6 +583,7 @@ class _productsState extends State<products> {
                             ),
                           ),
                           InkWell(
+                splashColor: Colors.transparent,
                             onTap: () {
                               drawerKey.currentState?.closeDrawer();
                               Navigator.of(context, rootNavigator: true).push(
@@ -576,6 +609,7 @@ class _productsState extends State<products> {
                             ),
                           ),
                           InkWell(
+                splashColor: Colors.transparent,
                             onTap: () {
                               drawerKey.currentState?.closeDrawer();
                               Navigator.of(context, rootNavigator: true).push(
@@ -607,6 +641,7 @@ class _productsState extends State<products> {
                 ),
               ),
               InkWell(
+                splashColor: Colors.transparent,
                 onTap: () {
                   drawerKey.currentState?.closeDrawer();
                   constWidget().Logout(context);

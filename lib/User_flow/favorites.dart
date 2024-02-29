@@ -31,6 +31,7 @@ class _FavoritesState extends State<Favorites> {
             return Padding(
               padding: const EdgeInsets.all(8.0),
               child: InkWell(
+                splashColor: Colors.transparent,
                 onTap: () async {
                   favorite.contains(widget.reference)
                       ? favorite.remove(widget.reference)
@@ -43,7 +44,7 @@ class _FavoritesState extends State<Favorites> {
                       ? Icons.favorite
                       : Icons.favorite_border,
                   size: 28,
-                  color: AppColor.textColor,
+                  color: currentUserDocument!.type == "Admin" ?Colors.black : AppColor.textColor,
                 ),
               ),
             );
@@ -54,7 +55,7 @@ class _FavoritesState extends State<Favorites> {
               child: Icon(
                 Icons.favorite_border,
                 size: 28,
-                color: AppColor.textColor,
+                color: currentUserDocument!.type == "Admin" ?Colors.black : AppColor.textColor,
               ),
             );
           }

@@ -26,11 +26,14 @@ class doctoreDetail extends StatefulWidget {
 
 class _doctoreDetailState extends State<doctoreDetail> {
   bool isload = false;
+
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
     return Scaffold(
-      backgroundColor: AppColor.backgroundColor,
+      backgroundColor: currentUserDocument!.type == "Admin"
+          ? Colors.white
+          : AppColor.backgroundColor,
       appBar: constWidget()
           .appbar(context, Name: widget.doctor.name, backbutton: true),
       body: SingleChildScrollView(
@@ -64,7 +67,9 @@ class _doctoreDetailState extends State<doctoreDetail> {
               Text(
                 widget.doctor.name,
                 style: TextStyle(
-                    color: AppColor.textColor,
+                    color: currentUserDocument!.type == "Admin"
+                        ? Colors.black
+                        : AppColor.textColor,
                     fontSize: 18,
                     fontWeight: FontWeight.w500),
               ),
@@ -103,8 +108,8 @@ class _doctoreDetailState extends State<doctoreDetail> {
                       color: AppColor.primaryColor, size: 25),
                   Expanded(
                     child: Text(widget.doctor.address!,
-                        style: TextStyle(
-                            color: AppColor.greycolor, fontSize: 15)),
+                        style:
+                            TextStyle(color: AppColor.greycolor, fontSize: 15)),
                   ),
                   InkWell(
                     splashColor: Colors.transparent,
@@ -114,25 +119,31 @@ class _doctoreDetailState extends State<doctoreDetail> {
                       });
                       var chatRef = await FirebaseFirestore.instance
                           .collection("chat")
-                          .where("user", isEqualTo: currentUserDocument!.reference)
-                          .where("otherUser", isEqualTo: widget.doctor.reference)
+                          .where("user",
+                              isEqualTo: currentUserDocument!.reference)
+                          .where("otherUser",
+                              isEqualTo: widget.doctor.reference)
                           .get();
                       var chatrefereance2;
-                      if(chatRef.docs.length != 0){
+                      if (chatRef.docs.length != 0) {
                         chatrefereance2 = chatRef.docs.first.reference;
-                      }else{
+                      } else {
                         Map<String, dynamic> mapdata = {
-                          "user" : currentUserDocument!.reference,
-                          "otherUser" : widget.doctor.reference,
-                          "messageList" : [],
-                          "userMessageList":[]
+                          "user": currentUserDocument!.reference,
+                          "otherUser": widget.doctor.reference,
+                          "messageList": [],
+                          "userMessageList": []
                         };
                         await FirebaseFirestore.instance
-                            .collection("chat").doc().set(mapdata);
+                            .collection("chat")
+                            .doc()
+                            .set(mapdata);
                         var chatRef2 = await FirebaseFirestore.instance
                             .collection("chat")
-                            .where("user", isEqualTo: currentUserDocument!.reference)
-                            .where("otherUser", isEqualTo: widget.doctor.reference)
+                            .where("user",
+                                isEqualTo: currentUserDocument!.reference)
+                            .where("otherUser",
+                                isEqualTo: widget.doctor.reference)
                             .get();
                         chatrefereance2 = chatRef2.docs.first.reference;
                       }
@@ -142,15 +153,18 @@ class _doctoreDetailState extends State<doctoreDetail> {
                       Navigator.of(context, rootNavigator: true).push(
                         CupertinoPageRoute<bool>(
                           fullscreenDialog: true,
-                          builder: (BuildContext context) => messageScreen(chatrefe: chatrefereance2,user: widget.doctor),
+                          builder: (BuildContext context) => messageScreen(
+                              chatrefe: chatrefereance2, user: widget.doctor),
                         ),
                       );
                     },
                     child: Stack(
                       children: [
-                        !isload ? Icon(CupertinoIcons.chat_bubble,
-                            size: 30, color: AppColor.primaryColor):
-                        constWidget().circularProgressInd(nodatafound: false),
+                        !isload
+                            ? Icon(CupertinoIcons.chat_bubble,
+                                size: 30, color: AppColor.primaryColor)
+                            : constWidget()
+                                .circularProgressInd(nodatafound: false),
                       ],
                     ),
                   ),
@@ -161,171 +175,206 @@ class _doctoreDetailState extends State<doctoreDetail> {
               ),
               SizedBox(height: 10),
               Text("contact Number: ${widget.doctor.contact}",
-                  style: TextStyle(color: AppColor.textColor, fontSize: 13)),
+                  style: TextStyle(
+                      color: currentUserDocument!.type == "Admin"
+                          ? Colors.black
+                          : AppColor.textColor,
+                      fontSize: 13)),
               Text("Education: ${widget.doctor.degree}",
-                  style: TextStyle(color: AppColor.textColor, fontSize: 13)),
+                  style: TextStyle(
+                      color: currentUserDocument!.type == "Admin"
+                          ? Colors.black
+                          : AppColor.textColor,
+                      fontSize: 13)),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
                       "Working : ${widget.doctor.startTime} to ${widget.doctor.endTime}",
-                      style:
-                          TextStyle(color: AppColor.textColor, fontSize: 13)),
-                  InkWell(
-                    onTap: () {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            backgroundColor: Colors.white,
-                            contentPadding: EdgeInsets.zero,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20)),
-                            content: SizedBox(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.6,
-                                width: width,
-                                child: doctorSlot(doctor: widget.doctor)),
-                          );
-                        },
-                      );
-                    },
-                    child: Text("Working Slot",
-                        style: TextStyle(
-                            color: AppColor.primaryColor,
-                            fontSize: 13,
-                            fontWeight: FontWeight.w500,
-                            decoration: TextDecoration.underline,
-                            decorationColor: AppColor.primaryColor)),
-                  ),
+                      style: TextStyle(
+                          color: currentUserDocument!.type == "Admin"
+                              ? Colors.black
+                              : AppColor.textColor,
+                          fontSize: 13)),
+                  widget.doctor.availableSlot!.length != 0
+                      ? InkWell(
+                          splashColor: Colors.transparent,
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  backgroundColor: Colors.white,
+                                  contentPadding: EdgeInsets.zero,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20)),
+                                  content: SizedBox(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.6,
+                                      width: width,
+                                      child: doctorSlot(doctor: widget.doctor)),
+                                );
+                              },
+                            );
+                          },
+                          child: Text("Working Slot",
+                              style: TextStyle(
+                                  color: AppColor.primaryColor,
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w500,
+                                  decoration: TextDecoration.underline,
+                                  decorationColor: AppColor.primaryColor)),
+                        )
+                      : SizedBox.shrink(),
                 ],
               ),
               SizedBox(height: 5),
               Text(widget.doctor.aboutUs!,
-                  style: TextStyle(color: AppColor.textColor, fontSize: 13)),
+                  style: TextStyle(
+                      color: currentUserDocument!.type == "Admin"
+                          ? Colors.black
+                          : AppColor.textColor,
+                      fontSize: 13)),
               SizedBox(height: 10),
-              currentUserDocument!.approve == "approve" ? ElevatedButton(
-                  style: ButtonStyle(
-                      minimumSize: MaterialStatePropertyAll(Size(width, 45)),
-                      shape: MaterialStatePropertyAll(RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10))),
-                      backgroundColor:
-                          MaterialStatePropertyAll(AppColor.primaryColor)),
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          backgroundColor: Colors.white,
-                          contentPadding: EdgeInsets.zero,
-                          content: RattingPopUp(
-                              refDoctor: widget.doctor.reference,
-                              rate: widget.doctor.rate!,
-                              rateUsers: widget.doctor.ratedUser!),
+              currentUserDocument!.approve == "approve"
+                  ? ElevatedButton(
+                      style: ButtonStyle(
+                          minimumSize:
+                              MaterialStatePropertyAll(Size(width, 45)),
+                          shape: MaterialStatePropertyAll(
+                              RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10))),
+                          backgroundColor:
+                              MaterialStatePropertyAll(AppColor.primaryColor)),
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              backgroundColor: Colors.white,
+                              contentPadding: EdgeInsets.zero,
+                              content: RattingPopUp(
+                                  refDoctor: widget.doctor.reference,
+                                  rate: widget.doctor.rate!,
+                                  rateUsers: widget.doctor.ratedUser!),
+                            );
+                          },
                         );
                       },
-                    );
-                  },
-                  child: Text("Ratting",
-                      style: TextStyle(
-                          color: AppColor.textColor, fontSize: 18))):SizedBox.shrink(),
-              currentUserDocument!.approve == "approve" ? StreamBuilder<RateList?>(
-                  stream: Firebase_Quires()
-                      .getRateDocuments(shopRef: widget.doctor.reference),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.active ||
-                        snapshot.connectionState == ConnectionState.done) {
-                      if (snapshot.hasData &&
-                          snapshot.data!.rate!.length != 0) {
-                        var maindata = snapshot.data!.rate!;
-                        return ListView.separated(
-                            separatorBuilder: (context, index) => Divider(
-                                color: AppColor.greycolor.withOpacity(0.5),
-                                height: 0,
-                                thickness: 2),
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            itemCount: maindata.length,
-                            itemBuilder: (context, index) {
-                              var data = maindata[index];
-                              return Container(
-                                padding: EdgeInsets.symmetric(vertical: 15),
-                                child: Row(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.center,
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    Container(
-                                      width: 45,
-                                      height: 45,
-                                      clipBehavior: Clip.antiAlias,
-                                      decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(100),
-                                      ),
-                                      child: Image.network(data.image,
-                                          fit: BoxFit.cover),
-                                    ),
-                                    SizedBox(width: 15),
-                                    Column(
+                      child: Text("Ratting",
+                          style: TextStyle(
+                              color: currentUserDocument!.type == "Admin"
+                                  ? Colors.black
+                                  : AppColor.textColor,
+                              fontSize: 18)))
+                  : SizedBox.shrink(),
+              currentUserDocument!.approve == "approve"
+                  ? StreamBuilder<RateList?>(
+                      stream: Firebase_Quires()
+                          .getRateDocuments(shopRef: widget.doctor.reference),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                                ConnectionState.active ||
+                            snapshot.connectionState == ConnectionState.done) {
+                          if (snapshot.hasData &&
+                              snapshot.data!.rate!.length != 0) {
+                            var maindata = snapshot.data!.rate!;
+                            return ListView.separated(
+                                separatorBuilder: (context, index) => Divider(
+                                    color: AppColor.greycolor.withOpacity(0.5),
+                                    height: 0,
+                                    thickness: 2),
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                itemCount: maindata.length,
+                                itemBuilder: (context, index) {
+                                  var data = maindata[index];
+                                  return Container(
+                                    padding: EdgeInsets.symmetric(vertical: 15),
+                                    child: Row(
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                          CrossAxisAlignment.center,
+                                      mainAxisSize: MainAxisSize.max,
                                       children: [
-                                        Text(data.name,
-                                            style: TextStyle(
-                                                color: AppColor.textColor,
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w400)),
-                                        SizedBox(
-                                          width: width * 0.75,
-                                          child: Text(data.description,
-                                              style: TextStyle(
-                                                  color: AppColor.greycolor,
-                                                  fontSize: 14),
-                                              maxLines: 2),
-                                        ),
-                                        SizedBox(
-                                          width: width * 0.75,
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment
-                                                    .spaceBetween,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.end,
-                                            children: [
-                                              rattingBar(
-                                                  tapOnly: true,
-                                                  initValue: data.rate),
-                                              Text(
-                                                DateFormat('dd MMM yyyy')
-                                                    .format(data.date),
-                                                textAlign: TextAlign.end,
-                                                style: TextStyle(
-                                                    color: AppColor.greycolor,
-                                                    fontSize: 13),
-                                              )
-                                            ],
+                                        Container(
+                                          width: 45,
+                                          height: 45,
+                                          clipBehavior: Clip.antiAlias,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(100),
                                           ),
-                                        )
+                                          child: Image.network(data.image,
+                                              fit: BoxFit.cover),
+                                        ),
+                                        SizedBox(width: 15),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(data.name,
+                                                style: TextStyle(
+                                                    color: currentUserDocument!
+                                                                .type ==
+                                                            "Admin"
+                                                        ? Colors.black
+                                                        : AppColor.textColor,
+                                                    fontSize: 18,
+                                                    fontWeight:
+                                                        FontWeight.w400)),
+                                            SizedBox(
+                                              width: width * 0.75,
+                                              child: Text(data.description,
+                                                  style: TextStyle(
+                                                      color: AppColor.greycolor,
+                                                      fontSize: 14),
+                                                  maxLines: 2),
+                                            ),
+                                            SizedBox(
+                                              width: width * 0.75,
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.end,
+                                                children: [
+                                                  rattingBar(
+                                                      tapOnly: true,
+                                                      initValue: data.rate),
+                                                  Text(
+                                                    DateFormat('dd MMM yyyy')
+                                                        .format(data.date),
+                                                    textAlign: TextAlign.end,
+                                                    style: TextStyle(
+                                                        color:
+                                                            AppColor.greycolor,
+                                                        fontSize: 13),
+                                                  )
+                                                ],
+                                              ),
+                                            )
+                                          ],
+                                        ),
                                       ],
                                     ),
-                                  ],
-                                ),
-                              );
-                            });
-                      } else {
-                        return Center(
-                          child: constWidget()
-                              .circularProgressInd(nodatafound: true),
-                        );
-                      }
-                    } else {
-                      return Center(
-                        child: constWidget()
-                            .circularProgressInd(nodatafound: false),
-                      );
-                    }
-                  }):SizedBox.shrink(),
+                                  );
+                                });
+                          } else {
+                            return Center(
+                              child: constWidget()
+                                  .circularProgressInd(nodatafound: true),
+                            );
+                          }
+                        } else {
+                          return Center(
+                            child: constWidget()
+                                .circularProgressInd(nodatafound: false),
+                          );
+                        }
+                      })
+                  : SizedBox.shrink(),
             ],
           ),
         ),

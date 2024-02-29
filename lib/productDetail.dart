@@ -86,6 +86,7 @@ class _productDetailState extends State<productDetail> {
                       ),
                       currentUserDocument!.type == "ShopKeeper"
                           ? InkWell(
+                splashColor: Colors.transparent,
                               onTap: () {
                                 widget.data.referenace.update(
                                     {'available': !widget.data.available});

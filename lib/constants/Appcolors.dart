@@ -14,4 +14,9 @@ class AppColor{
   static Color greycolor = Colors.grey;
 
 
+  static chagecolorForAdmin(){
+    backgroundColor == Colors.white;
+    textColor == Colors.black;
+  }
+
 }

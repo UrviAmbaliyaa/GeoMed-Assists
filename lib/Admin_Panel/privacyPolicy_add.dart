@@ -94,6 +94,7 @@ class _privacy_policy_addState extends State<privacy_policy_add> {
                 ),
                 SizedBox(height: 20),
                 InkWell(
+                splashColor: Colors.transparent,
                     onTap: () async {
                       bool? validation = formKey.currentState?.validate();
                       if (validation == true) {

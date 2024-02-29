@@ -119,6 +119,7 @@ class _allDoctoresState extends State<allDoctores> {
                             ],
                           ),
                           child: InkWell(
+                splashColor: Colors.transparent,
                             onTap: () =>
                                 Navigator.of(context, rootNavigator: true).push(
                               CupertinoPageRoute<bool>(
@@ -180,6 +181,7 @@ class _allDoctoresState extends State<allDoctores> {
                           ),
                         ),
                         InkWell(
+                splashColor: Colors.transparent,
                           onTap: () {
                             callNumber(contactNumber: data.contact);
                           },

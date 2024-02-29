@@ -251,6 +251,7 @@ class _SignUpAsShopkeeperState extends State<SignUpAsShopkeeper> {
                                               fontWeight: FontWeight.w400)),
                                       SizedBox(height: 23),
                                       InkWell(
+                splashColor: Colors.transparent,
                                         onTap: () {
                                           showModalBottomSheet(
                                             context: context,
@@ -356,6 +357,7 @@ class _SignUpAsShopkeeperState extends State<SignUpAsShopkeeper> {
                                                   passwordvisiblity:
                                                       !passwordvisiblity,
                                                   sufixIcon: InkWell(
+                splashColor: Colors.transparent,
                                                       onTap: () {
                                                         setState(() {
                                                           passwordvisiblity =
@@ -400,6 +402,7 @@ class _SignUpAsShopkeeperState extends State<SignUpAsShopkeeper> {
                                                   passwordvisiblity:
                                                       !confirmpasswordvisiblity,
                                                   sufixIcon: InkWell(
+                splashColor: Colors.transparent,
                                                       onTap: () {
                                                         setState(() {
                                                           confirmpasswordvisiblity =
@@ -671,6 +674,7 @@ class _SignUpAsShopkeeperState extends State<SignUpAsShopkeeper> {
                                   ),
                                 ),
                                 InkWell(
+                splashColor: Colors.transparent,
                                   onTap: () {
                                     if (widget.editdcreen || imagepath != null) {
                                       var validate =
@@ -729,6 +733,7 @@ class _SignUpAsShopkeeperState extends State<SignUpAsShopkeeper> {
                                 style: TextStyle(
                                     color: AppColor.textColor, fontSize: 18)),
                             InkWell(
+                splashColor: Colors.transparent,
                                 onTap: () {
                                   Navigator.of(context, rootNavigator: true)
                                       .push(

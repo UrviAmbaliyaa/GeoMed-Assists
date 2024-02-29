@@ -106,6 +106,7 @@ class _allShopesState extends State<allShopes> {
                       alignment: Alignment.topRight,
                       children: [
                         InkWell(
+                splashColor: Colors.transparent,
                           onTap: () =>
                               Navigator.of(context, rootNavigator: true).push(
                             CupertinoPageRoute<bool>(

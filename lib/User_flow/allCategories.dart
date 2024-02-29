@@ -34,6 +34,7 @@ class _allCategoriesState extends State<allCategories> {
         leading: currentUserDocument!.type != "Admin"
             ? Align(
                 child: InkWell(
+                splashColor: Colors.transparent,
                     onTap: () {
                       Navigator.pop(context);
                     },
@@ -81,6 +82,7 @@ class _allCategoriesState extends State<allCategories> {
                             .addAll({"refereance": maindata[index].reference});
                         var data = categoryModel.fromJson(categories);
                         return InkWell(
+                splashColor: Colors.transparent,
                           onTap: () =>
                               Navigator.of(context, rootNavigator: true).push(
                             CupertinoPageRoute<bool>(

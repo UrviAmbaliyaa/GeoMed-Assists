@@ -129,6 +129,7 @@ class _favoriteShopesState extends State<favoriteShopes> {
                               alignment: Alignment.topRight,
                               children: [
                                 InkWell(
+                splashColor: Colors.transparent,
                                   onTap: () =>
                                       Navigator.of(context, rootNavigator: true)
                                           .push(
@@ -278,6 +279,7 @@ class _favoriteDoctorState extends State<favoriteDoctor> {
                               return Visibility(
                                 visible: data.type == "Doctore",
                                 child: InkWell(
+                splashColor: Colors.transparent,
                                   onTap: () =>
                                       Navigator.of(context, rootNavigator: true).push(
                                         CupertinoPageRoute<bool>(

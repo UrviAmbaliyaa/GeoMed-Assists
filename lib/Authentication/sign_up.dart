@@ -165,6 +165,7 @@ class _SignUpState extends State<SignUp> {
                                               fontWeight: FontWeight.w400)),
                                       SizedBox(height: 23),
                                       InkWell(
+                splashColor: Colors.transparent,
                                         onTap: () {
                                           showModalBottomSheet(
                                             context: context,
@@ -265,6 +266,7 @@ class _SignUpState extends State<SignUp> {
                                             password: true,
                                             passwordvisiblity: !passwordvisiblity,
                                             sufixIcon: InkWell(
+                splashColor: Colors.transparent,
                                                 onTap: () {
                                                   setState(() {
                                                     passwordvisiblity =
@@ -301,6 +303,7 @@ class _SignUpState extends State<SignUp> {
                                             passwordvisiblity:
                                             !confirmpasswordvisiblity,
                                             sufixIcon: InkWell(
+                splashColor: Colors.transparent,
                                                 onTap: () {
                                                   setState(() {
                                                     confirmpasswordvisiblity =
@@ -362,6 +365,7 @@ class _SignUpState extends State<SignUp> {
                                   ),
                                 ),
                                 InkWell(
+                splashColor: Colors.transparent,
                                   onTap: () {
                                     if(widget.editdcreen || imagepath != null){
                                       var validate =
@@ -405,6 +409,7 @@ class _SignUpState extends State<SignUp> {
                           style: TextStyle(
                               color: AppColor.textColor, fontSize: 18)),
                       InkWell(
+                splashColor: Colors.transparent,
                           onTap: () {
                             Navigator.of(context, rootNavigator: true).push(
                               CupertinoPageRoute<bool>(

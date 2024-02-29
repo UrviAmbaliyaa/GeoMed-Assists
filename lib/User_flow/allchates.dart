@@ -112,6 +112,7 @@ class _allChatesState extends State<allChates> {
                                         padding:
                                             EdgeInsets.symmetric(vertical: 15),
                                         child: InkWell(
+                splashColor: Colors.transparent,
                                           onTap: () => Navigator.of(context,
                                                   rootNavigator: true)
                                               .push(
@@ -166,6 +167,7 @@ class _allChatesState extends State<allChates> {
                                               Column(
                                                 children: [
                                                   InkWell(
+                splashColor: Colors.transparent,
                                                     onTap: () async {
                                                      await data.reference.update({"${currentUserDocument!.type == "User" ? "userMessageList" : "messageList"}":[]});
                                                      setState(() {

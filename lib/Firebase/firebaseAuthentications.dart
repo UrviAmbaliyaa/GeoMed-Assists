@@ -40,16 +40,12 @@ class firebase_auth{
   }
 
   Future<bool> signInWithEmailAndPassword(String email, String password) async {
-    try {
       var value =  await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
       await getUserInfo(id: value.user!.uid);
       return true;
-    } catch (e) {
-      return false;
-    }
   }
 
   Future<void> SignOut() async {

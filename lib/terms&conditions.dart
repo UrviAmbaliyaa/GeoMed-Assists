@@ -19,20 +19,21 @@ class _terms_conditionsState extends State<terms_conditions> {
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
     return Scaffold(
-      backgroundColor: AppColor.backgroundColor,
+      backgroundColor: currentUserDocument!.type == "Admin" ? Colors.white :AppColor.backgroundColor,
       appBar: AppBar(
-        backgroundColor: AppColor.backgroundColor,
+        backgroundColor: currentUserDocument!.type == "Admin" ? Colors.transparent :AppColor.backgroundColor,
         elevation: 0,
         primary: true,
         leadingWidth: 70,
         automaticallyImplyLeading: false,
         leading: Align(
           child: InkWell(
+                splashColor: Colors.transparent,
               onTap: () {
                 Navigator.pop(context);
               },
               child:
-                  Icon(Icons.arrow_back, color: AppColor.textColor, size: 30)),
+                  Icon(Icons.arrow_back, color: currentUserDocument!.type == "Admin" ?Colors.black : AppColor.textColor, size: 30)),
         ),
         centerTitle: true,
         actions: [
@@ -47,7 +48,7 @@ class _terms_conditionsState extends State<terms_conditions> {
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(5),
                             border: Border.all(
-                                color: Colors.white.withOpacity(0.6),
+                                color:currentUserDocument!.type == "Admin" ?Colors.black.withOpacity(0.6) : AppColor.textColor.withOpacity(0.6),
                                 width: 2)),
                       ),
                       Container(
@@ -55,7 +56,7 @@ class _terms_conditionsState extends State<terms_conditions> {
                           height: 25,
                           alignment: Alignment.topRight,
                           child:
-                              Icon(Icons.edit, size: 20, color: Colors.white)),
+                              Icon(Icons.edit, size: 20, color:  currentUserDocument!.type == "Admin" ?Colors.black : AppColor.textColor,)),
                     ],
                   ),
                   onPressed: () async {
@@ -80,7 +81,7 @@ class _terms_conditionsState extends State<terms_conditions> {
         title: Text(
           "Terms and Conditions",
           style: TextStyle(
-              color: AppColor.textColor,
+              color: currentUserDocument!.type == "Admin" ?Colors.black : AppColor.textColor,
               fontSize: 18,
               fontWeight: FontWeight.w500),
           textAlign: TextAlign.center,
@@ -98,13 +99,13 @@ class _terms_conditionsState extends State<terms_conditions> {
                 width: double.infinity,
                 height: width * 0.4,
                 alignment: Alignment.bottomCenter,
-                child: Image.asset("assets/logo/Logo.png", color: Colors.white),
+                child: Image.asset("assets/logo/Logo.png", color: currentUserDocument!.type == "Admin" ?Colors.black : AppColor.textColor),
               ),
               SizedBox(height: 10),
               Text(
                 "Terms and Conditions",
                 style: TextStyle(
-                    color: AppColor.textColor,
+                    color: currentUserDocument!.type == "Admin" ?Colors.black : AppColor.textColor,
                     fontSize: 20,
                     fontWeight: FontWeight.w500),
               ),
@@ -120,7 +121,7 @@ class _terms_conditionsState extends State<terms_conditions> {
                         ? snapshot.hasData && snapshot.data!.docs.length != 0
                             ? Text(snapshot.data!.docs[0]['terms_conditions'],
                                 style: TextStyle(
-                                    color: AppColor.textColor, fontSize: 13))
+                                    color: currentUserDocument!.type == "Admin" ?Colors.black : AppColor.textColor, fontSize: 13))
                             : Container(
                                 height: MediaQuery.of(context).size.height / 2,
                                 child: Column(

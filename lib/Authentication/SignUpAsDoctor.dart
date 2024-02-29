@@ -246,6 +246,7 @@ class _SignUpAsDoctorState extends State<SignUpAsDoctor> {
                                               fontWeight: FontWeight.w400)),
                                       SizedBox(height: 23),
                                       InkWell(
+                splashColor: Colors.transparent,
                                         onTap: () {
                                           showModalBottomSheet(
                                             context: context,
@@ -352,6 +353,7 @@ class _SignUpAsDoctorState extends State<SignUpAsDoctor> {
                                            password: true,
                                            passwordvisiblity: !passwordvisiblity,
                                            sufixIcon: InkWell(
+                splashColor: Colors.transparent,
                                                onTap: () {
                                                  setState(() {
                                                    passwordvisiblity =
@@ -388,6 +390,7 @@ class _SignUpAsDoctorState extends State<SignUpAsDoctor> {
                                            passwordvisiblity:
                                           !confirmpasswordvisiblity,
                                            sufixIcon: InkWell(
+                splashColor: Colors.transparent,
                                                onTap: () {
                                                  setState(() {
                                                    confirmpasswordvisiblity =
@@ -726,6 +729,7 @@ class _SignUpAsDoctorState extends State<SignUpAsDoctor> {
                                   ),
                                 ),
                                 InkWell(
+                splashColor: Colors.transparent,
                                   onTap: () {
                                     if (widget.editdcreen || imagepath != null) {
                                       var validate =
@@ -780,6 +784,7 @@ class _SignUpAsDoctorState extends State<SignUpAsDoctor> {
                                 style: TextStyle(
                                     color: AppColor.textColor, fontSize: 18)),
                             InkWell(
+                splashColor: Colors.transparent,
                                 onTap: () {
                                   Navigator.of(context, rootNavigator: true)
                                       .push(

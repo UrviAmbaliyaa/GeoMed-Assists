@@ -35,7 +35,7 @@ class _shopDetailScreenState extends State<shopDetailScreen> {
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
     return Scaffold(
-      backgroundColor: AppColor.backgroundColor,
+      backgroundColor: currentUserDocument!.type == "Admin" ? Colors.white :AppColor.backgroundColor,
       appBar: constWidget()
           .appbar(context, Name: widget.data.name, backbutton: true),
       body: SingleChildScrollView(
@@ -69,7 +69,7 @@ class _shopDetailScreenState extends State<shopDetailScreen> {
               Text(
                 widget.data.name,
                 style: TextStyle(
-                    color: AppColor.textColor,
+                    color: currentUserDocument!.type == "Admin" ?Colors.black : AppColor.textColor,
                     fontSize: 18,
                     fontWeight: FontWeight.w500),
               ),
@@ -102,7 +102,7 @@ class _shopDetailScreenState extends State<shopDetailScreen> {
                               children: [
                                 Text(widget.data.address!,
                                     style:
-                                    TextStyle(color: AppColor.greycolor, fontSize: 15)),
+                                    TextStyle(color: currentUserDocument!.type == "Admin" ?Colors.black : AppColor.textColor, fontSize: 15)),
                               ],
                             ),
                           ),
@@ -178,18 +178,19 @@ class _shopDetailScreenState extends State<shopDetailScreen> {
               ),
               SizedBox(height: 5),
               Text("contact Number: ${widget.data.contact}",
-                  style: TextStyle(color: AppColor.textColor, fontSize: 13)),
+                  style: TextStyle(color: currentUserDocument!.type == "Admin" ?Colors.black : AppColor.textColor, fontSize: 13)),
               Text(
                   "Working time: ${widget.data.startTime} to ${widget.data.endTime}",
-                  style: TextStyle(color: AppColor.textColor, fontSize: 13)),
+                  style: TextStyle(color: currentUserDocument!.type == "Admin" ?Colors.black : AppColor.textColor, fontSize: 13)),
               SizedBox(height: 5),
               Text(widget.data.aboutUs!,
-                  style: TextStyle(color: AppColor.textColor, fontSize: 13)),
+                  style: TextStyle(color: currentUserDocument!.type == "Admin" ?Colors.black : AppColor.textColor, fontSize: 13)),
               SizedBox(height: 10),
               currentUserDocument!.approve == "approve" ?Row(
                 children: [
                   Expanded(
                     child: InkWell(
+                splashColor: Colors.transparent,
                       onTap: () {
                         setState(() {
                           pgcontrolles.jumpToPage(0);
@@ -207,6 +208,7 @@ class _shopDetailScreenState extends State<shopDetailScreen> {
                   ),
                   Expanded(
                     child: InkWell(
+                splashColor: Colors.transparent,
                       onTap: () {
                         setState(() {
                           pgcontrolles.jumpToPage(1);
@@ -273,7 +275,7 @@ class _productsPageState extends State<productsPage> {
           ),
           child: TextField(
             controller: serachingController,
-            style: TextStyle(color: AppColor.textColor, fontSize: 15),
+            style: TextStyle(color: currentUserDocument!.type == "Admin" ?Colors.black : AppColor.textColor, fontSize: 15),
             onChanged: (value) {
               Future.delayed(Duration(seconds: 3),() => setState(() {}));
             },
@@ -332,6 +334,7 @@ class _productsPageState extends State<productsPage> {
                       itemBuilder: (context, index) {
                         var data = maindata[index];
                         return InkWell(
+                splashColor: Colors.transparent,
                           onTap: () {
                             Navigator.of(context, rootNavigator: true).push(
                               CupertinoPageRoute<bool>(
@@ -370,7 +373,7 @@ class _productsPageState extends State<productsPage> {
                                   padding: EdgeInsets.symmetric(horizontal: 5),
                                   child: Text(data.name,
                                       style: TextStyle(
-                                          color: AppColor.textColor,
+                                          color: currentUserDocument!.type == "Admin" ?Colors.black : AppColor.textColor,
                                           fontSize: 16),
                                       maxLines: 2),
                                 ),
@@ -479,7 +482,7 @@ class _rattibgPageState extends State<rattibgPage> {
                 );
               },
               child: Text("Ratting",
-                  style: TextStyle(color: AppColor.textColor, fontSize: 18))),
+                  style: TextStyle(color: currentUserDocument!.type == "Admin" ?Colors.black : AppColor.textColor, fontSize: 18))),
           Expanded(
             child: StreamBuilder<RateList?>(
                 stream: Firebase_Quires()
@@ -522,7 +525,7 @@ class _rattibgPageState extends State<rattibgPage> {
                                     children: [
                                       Text(data.name,
                                           style: TextStyle(
-                                              color: AppColor.textColor,
+                                              color: currentUserDocument!.type == "Admin" ?Colors.black : AppColor.textColor,
                                               fontSize: 18,
                                               fontWeight: FontWeight.w400)),
                                       SizedBox(

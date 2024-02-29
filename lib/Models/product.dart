@@ -25,6 +25,7 @@ class Product {
   final bool available;
   final String category;
   final String status;
+  final String? cancelReason;
   final DocumentReference referenace;
   final DocumentReference shopReference;
   final DocumentReference categoryRef;
@@ -37,6 +38,7 @@ class Product {
     required this.description,
     required this.available,
     required this.category,
+    this.cancelReason,
     required this.referenace,
     required this.shopReference,
     required this.categoryRef,
@@ -51,6 +53,7 @@ class Product {
       price: double.parse(json['price']),
       description: json['description'],
       available: json['available'],
+      cancelReason: json['cancelReason'] ?? '',
       category: json['category'],
       referenace: json['referenace'],
       shopReference: json['shopReference'],
@@ -68,6 +71,7 @@ class Product {
       'description': description,
       'available': available,
       'category': category,
+      'cancelReason': cancelReason,
       'referenace': referenace,
       'shopReference': shopReference,
       'categoryRef': categoryRef,

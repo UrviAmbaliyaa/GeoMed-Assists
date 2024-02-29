@@ -45,6 +45,7 @@ class _signUpASState extends State<signUpAS> {
               physics: NeverScrollableScrollPhysics(),
               itemBuilder: (context, index) {
                 return InkWell(
+                splashColor: Colors.transparent,
                   onTap: () {
                     setState(() {
                       imagepath = null;

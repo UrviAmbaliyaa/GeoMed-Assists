@@ -154,6 +154,7 @@ class _allProductsState extends State<allProducts> {
                             itemBuilder: (context, index) {
                               var data = maindata[index];
                               return InkWell(
+                splashColor: Colors.transparent,
                                 onTap: () {
                                   showBottomSheet(
                                       context: context,
@@ -311,6 +312,7 @@ class _allProductsState extends State<allProducts> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           InkWell(
+                splashColor: Colors.transparent,
                             onTap: () {
                               drawerKey.currentState?.closeDrawer();
                               Navigator.of(context, rootNavigator: true).push(
@@ -336,6 +338,7 @@ class _allProductsState extends State<allProducts> {
                             ),
                           ),
                           InkWell(
+                splashColor: Colors.transparent,
                             onTap: () {
                               drawerKey.currentState?.closeDrawer();
                               Navigator.of(context, rootNavigator: true).push(
@@ -361,6 +364,7 @@ class _allProductsState extends State<allProducts> {
                             ),
                           ),
                           InkWell(
+                splashColor: Colors.transparent,
                             onTap: () {
                               drawerKey.currentState?.closeDrawer();
                               Navigator.of(context, rootNavigator: true).push(
@@ -386,6 +390,7 @@ class _allProductsState extends State<allProducts> {
                             ),
                           ),
                           InkWell(
+                splashColor: Colors.transparent,
                             onTap: () {
                               drawerKey.currentState?.closeDrawer();
                               Navigator.of(context, rootNavigator: true).push(
@@ -411,6 +416,7 @@ class _allProductsState extends State<allProducts> {
                             ),
                           ),
                           InkWell(
+                splashColor: Colors.transparent,
                             onTap: () {
                               drawerKey.currentState?.closeDrawer();
                               Navigator.of(context, rootNavigator: true).push(
@@ -442,6 +448,7 @@ class _allProductsState extends State<allProducts> {
                 ),
               ),
               InkWell(
+                splashColor: Colors.transparent,
                 onTap: () {
                   drawerKey.currentState?.closeDrawer();
                   constWidget().Logout(context);

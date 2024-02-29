@@ -115,6 +115,7 @@ class _SignInState extends State<SignIn> {
                               password: true,
                               passwordvisiblity: passwordvisiblity,
                               sufixIcon: InkWell(
+                splashColor: Colors.transparent,
                                   onTap: () {
                                     setState(() {
                                       passwordvisiblity = !passwordvisiblity;
@@ -135,6 +136,7 @@ class _SignInState extends State<SignIn> {
                         ),
                       ),
                       InkWell(
+                splashColor: Colors.transparent,
                         onTap: () async {
                           var validate = formKey.currentState!.validate();
                           if (validate) {
@@ -191,6 +193,7 @@ class _SignInState extends State<SignIn> {
               SizedBox(height: 20),
               Expanded(
                   child: InkWell(
+                splashColor: Colors.transparent,
                 onTap: () {
                   Navigator.of(context, rootNavigator: true).push(
                     CupertinoPageRoute<bool>(
@@ -212,6 +215,7 @@ class _SignInState extends State<SignIn> {
                       style:
                           TextStyle(color: AppColor.textColor, fontSize: 18)),
                   InkWell(
+                splashColor: Colors.transparent,
                       onTap: () {
                         Navigator.of(context, rootNavigator: true).push(
                           CupertinoPageRoute<bool>(

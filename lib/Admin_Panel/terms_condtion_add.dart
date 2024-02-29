@@ -95,6 +95,7 @@ class _term_conditions_addState extends State<term_conditions_add> {
                 ),
                 SizedBox(height: 20),
                 InkWell(
+                splashColor: Colors.transparent,
                     onTap: () async {
                         bool? validation = formKey.currentState?.validate();
                         if (validation == true) {

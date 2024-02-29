@@ -27,7 +27,11 @@ class _customeTextFormFieldState extends State<customeTextFormField> {
       padding: const EdgeInsets.fromLTRB(0, 5, 0, 6),
       child: TextFormField(
         onChanged: (value) {
-          widget.onchageAction!.call();
+          try{
+            widget.onchageAction!.call();
+          }catch(error){
+            print("error ------>$error");
+          }
         },
         controller: widget.contoller,
         keyboardType: widget.keybordType,

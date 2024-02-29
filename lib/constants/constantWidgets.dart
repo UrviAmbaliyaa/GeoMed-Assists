@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:geomed_assist/Authentication/sign_in.dart';
 import 'package:geomed_assist/Firebase/firebaseAuthentications.dart';
 import 'package:geomed_assist/constants/Appcolors.dart';
+import 'package:geomed_assist/constants/constantdata.dart';
 
 class constWidget {
   showSnackbar(String message, context) {
@@ -26,7 +27,7 @@ class constWidget {
 
   appbar(context, {required String Name, required bool backbutton}) {
     return AppBar(
-      backgroundColor: AppColor.backgroundColor,
+      backgroundColor: currentUserDocument!.type == "Admin" ?Colors.white : AppColor.backgroundColor,
       elevation: 0,
       primary: true,
       leadingWidth: 70,
@@ -34,18 +35,19 @@ class constWidget {
       leading: backbutton
           ? Align(
               child: InkWell(
+                splashColor: Colors.transparent,
                   onTap: () {
                     Navigator.pop(context);
                   },
                   child: Icon(Icons.arrow_back,
-                      color: AppColor.textColor, size: 30)),
+                      color: currentUserDocument!.type == "Admin" ?Colors.black : AppColor.textColor, size: 30)),
             )
           : SizedBox.shrink(),
       centerTitle: true,
       title: Text(
         Name,
         style: TextStyle(
-            color: AppColor.textColor,
+            color: currentUserDocument!.type == "Admin" ?Colors.black : AppColor.textColor,
             fontSize: 18,
             fontWeight: FontWeight.w500),
         textAlign: TextAlign.center,
@@ -61,7 +63,7 @@ class constWidget {
         nodatafound
             ? Text("No Data Found",
                 style: TextStyle(
-                    color: AppColor.textColor,
+                    color: currentUserDocument!.type == "Admin" ?Colors.black : AppColor.textColor,
                     fontSize: 18,
                     fontWeight: FontWeight.w500))
             : Container(
