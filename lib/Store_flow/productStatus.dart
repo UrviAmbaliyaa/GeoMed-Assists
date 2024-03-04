@@ -24,72 +24,67 @@ class _productStatusState extends State<productStatus> {
       appBar: AppBar(
         elevation: 1,
         leadingWidth: 0,
-        toolbarHeight: 110,
         automaticallyImplyLeading: false,
+        backgroundColor: AppColor.backgroundColor,
         excludeHeaderSemantics: true,
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: 10),
-            Text(
-              "Product status",
-              style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w900),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 10),
-            Container(
-              margin: EdgeInsets.only(right: 20, left: 20, top: 5, bottom: 17),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(25.0),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.5),
-                    spreadRadius: 2,
-                    blurRadius: 10,
-                    offset: Offset(0, 3), // changes position of shadow
-                  ),
-                ],
-              ),
-              child: TextField(
-                controller: searcontroll,
-                style: TextStyle(color: AppColor.textColor, fontSize: 15),
-                onChanged: (value) => setState(() {}),
-                decoration: InputDecoration(
-                  hintText: "Search here..",
-                  hintStyle: TextStyle(color: AppColor.greycolor, fontSize: 15),
-                  isDense: true,
-                  fillColor: AppColor.backgroundColor,
-                  filled: true,
-                  contentPadding:
-                  EdgeInsets.only(left: 15, top: 5, bottom: 5, right: 15),
-                  suffixIcon:
-                  Icon(Icons.search, color: AppColor.greycolor, size: 29),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(50.0),
-                    borderSide:
-                    BorderSide(color: AppColor.greycolor.withOpacity(0.3)),
-                  ),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(50.0),
-                      borderSide: BorderSide(
-                        color: AppColor.greycolor,
-                      )),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(50.0),
-                    borderSide:
-                    BorderSide(color: AppColor.textColor.withOpacity(0.5)),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
+        centerTitle: true,
+        title: Text(
+          "Product status",
+          style: TextStyle(
+              color: AppColor.textColor,
+              fontSize: 20,
+              fontWeight: FontWeight.w900),
+          textAlign: TextAlign.center,
+        )
       ),
       body: Column(
         children: [
+          Container(
+            margin: EdgeInsets.only(right: 20, left: 20, bottom: 17),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(25.0),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.5),
+                  spreadRadius: 2,
+                  blurRadius: 10,
+                  offset: Offset(0, 3), // changes position of shadow
+                ),
+              ],
+            ),
+            child: TextField(
+              controller: searcontroll,
+              style: TextStyle(color: AppColor.textColor, fontSize: 15),
+              onChanged: (value) => setState(() {}),
+              decoration: InputDecoration(
+                hintText: "Search here..",
+                hintStyle: TextStyle(color: AppColor.greycolor, fontSize: 15),
+                isDense: true,
+                fillColor: AppColor.backgroundColor,
+                filled: true,
+                contentPadding:
+                EdgeInsets.only(left: 15, top: 5, bottom: 5, right: 15),
+                suffixIcon:
+                Icon(Icons.search, color: AppColor.greycolor, size: 29),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(50.0),
+                  borderSide:
+                  BorderSide(color: AppColor.greycolor.withOpacity(0.3)),
+                ),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(50.0),
+                    borderSide: BorderSide(
+                      color: AppColor.greycolor,
+                    )),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(50.0),
+                  borderSide:
+                  BorderSide(color: AppColor.textColor.withOpacity(0.5)),
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: 15),
           Expanded(
             child: StreamBuilder(
                 stream: FirebaseFirestore.instance
@@ -157,7 +152,7 @@ class _productStatusState extends State<productStatus> {
                                                       padding:
                                                           EdgeInsets.symmetric(
                                                               vertical: 5,
-                                                              horizontal: 5),
+                                                              horizontal: 10),
                                                       child: Column(
                                                         crossAxisAlignment:
                                                             CrossAxisAlignment
@@ -208,18 +203,14 @@ class _productStatusState extends State<productStatus> {
                                                                       "Accept"
                                                                   ? CupertinoColors
                                                                       .systemGreen
-                                                                      .withOpacity(
-                                                                          0.5)
                                                                   : product.status ==
                                                                           "Reject"
                                                                       ? CupertinoColors
                                                                           .systemRed
-                                                                          .withOpacity(
-                                                                              0.5)
+
                                                                       : CupertinoColors
                                                                           .systemGrey
-                                                                          .withOpacity(
-                                                                              0.5))),
+                                                                          )),
                                                           child: Text(product.status,
                                                               style: TextStyle(
                                                                   color: Colors.black))),
@@ -228,7 +219,7 @@ class _productStatusState extends State<productStatus> {
                                                 ),
                                                 collapsed: SizedBox.shrink(),
                                                 expanded: Padding(
-                                                  padding: EdgeInsets.all(15),
+                                                  padding: EdgeInsets.all(10),
                                                   child: Column(
                                                     children: [
                                                       Text(product.description,

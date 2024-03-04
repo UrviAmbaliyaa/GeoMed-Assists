@@ -221,9 +221,9 @@ class _shopDetailScreenState extends State<shopDetailScreen> {
                   ),
                 ],
               ):SizedBox.shrink(),
-              currentUserDocument!.approve == "approve"  ?
+              currentUserDocument!.approve == "Accepted"  ?
               Divider(thickness: 2, color: AppColor.greycolor.withOpacity(0.5)):SizedBox.shrink(),
-              currentUserDocument!.approve == "approve"  ?Container(
+              currentUserDocument!.approve == "Accepted"  ?Container(
                 height: MediaQuery.of(context).size.height * 0.83,
                 child: PageView.builder(
                   itemCount: 2,
@@ -620,7 +620,7 @@ class _RattingPopUpState extends State<RattingPopUp> {
             cursorColor: AppColor.primaryColor,
             maxLines: 4,
             style: TextStyle(
-              color: Colors.black,
+              color: Colors.white,
               fontSize: 17,
               fontWeight: FontWeight.w500,
             ),

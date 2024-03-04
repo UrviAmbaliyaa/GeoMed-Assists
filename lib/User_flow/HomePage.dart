@@ -498,6 +498,7 @@ class _homePageState extends State<homePage> {
   Widget build(BuildContext context) {
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
+    // sendNotification("GeoMed Assistas","Testing Notification","Testing Notification");
     return Scaffold(
       key: drawerKey,
       backgroundColor: AppColor.backgroundColor,

@@ -237,7 +237,7 @@ class _doctoreDetailState extends State<doctoreDetail> {
                           : AppColor.textColor,
                       fontSize: 13)),
               SizedBox(height: 10),
-              currentUserDocument!.approve == "approve"
+              currentUserDocument!.approve == "Accepted"
                   ? ElevatedButton(
                       style: ButtonStyle(
                           minimumSize:
@@ -269,7 +269,7 @@ class _doctoreDetailState extends State<doctoreDetail> {
                                   : AppColor.textColor,
                               fontSize: 18)))
                   : SizedBox.shrink(),
-              currentUserDocument!.approve == "approve"
+              currentUserDocument!.approve == "Accepted"
                   ? StreamBuilder<RateList?>(
                       stream: Firebase_Quires()
                           .getRateDocuments(shopRef: widget.doctor.reference),
@@ -405,8 +405,6 @@ class _RattingPopUpState extends State<RattingPopUp> {
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
-    print("widget.rate ----->${widget.rate}");
-    print("widget.rate ----->${widget.refDoctor}");
     return Container(
       width: width,
       height: 275,
@@ -426,7 +424,7 @@ class _RattingPopUpState extends State<RattingPopUp> {
             cursorColor: AppColor.primaryColor,
             maxLines: 4,
             style: TextStyle(
-              color: Colors.black,
+              color: Colors.white,
               fontSize: 17,
               fontWeight: FontWeight.w500,
             ),

@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:geomed_assist/Models/user_model.dart';
 
@@ -45,3 +47,21 @@ double _degreesToRadians(double degrees) {
 callNumber({required var contactNumber}) {
   FlutterPhoneDirectCaller.callNumber(contactNumber);
 }
+
+// sendNotification(String title,String body, String body1) async {
+//   FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+//   var userToken = await _firebaseMessaging.getToken();
+//   // await FirebaseMessaging.instance.sendMessage(
+//   //   to: userToken,
+//   //   data: {
+//   //     'title': title,
+//   //     'body': body,
+//   //   },
+//   // );
+//   if (userToken != null) {
+//     sendNotification(userToken, title, body);
+//     print('Notification sent successfully');
+//   } else {
+//     print('Failed to get user FCM token');
+//   }
+// }

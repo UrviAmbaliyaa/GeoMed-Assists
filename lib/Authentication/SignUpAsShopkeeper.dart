@@ -119,7 +119,7 @@ class _SignUpAsShopkeeperState extends State<SignUpAsShopkeeper> {
         "breckendTime":"${breackEndendTime!.hour}:${breackEndendTime!.minute}",
         "approve" :  widget.editdcreen? widget.editdcreen : "Pending"
       };
-      !widget.editdcreen? mapdata.addAll({"favoriteReference": [],"availableSlot": [],"create": DateTime.now()}):null;
+      !widget.editdcreen? mapdata.addAll({"favoriteReference": [],"availableSlot": [],"register": DateTime.now()}):null;
       !widget.editdcreen
           ? await firebase_auth().signUpWithEmailAndPassword(
               emailController.text, password.text, mapdata, context)
@@ -519,6 +519,7 @@ class _SignUpAsShopkeeperState extends State<SignUpAsShopkeeper> {
                                       ),
                                       SizedBox(height: 10),
                                       Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
                                           Column(
                                             children: [
@@ -547,11 +548,6 @@ class _SignUpAsShopkeeperState extends State<SignUpAsShopkeeper> {
                                                       color: AppColor.textColor))
                                             ],
                                           ),
-                                          SizedBox(width: 15),
-                                          Text("to",
-                                              style: TextStyle(
-                                                  fontSize: 18,
-                                                  color: AppColor.textColor)),
                                           SizedBox(width: 15),
                                           Column(
                                             children: [
@@ -584,6 +580,7 @@ class _SignUpAsShopkeeperState extends State<SignUpAsShopkeeper> {
                                       ),
                                       SizedBox(height: 10),
                                       Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
                                           Column(
                                             children: [
@@ -612,11 +609,6 @@ class _SignUpAsShopkeeperState extends State<SignUpAsShopkeeper> {
                                                       color: AppColor.textColor))
                                             ],
                                           ),
-                                          SizedBox(width: 15),
-                                          Text("to",
-                                              style: TextStyle(
-                                                  fontSize: 18,
-                                                  color: AppColor.textColor)),
                                           SizedBox(width: 15),
                                           Column(
                                             children: [

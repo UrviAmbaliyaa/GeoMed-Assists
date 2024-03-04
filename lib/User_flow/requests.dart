@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geomed_assist/Firebase/firebaseAuthentications.dart';
 import 'package:geomed_assist/Firebase/firebase_quaries.dart';
@@ -51,7 +52,7 @@ class _requestsState extends State<requests> {
                             if (snapshot2.hasData) {
                               var userinfo = snapshot2.data;
                               return Container(
-                                padding: EdgeInsets.only(left: 25,right: 25,top: 15),
+                                padding: EdgeInsets.only(left: 25,right: 25,top: 15,bottom: 15),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
@@ -77,22 +78,30 @@ class _requestsState extends State<requests> {
                                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                               children: [
                                                 SizedBox(
-                                                  width: width*0.6,
+                                                  width: width*0.52,
                                                   child: Text(userinfo.name,
                                                       style: TextStyle(
                                                           color: AppColor.textColor,
                                                           fontSize: 18,
                                                           fontWeight: FontWeight.w400)),
                                                 ),
-                                                Text(data.status,
-                                                    style: TextStyle(
-                                                        color: data.status == "Pending"
-                                                            ? AppColor.greycolor
-                                                            : data.status == "Accept"
-                                                            ? Colors.green
-                                                            : Colors.red,
-                                                        fontSize: 15,
-                                                        fontWeight: FontWeight.w400)),
+                                                Container(
+                                                  padding: EdgeInsets.symmetric(vertical: 5,horizontal: 15),
+                                                  decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.circular(100),
+                                                    color: data.status == "Pending"
+                                                        ? CupertinoColors.systemGrey
+                                                        : data.status == "Accept"
+                                                        ? CupertinoColors.activeGreen
+                                                        : CupertinoColors.systemRed,
+                                                  ),
+
+                                                  child: Text(data.status,
+                                                      style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 15,
+                                                          fontWeight: FontWeight.w500)),
+                                                ),
                                               ],
                                             ),
                                             StreamBuilder(
@@ -116,7 +125,7 @@ class _requestsState extends State<requests> {
                                       CrossAxisAlignment.start,
                                       children: [
                                         SizedBox(
-                                          width: width * 0.73,
+                                          width: width * 0.7,
                                           child: Text(data.description,
                                               style: TextStyle(
                                                   color: AppColor.greycolor,

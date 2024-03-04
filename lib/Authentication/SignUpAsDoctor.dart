@@ -118,13 +118,14 @@ class _SignUpAsDoctorState extends State<SignUpAsDoctor> {
         "cantact": contactNumberController.text,
         "zipCode": zipCodeController.text,
         "imagePath": networkImagepath,
+
         "startTime": "${startTime!.hour}:${startTime!.minute}",
         "breckstartTime": "${breckStartTime!.hour}:${breckStartTime!.minute}",
         "endtime":"${endTime!.hour}:${endTime!.minute}",
         "breckendTime":"${breackEndendTime!.hour}:${breackEndendTime!.minute}",
         "approve" : widget.editdcreen? widget.editdcreen : "Pending"
       };
-      !widget.editdcreen? mapdata.addAll({"favoriteReference": [],"availableSlot": [],"create": DateTime.now()}):null;
+      !widget.editdcreen? mapdata.addAll({"favoriteReference": [],"availableSlot": [],"register": DateTime.now()}):null;
       !widget.editdcreen
           ? await firebase_auth().signUpWithEmailAndPassword(
               emailController.text, password.text, mapdata, context)

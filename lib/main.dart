@@ -5,6 +5,7 @@ import 'package:geomed_assist/Splashscreen.dart';
 Future<void> main() async {
     WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp();
+
     runApp(const MyApp());
 
 }

@@ -133,7 +133,9 @@ class _productsState extends State<products> {
           Expanded(
               child: StreamBuilder<ProductList?>(
                   stream: Firebase_Quires().getProductDocuments(
-                      shopRef: currentUserDocument!.reference, available: true,forCategories: false),
+                      shopRef: currentUserDocument!.reference,
+                      available: true,
+                      forCategories: false),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.active ||
                         snapshot.connectionState == ConnectionState.done) {
@@ -197,11 +199,15 @@ class _productsState extends State<products> {
                                         children: [
                                           GestureDetector(
                                             onTap: () {
-                                              Navigator.of(context, rootNavigator: true).push(
+                                              Navigator.of(context,
+                                                      rootNavigator: true)
+                                                  .push(
                                                 CupertinoPageRoute<bool>(
                                                   fullscreenDialog: true,
-                                                  builder: (BuildContext context) =>
-                                                  new productDetail(data: data),
+                                                  builder:
+                                                      (BuildContext context) =>
+                                                          new productDetail(
+                                                              data: data),
                                                 ),
                                               );
                                             },
@@ -242,11 +248,18 @@ class _productsState extends State<products> {
                                                           maxLines: 2),
                                                     ),
                                                     InkWell(
-                splashColor: Colors.transparent,
+                                                        splashColor:
+                                                            Colors.transparent,
                                                         onTap: () async {
-                                                          List<categoryModel>? categories2 = [];
-                                                          Stream<List<categoryModel>?> datas = await Firebase_Quires().getCategory();
-                                                          await for (List<categoryModel>? event in datas) {
+                                                          List<categoryModel>?
+                                                              categories2 = [];
+                                                          Stream<List<categoryModel>?>
+                                                              datas =
+                                                              await Firebase_Quires()
+                                                                  .getCategory();
+                                                          await for (List<
+                                                                  categoryModel>? event
+                                                              in datas) {
                                                             categories2 = event;
                                                           }
                                                           Navigator.of(context,
@@ -260,12 +273,11 @@ class _productsState extends State<products> {
                                                               builder: (BuildContext
                                                                       context) =>
                                                                   new addProduct(
-                                                                      edit:
-                                                                          true,
-                                                                      product:
-                                                                          data,
-                                                                  categories: categories2,
-                                                                  ),
+                                                                edit: true,
+                                                                product: data,
+                                                                categories:
+                                                                    categories2,
+                                                              ),
                                                             ),
                                                           );
                                                         },
@@ -275,7 +287,8 @@ class _productsState extends State<products> {
                                                             size: 25)),
                                                     SizedBox(width: 10),
                                                     InkWell(
-                splashColor: Colors.transparent,
+                                                        splashColor:
+                                                            Colors.transparent,
                                                         onTap: () async {
                                                           showDialog(
                                                             context: context,
@@ -329,7 +342,7 @@ class _productsState extends State<products> {
                                                                             child: ElevatedButton(
                                                                                 style: ButtonStyle(shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))), backgroundColor: MaterialStatePropertyAll(AppColor.primaryColor)),
                                                                                 onPressed: () async {
-                                                                                  await Firebase_Quires().crudOperations(available: true, categoryReferance: data.categoryRef, crudType: "del", image: data.image, description: data.description, name: data.name, price: data.price.toString(), productID: data.referenace.id,status: data.status);
+                                                                                  await Firebase_Quires().crudOperations(available: true, categoryReferance: data.categoryRef, crudType: "del", image: data.image, description: data.description, name: data.name, price: data.price.toString(), productID: data.referenace.id, status: data.status);
                                                                                   Navigator.pop(context);
                                                                                 },
                                                                                 child: Text("Delete", style: TextStyle(color: AppColor.textColor, fontSize: 18))),
@@ -350,29 +363,45 @@ class _productsState extends State<products> {
                                                   ],
                                                 ),
                                                 Padding(
-                                                  padding: EdgeInsets.symmetric(horizontal: 5),
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 5),
                                                   child: Row(
                                                     children: [
                                                       Container(
                                                         width: 10,
                                                         height: 10,
-                                                        margin: EdgeInsets.only(right: 5),
+                                                        margin: EdgeInsets.only(
+                                                            right: 5),
                                                         decoration: BoxDecoration(
-                                                            borderRadius: BorderRadius.circular(100),
-                                                            color: data.available ? Colors.green : Colors.red
-                                                        ),
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        100),
+                                                            color: data
+                                                                    .available
+                                                                ? Colors.green
+                                                                : Colors.red),
                                                       ),
                                                       Row(
-                                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
                                                         children: [
-                                                          Text(data.available ? "Available" : "Not Available",
+                                                          Text(
+                                                              data.available
+                                                                  ? "Available"
+                                                                  : "Not Available",
                                                               style: TextStyle(
-                                                                  color: data.available ? Colors.green : Colors.red,
+                                                                  color: data
+                                                                          .available
+                                                                      ? Colors
+                                                                          .green
+                                                                      : Colors
+                                                                          .red,
                                                                   fontSize: 13),
                                                               maxLines: 2),
                                                         ],
                                                       ),
-
                                                     ],
                                                   ),
                                                 ),
@@ -445,7 +474,7 @@ class _productsState extends State<products> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           InkWell(
-                splashColor: Colors.transparent,
+                            splashColor: Colors.transparent,
                             onTap: () {
                               drawerKey.currentState?.closeDrawer();
                               Navigator.of(context, rootNavigator: true).push(
@@ -471,15 +500,16 @@ class _productsState extends State<products> {
                             ),
                           ),
                           InkWell(
-                splashColor: Colors.transparent,
+                            splashColor: Colors.transparent,
                             onTap: () async {
                               drawerKey.currentState?.closeDrawer();
-                              var category =
-                              await FirebaseFirestore.instance.collection("category").get();
+                              var category = await FirebaseFirestore.instance
+                                  .collection("category")
+                                  .get();
                               List<categoryModel> categorytList = [];
                               for (var doc in category.docs) {
                                 Map<String, dynamic> docdata = doc.data();
-                                docdata.addAll({"refereance":doc.reference});
+                                docdata.addAll({"refereance": doc.reference});
                                 categorytList
                                     .add(categoryModel.fromJson(docdata));
                               }
@@ -487,7 +517,9 @@ class _productsState extends State<products> {
                                 CupertinoPageRoute<bool>(
                                   fullscreenDialog: true,
                                   builder: (BuildContext context) =>
-                                      new addProduct(edit: false,categories: categorytList),
+                                      new addProduct(
+                                          edit: false,
+                                          categories: categorytList),
                                 ),
                               );
                             },
@@ -505,15 +537,15 @@ class _productsState extends State<products> {
                               ),
                             ),
                           ),
-                          // productStatus
+
                           InkWell(
-                splashColor: Colors.transparent,
-                            onTap: ()  {
+                            splashColor: Colors.transparent,
+                            onTap: () {
                               Navigator.of(context, rootNavigator: true).push(
                                 CupertinoPageRoute<bool>(
                                   fullscreenDialog: true,
                                   builder: (BuildContext context) =>
-                                  new productStatus(),
+                                      new productStatus(),
                                 ),
                               );
                             },
@@ -532,39 +564,13 @@ class _productsState extends State<products> {
                             ),
                           ),
                           InkWell(
-                splashColor: Colors.transparent,
-                            onTap: () async {
-                              Navigator.of(context, rootNavigator: true).push(
-                                CupertinoPageRoute<bool>(
-                                  fullscreenDialog: true,
-                                  builder: (BuildContext context) =>
-                                      ProductRequest(),
-                                ),
-                              );
-                            },
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(vertical: 10),
-                              child: Row(
-                                children: [
-                                  Text(
-                                    'Product Request',
-                                    style: TextStyle(
-                                        color: AppColor.textColor,
-                                        fontSize: 18),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          InkWell(
-                splashColor: Colors.transparent,
+                            splashColor: Colors.transparent,
                             onTap: () {
                               drawerKey.currentState?.closeDrawer();
                               Navigator.of(context, rootNavigator: true).push(
                                 CupertinoPageRoute<bool>(
                                   fullscreenDialog: true,
-                                  builder: (BuildContext context) =>
-                                      requests(),
+                                  builder: (BuildContext context) => requests(),
                                 ),
                               );
                             },
@@ -583,7 +589,7 @@ class _productsState extends State<products> {
                             ),
                           ),
                           InkWell(
-                splashColor: Colors.transparent,
+                            splashColor: Colors.transparent,
                             onTap: () {
                               drawerKey.currentState?.closeDrawer();
                               Navigator.of(context, rootNavigator: true).push(
@@ -609,7 +615,7 @@ class _productsState extends State<products> {
                             ),
                           ),
                           InkWell(
-                splashColor: Colors.transparent,
+                            splashColor: Colors.transparent,
                             onTap: () {
                               drawerKey.currentState?.closeDrawer();
                               Navigator.of(context, rootNavigator: true).push(

@@ -27,11 +27,11 @@ class _product_adminState extends State<product_admin> {
         appBar: AppBar(
           elevation: 1,
           leadingWidth: 0,
-          toolbarHeight: 110,
+          toolbarHeight: 130,
           automaticallyImplyLeading: false,
           excludeHeaderSemantics: true,
           title: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(height: 10),
               Text(
@@ -42,7 +42,7 @@ class _product_adminState extends State<product_admin> {
                     fontWeight: FontWeight.w900),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: 10),
+              SizedBox(height: 20),
               Row(
                 children: [
                   Container(
@@ -168,7 +168,6 @@ class _product_adminState extends State<product_admin> {
 
   bool productVisible({required Product pro, String? search}) {
     bool searching = false;
-    print("selectedMenu ----->$selectedMenu");
     switch (selectedMenu) {
       case "All":
         searching = true;
@@ -183,7 +182,6 @@ class _product_adminState extends State<product_admin> {
         searching = pro.status == "Reject";
         break;
     }
-    print("search ------>$search");
     if (search != null && search.trim().length != 0 && searching == true) {
       searching =
           pro.name.toUpperCase().trim().contains(search.toUpperCase().trim());
@@ -223,7 +221,10 @@ class _product_adminState extends State<product_admin> {
                                       pro: product, search: searcontroll.text),
                                   child: Padding(
                                     padding: EdgeInsets.only(
-                                        left: 20, right: 20, top: 10,bottom: 10),
+                                        left: 20,
+                                        right: 20,
+                                        top: 10,
+                                        bottom: 10),
                                     child: ExpandablePanel(
                                       header: Row(
                                         children: [
@@ -270,78 +271,85 @@ class _product_adminState extends State<product_admin> {
                                             width: 93,
                                             height: 35,
                                             child: ElevatedButton(
-                                                onPressed: () {
-                                                },
+                                                onPressed: () {},
                                                 style: ButtonStyle(
                                                     elevation:
-                                                    MaterialStatePropertyAll(
-                                                        0),
-                                                    backgroundColor: MaterialStatePropertyAll(
-                                                        product.status == "Accept" ? CupertinoColors
+                                                        MaterialStatePropertyAll(
+                                                            0),
+                                                    backgroundColor: MaterialStatePropertyAll(product
+                                                                .status ==
+                                                            "Accept"
+                                                        ? CupertinoColors
                                                             .systemGreen
-                                                            .withOpacity(
-                                                            0.5):
-                                                        product.status == "Reject" ?
-                                                        CupertinoColors
-                                                            .systemRed
-                                                            .withOpacity(
-                                                            0.5) :
-                                                        CupertinoColors
-                                                            .systemGrey
-                                                            .withOpacity(
-                                                            0.5)
-                                                    )),
+                                                            .withOpacity(0.5)
+                                                        : product.status ==
+                                                                "Reject"
+                                                            ? CupertinoColors
+                                                                .systemRed
+                                                                .withOpacity(
+                                                                    0.5)
+                                                            : CupertinoColors
+                                                                .systemGrey
+                                                                .withOpacity(
+                                                                    0.5))),
                                                 child: Text(product.status,
                                                     style: TextStyle(
-                                                        color: Colors
-                                                            .black))),
+                                                        color: Colors.black))),
                                           ),
-
                                         ],
                                       ),
                                       collapsed: SizedBox.shrink(),
                                       expanded: Padding(
-                                        padding: EdgeInsets.all(15),
+                                        padding: EdgeInsets.all(10),
                                         child: Column(
                                           children: [
                                             StreamBuilder(
-                                              stream: product.shopReference.snapshots(),
-                                              builder: (context, snapshot3) {
-                                                return snapshot3.hasData ? Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  mainAxisAlignment: MainAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      "Shop name: ${snapshot3.data!['name']}",
-                                                      style: TextStyle(
-                                                          fontSize: 15,
-                                                          fontWeight:
-                                                          FontWeight.w500),
-                                                    ),
-                                                    Text(
-                                                      "Address: ${snapshot3.data!['address']}",
-                                                      style: TextStyle(
-                                                          fontSize: 15,
-                                                          fontWeight:
-                                                          FontWeight.w400),
-                                                    ),
-                                                    Text(
-                                                      "cantact: ${snapshot3.data!['cantact']}",
-                                                      style: TextStyle(
-                                                          fontSize: 15,
-                                                          fontWeight:
-                                                          FontWeight.w400),
-                                                    ),
-                                                  ],
-                                                ) : SizedBox.shrink();
-                                              }
-                                            ),
-
-                                              Text(product.description,
+                                                stream: product.shopReference
+                                                    .snapshots(),
+                                                builder: (context, snapshot3) {
+                                                  return snapshot3.hasData
+                                                      ? Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Text(
+                                                              "Shop name: ${snapshot3.data!['name']}",
+                                                              style: TextStyle(
+                                                                  fontSize: 15,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500),
+                                                            ),
+                                                            Text(
+                                                              "Address: ${snapshot3.data!['address']}",
+                                                              style: TextStyle(
+                                                                  fontSize: 15,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w400),
+                                                            ),
+                                                            Text(
+                                                              "cantact: ${snapshot3.data!['cantact']}",
+                                                              style: TextStyle(
+                                                                  fontSize: 15,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w400),
+                                                            ),
+                                                          ],
+                                                        )
+                                                      : SizedBox.shrink();
+                                                }),
+                                            Text(product.description,
                                                 style: TextStyle(
                                                     fontSize: 15,
                                                     color: Colors.grey,
-                                                    fontWeight: FontWeight.w500),
+                                                    fontWeight:
+                                                        FontWeight.w500),
                                                 softWrap: true),
                                             SizedBox(height: 10),
                                             SizedBox(
@@ -349,68 +357,83 @@ class _product_adminState extends State<product_admin> {
                                               height: 45,
                                               child: Row(
                                                 children: [
-                                                  product.status == "Pending" || product.status == "Reject" ? Expanded(
-                                                    child: ElevatedButton(
-                                                        onPressed: () {
-                                                          product.referenace
-                                                              .update({
-                                                            "status":
-                                                            "Accept"
-                                                          });
-                                                        },
-                                                        style: ButtonStyle(
-                                                            elevation:
-                                                            MaterialStatePropertyAll(
-                                                                0),
-                                                            backgroundColor: MaterialStatePropertyAll(
-                                                                CupertinoColors
-                                                                    .systemGreen
-                                                                    .withOpacity(
-                                                                    0.5))),
-                                                        child: Text("Accept",
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .black))),
-                                                  ) : SizedBox.shrink(),
-                                                  SizedBox(width: product.status == "Pending" || product.status == "Reject" ? 5 : 0),
-                                                  product.status == "Pending" || product.status == "Accept" ?  Expanded(
-                                                    child: ElevatedButton(
-                                                        onPressed: () {
-                                                          showDialog(
-                                                              context: context,
-                                                              builder:
-                                                                  (context) {
-                                                                return AlertDialog(
-                                                                  backgroundColor:
-                                                                  Colors
-                                                                      .white,
-                                                                  elevation: 0,
-                                                                  contentPadding:
-                                                                  EdgeInsets
-                                                                      .zero,
-                                                                  content: alertPopu(
-                                                                      formKey,
-                                                                      description,
-                                                                      context,
-                                                                      product: product),
-                                                                );
-                                                              });
-                                                        },
-                                                        style: ButtonStyle(
-                                                            elevation:
-                                                            MaterialStatePropertyAll(
-                                                                0),
-                                                            backgroundColor:
-                                                            MaterialStatePropertyAll(
-                                                                CupertinoColors
-                                                                    .systemRed
-                                                                    .withOpacity(
-                                                                    0.5))),
-                                                        child: Text("Reject",
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .black))),
-                                                  )  : SizedBox.shrink(),
+                                                  product.status == "Pending" ||
+                                                          product.status ==
+                                                              "Reject"
+                                                      ? Expanded(
+                                                          child: ElevatedButton(
+                                                              onPressed: () {
+                                                                product
+                                                                    .referenace
+                                                                    .update({
+                                                                  "status":
+                                                                      "Accept"
+                                                                });
+                                                              },
+                                                              style: ButtonStyle(
+                                                                  elevation:
+                                                                      MaterialStatePropertyAll(
+                                                                          0),
+                                                                  backgroundColor: MaterialStatePropertyAll(CupertinoColors
+                                                                      .systemGreen
+                                                                      .withOpacity(
+                                                                          0.5))),
+                                                              child: Text(
+                                                                  "Accept",
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .black))),
+                                                        )
+                                                      : SizedBox.shrink(),
+                                                  SizedBox(
+                                                      width: product.status ==
+                                                                  "Pending" ||
+                                                              product.status ==
+                                                                  "Reject"
+                                                          ? 5
+                                                          : 0),
+                                                  product.status == "Pending" ||
+                                                          product.status ==
+                                                              "Accept"
+                                                      ? Expanded(
+                                                          child: ElevatedButton(
+                                                              onPressed: () {
+                                                                showDialog(
+                                                                    context:
+                                                                        context,
+                                                                    builder:
+                                                                        (context) {
+                                                                      return AlertDialog(
+                                                                        backgroundColor:
+                                                                            Colors.white,
+                                                                        elevation:
+                                                                            0,
+                                                                        contentPadding:
+                                                                            EdgeInsets.zero,
+                                                                        content: alertPopu(
+                                                                            formKey,
+                                                                            description,
+                                                                            context,
+                                                                            product:
+                                                                                product),
+                                                                      );
+                                                                    });
+                                                              },
+                                                              style: ButtonStyle(
+                                                                  elevation:
+                                                                      MaterialStatePropertyAll(
+                                                                          0),
+                                                                  backgroundColor: MaterialStatePropertyAll(CupertinoColors
+                                                                      .systemRed
+                                                                      .withOpacity(
+                                                                          0.5))),
+                                                              child: Text(
+                                                                  "Reject",
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .black))),
+                                                        )
+                                                      : SizedBox.shrink(),
                                                 ],
                                               ),
                                             ),
@@ -421,7 +444,9 @@ class _product_adminState extends State<product_admin> {
                                         tapHeaderToExpand: true,
                                         tapBodyToExpand: false,
                                         tapBodyToCollapse: false,
-                                        headerAlignment: ExpandablePanelHeaderAlignment.center,
+                                        headerAlignment:
+                                            ExpandablePanelHeaderAlignment
+                                                .center,
                                         hasIcon: false,
                                       ),
                                     ),
@@ -433,8 +458,13 @@ class _product_adminState extends State<product_admin> {
                             });
                       },
                     )
-                  : constWidget().circularProgressInd(nodatafound: true)
-              : constWidget().circularProgressInd(nodatafound: false);
+                  : Center(
+                      child:
+                          constWidget().circularProgressInd(nodatafound: true),
+                    )
+              : Center(
+                  child: constWidget().circularProgressInd(nodatafound: false),
+                );
         });
   }
 

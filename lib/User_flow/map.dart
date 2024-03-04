@@ -15,6 +15,7 @@ import 'package:geomed_assist/constants/constantWidgets.dart';
 import 'package:geomed_assist/constants/constantdata.dart';
 import 'package:geomed_assist/constants/customTextField.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class MapScreen extends StatefulWidget {
   @override
@@ -35,6 +36,9 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   Future<void> getMarkers() async {
+    await Permission.location.request();
+    await Permission.locationAlways.request();
+    await Permission.locationWhenInUse.request();
     Position position = await Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.high,
     );
@@ -43,18 +47,20 @@ class _MapScreenState extends State<MapScreen> {
       position.longitude,
     )));
     Marker marker1 = addMarker(
-        id: "0",
-        latlong: LatLng(position.latitude, position.longitude),
-        title: "Current Location",
-        address: "You are here..",
+      id: "0",
+      latlong: LatLng(position.latitude, position.longitude),
+      title: "Current Location",
+      address: "You are here..",
     );
     markers.add(marker1);
-    shops_doctores =
-        await Firebase_Quires().getShopKeepe_Doctore(shopkeeper: true,fromMap: true).first ??
-            [];
-    shops_doctores.addAll(
-        await Firebase_Quires().getShopKeepe_Doctore(shopkeeper: false,fromMap: true).first ??
-            []);
+    shops_doctores = await Firebase_Quires()
+            .getShopKeepe_Doctore(shopkeeper: true, fromMap: true)
+            .first ??
+        [];
+    shops_doctores.addAll(await Firebase_Quires()
+            .getShopKeepe_Doctore(shopkeeper: false, fromMap: true)
+            .first ??
+        []);
     for (UserModel doc in shops_doctores) {
       LatLng lng = LatLng(doc.latLong!, doc.longitude!);
       var marker = addMarker(
@@ -62,8 +68,7 @@ class _MapScreenState extends State<MapScreen> {
           latlong: lng,
           title: doc.name,
           address: doc.address!,
-          data: doc
-      );
+          data: doc);
       markers.add(marker);
     }
     setState(() {});
@@ -74,8 +79,7 @@ class _MapScreenState extends State<MapScreen> {
       required LatLng latlong,
       required String title,
       required String address,
-      UserModel? data
-      }) {
+      UserModel? data}) {
     return Marker(
       markerId: MarkerId(id),
       position: latlong,
@@ -85,13 +89,16 @@ class _MapScreenState extends State<MapScreen> {
       ),
       onTap: () {
         print("===========================================?");
-        id != 0 ? Navigator.of(context, rootNavigator: true).push(
-          CupertinoPageRoute<bool>(
-            fullscreenDialog: true,
-            builder: (BuildContext context) =>
-            data!.type == "ShopKeeper" ? shopDetailScreen(data: data) : doctoreDetail(doctor: data),
-          ),
-        ):null;
+        id != 0
+            ? Navigator.of(context, rootNavigator: true).push(
+                CupertinoPageRoute<bool>(
+                  fullscreenDialog: true,
+                  builder: (BuildContext context) => data!.type == "ShopKeeper"
+                      ? shopDetailScreen(data: data)
+                      : doctoreDetail(doctor: data),
+                ),
+              )
+            : null;
       },
     );
   }
@@ -99,7 +106,7 @@ class _MapScreenState extends State<MapScreen> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () async{
+      onWillPop: () async {
         exit(0);
       },
       child: Scaffold(
@@ -119,12 +126,11 @@ class _MapScreenState extends State<MapScreen> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(top: 15,left: 20,right: 20),
+                padding: EdgeInsets.only(top: 15, left: 20, right: 20),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    SizedBox(
-                      width: MediaQuery.sizeOf(context).width * 0.68,
+                    Expanded(
                       child: customeTextFormField(
                         autofillHint: [],
                         readOnly: false,
@@ -135,59 +141,74 @@ class _MapScreenState extends State<MapScreen> {
                         passwordvisiblity: false,
                         sufixIcon: Icon(Icons.location_on_outlined,
                             size: 30, color: AppColor.textColor),
-                        validation: (value) {
-                        },
+                        validation: (value) {},
                         onchageAction: () =>
                             Future.delayed(Duration(seconds: 3), () async {
-                              if (searchController.text.trim().length >= 5) {
-                                markers.clear();
-                                var searchdata = shops_doctores.where((element) {
-                                  return element.zipCode == searchController.text.trim();
-                                });
-                                selectedZipCode = searchController.text;
-
-                                for (UserModel doc in searchdata) {
-                                  LatLng lng = LatLng(doc.latLong!, doc.longitude!);
-                                  var marker = addMarker(
-                                      id: doc.reference.id,
-                                      latlong: lng,
-                                      title: doc.name,
-                                      address: doc.address!,
-                                      data: doc
-                                  );
-                                  markers.add(marker);
-                                }
-                                _searchLocation(
-                                    location: LatLng(searchdata.first.latLong!,
-                                        searchdata.first.longitude!),
-                                    id: searchdata.first.reference.id);
+                              print("shops_doctores ------>${shops_doctores}");
+                          if (searchController.text.trim().length >= 5) {
+                            markers.clear();
+                            var searchdata = shops_doctores.where((element) {
+                              return element.zipCode ==
+                                  searchController.text.trim();
+                            });
+                            selectedZipCode = searchController.text;
+                            if (searchdata.length != 0) {
+                              for (UserModel doc in searchdata) {
+                                LatLng lng =
+                                    LatLng(doc.latLong!, doc.longitude!);
+                                var marker = addMarker(
+                                    id: doc.reference.id,
+                                    latlong: lng,
+                                    title: doc.name,
+                                    address: doc.address!,
+                                    data: doc);
+                                markers.add(marker);
                               }
-                            }),
+
+                              _searchLocation(
+                                  location: LatLng(searchdata.first.latLong!,
+                                      searchdata.first.longitude!),
+                                  id: searchdata.first.reference.id);
+                            }
+                          }
+                        }),
                       ),
                     ),
-                    ElevatedButton(
-                        onPressed: (){
-                          Navigator.of(context, rootNavigator: true).push(
-                            CupertinoPageRoute<bool>(
-                              fullscreenDialog: true,
-                              builder: (BuildContext context) => bottomTabBar()
-                            ),
-                          );
-                        },
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStatePropertyAll(AppColor.inputTextfill),
-                          padding: MaterialStatePropertyAll(EdgeInsets.symmetric(vertical: 10,horizontal: 14)),
-                          shape: MaterialStatePropertyAll(
-                              RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12)
-                              )
+                    searchController.text.trim().length > 4
+                        ? Container(
+                            margin: EdgeInsets.only(left: 10),
+                            child: ElevatedButton(
+                                onPressed: () {
+                                  Navigator.of(context, rootNavigator: true)
+                                      .push(
+                                    CupertinoPageRoute<bool>(
+                                        fullscreenDialog: true,
+                                        builder: (BuildContext context) =>
+                                            bottomTabBar()),
+                                  );
+                                },
+                                style: ButtonStyle(
+                                    backgroundColor: MaterialStatePropertyAll(
+                                        AppColor.inputTextfill),
+                                    padding: MaterialStatePropertyAll(
+                                        EdgeInsets.symmetric(
+                                            vertical: 10, horizontal: 14)),
+                                    shape: MaterialStatePropertyAll(
+                                        RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12)))),
+                                child: Text(
+                                  "See All",
+                                  style: TextStyle(
+                                      color: AppColor.textColor,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w500),
+                                )),
                           )
-                        ),
-                        child: Text("See All",style: TextStyle(color: AppColor.textColor,fontSize: 18,fontWeight: FontWeight.w500),))
+                        : SizedBox.shrink()
                   ],
                 ),
               ),
-      
             ],
           ),
         ),

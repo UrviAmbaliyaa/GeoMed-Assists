@@ -37,14 +37,21 @@ class _splashScreenState extends State<splashScreen> {
             Screens = admin_bottomTabBar();
         }
     }
-
+    Future.delayed(Duration(milliseconds: 10),() =>
     Navigator.of(context1).push(
       CupertinoPageRoute(
         fullscreenDialog: true,
         builder: (BuildContext context) =>
         FirebaseAuth.instance.currentUser == null ? SignIn() : Screens,
       ),
-    );
+    ));
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
   }
 
   @override

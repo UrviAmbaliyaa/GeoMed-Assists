@@ -159,20 +159,22 @@ class Firebase_Quires {
     try {
       var user = !fromMap ? await FirebaseFirestore.instance
           .collection("User")
-          .where("approve", isEqualTo: true)
+          .where("approve", isEqualTo: "Accepted")
           .where("type", isEqualTo: shopkeeper ? "ShopKeeper" : "Doctore")
           .where('zipCode',isEqualTo: selectedZipCode).get() :
       await FirebaseFirestore.instance
           .collection("User")
-          .where("approve", isEqualTo: true)
+          .where("approve", isEqualTo: "Accepted")
           .where("type", isEqualTo: shopkeeper ? "ShopKeeper" : "Doctore").get();
 
-
+      print("user.docs ----->${user.docs.length}");
       List<UserModel> userList = [];
       for (var doc in user.docs) {
         Map<String, dynamic> data = doc.data();
-        data.addAll({"reference": doc.reference});
-        userList.add(UserModel.fromJson(data as Map<String, dynamic>));
+        if(doc['type'] != "Admin"){
+          data.addAll({"reference": doc.reference});
+          userList.add(UserModel.fromJson(data as Map<String, dynamic>));
+        }
       }
       userList.sort((a, b) => a.distanc!.compareTo(b.distanc!));
       yield userList;
