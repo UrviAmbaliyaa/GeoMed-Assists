@@ -118,7 +118,6 @@ class _SignUpAsDoctorState extends State<SignUpAsDoctor> {
         "cantact": contactNumberController.text,
         "zipCode": zipCodeController.text,
         "imagePath": networkImagepath,
-
         "startTime": "${startTime!.hour}:${startTime!.minute}",
         "breckstartTime": "${breckStartTime!.hour}:${breckStartTime!.minute}",
         "endtime":"${endTime!.hour}:${endTime!.minute}",

@@ -29,22 +29,34 @@ class _splashScreenState extends State<splashScreen> {
         switch (currentUserDocument!.type) {
           case "User":
             Screens = currentUserDocument!.approve == "Accepted" ? MapScreen() :unAuthorized();
+            break;
           case "ShopKeeper":
             Screens = currentUserDocument!.approve == "Accepted" ? shop_bottomNavigationbar() :unAuthorized();
+            break;
           case "Doctore":
             Screens = currentUserDocument!.approve == "Accepted" ? bottomSheet_doctor() :unAuthorized();
+            break;
           case "Admin":
             Screens = admin_bottomTabBar();
+            break;
         }
+        Future.delayed(Duration(microseconds: 10),() => Navigator.of(context1).push(
+          CupertinoPageRoute(
+            fullscreenDialog: true,
+            builder: (BuildContext context) =>
+            Screens,
+          ),
+        ));
+    }else{
+      Future.delayed(Duration(microseconds: 10),() => Navigator.of(context1).push(
+        CupertinoPageRoute(
+          fullscreenDialog: true,
+          builder: (BuildContext context) =>
+              SignIn()
+        ),
+      ));
     }
-    Future.delayed(Duration(milliseconds: 10),() =>
-    Navigator.of(context1).push(
-      CupertinoPageRoute(
-        fullscreenDialog: true,
-        builder: (BuildContext context) =>
-        FirebaseAuth.instance.currentUser == null ? SignIn() : Screens,
-      ),
-    ));
+
   }
 
   @override

@@ -61,13 +61,13 @@ class firebase_auth{
   }
 
   updateData({required DocumentReference reference,required Map<String, dynamic> jsondata}) async {
-    try{
+    // try{
       await reference.update(jsondata as Map<Object, Object?>);
       Map<String, dynamic> mapdata = jsondata;
       mapdata.addAll({"reference":reference});
       currentUserDocument = await UserModel.fromJson(mapdata);
-    }catch(error){
-      print("Error =====>${error}");
-    }
+    // }catch(error){
+    //   print("Error =====>${error}");
+    // }
   }
 }

@@ -220,7 +220,7 @@ class _SignInState extends State<SignIn> {
                         Navigator.of(context, rootNavigator: true).push(
                           CupertinoPageRoute<bool>(
                             fullscreenDialog: true,
-                            builder: (BuildContext context) => new signUpAS(),
+                            builder: (BuildContext context) => signUpAS(),
                           ),
                         );
                       },

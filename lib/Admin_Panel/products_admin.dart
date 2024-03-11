@@ -43,120 +43,122 @@ class _product_adminState extends State<product_admin> {
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: 20),
-              Row(
-                children: [
-                  Container(
-                    width: MediaQuery.sizeOf(context).width * 0.79,
-                    height: 50,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(100),
-                        color: Colors.deepPurple.withOpacity(0.05)),
-                    child: TextFormField(
-                      controller: searcontroll,
-                      keyboardType: TextInputType.text,
-                      onChanged: (value) {
-                        Future.delayed(
-                            Duration(seconds: 2), () => setState(() {}));
-                      },
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 17,
-                          fontWeight: FontWeight.w400),
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.only(
-                            top: 15, bottom: 15, left: 13, right: 2),
-                        focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(100),
-                            borderSide: BorderSide(
-                                color: Colors.deepPurple.withOpacity(0.5),
-                                width: 2)),
-                        enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Colors.transparent,
-                            ),
-                            borderRadius: BorderRadius.circular(15)),
-                        hintText: "Search here...",
-                        hintStyle: TextStyle(
-                            color: Colors.deepPurple.withOpacity(0.5),
+              SingleChildScrollView(
+                child: Row(
+                  children: [
+                    Container(
+                      width: MediaQuery.sizeOf(context).width * 0.79,
+                      height: 50,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(100),
+                          color: Colors.deepPurple.withOpacity(0.05)),
+                      child: TextFormField(
+                        controller: searcontroll,
+                        keyboardType: TextInputType.text,
+                        onChanged: (value) {
+                          Future.delayed(
+                              Duration(seconds: 2), () => setState(() {}));
+                        },
+                        style: TextStyle(
+                            color: Colors.black,
                             fontSize: 17,
                             fontWeight: FontWeight.w400),
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.only(
+                              top: 15, bottom: 15, left: 13, right: 2),
+                          focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(100),
+                              borderSide: BorderSide(
+                                  color: Colors.deepPurple.withOpacity(0.5),
+                                  width: 2)),
+                          enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.transparent,
+                              ),
+                              borderRadius: BorderRadius.circular(15)),
+                          hintText: "Search here...",
+                          hintStyle: TextStyle(
+                              color: Colors.deepPurple.withOpacity(0.5),
+                              fontSize: 17,
+                              fontWeight: FontWeight.w400),
+                        ),
                       ),
                     ),
-                  ),
-                  SizedBox(width: 5),
-                  PopupMenuButton<int>(
-                    padding: EdgeInsets.zero,
-                    icon: Icon(Icons.more_vert, size: 30, color: Colors.black),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-
-                    elevation: 8,
-                    enabled: true,
-                    color: Colors.white,
-                    // Set background color to white
-                    itemBuilder: (BuildContext context) => [
-                      PopupMenuItem(
-                        height: 50,
-                        onTap: () {
-                          setState(() {
-                            selectedMenu = "All";
-                          });
-                        },
-                        child: Container(
-                          child: Text('All',
+                    SizedBox(width: 5),
+                    PopupMenuButton<int>(
+                      padding: EdgeInsets.zero,
+                      icon: Icon(Icons.more_vert, size: 30, color: Colors.black),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                
+                      elevation: 8,
+                      enabled: true,
+                      color: Colors.white,
+                      // Set background color to white
+                      itemBuilder: (BuildContext context) => [
+                        PopupMenuItem(
+                          height: 50,
+                          onTap: () {
+                            setState(() {
+                              selectedMenu = "All";
+                            });
+                          },
+                          child: Container(
+                            child: Text('All',
+                                style: TextStyle(
+                                    color: selectedMenu == "All"
+                                        ? Colors.deepPurple
+                                        : Colors.black,
+                                    fontSize: 16)),
+                          ),
+                        ),
+                        PopupMenuItem(
+                          height: 50,
+                          onTap: () {
+                            setState(() {
+                              selectedMenu = "Pending";
+                            });
+                          },
+                          child: Text('Pending',
                               style: TextStyle(
-                                  color: selectedMenu == "All"
+                                  color: selectedMenu == "Pending"
                                       ? Colors.deepPurple
                                       : Colors.black,
                                   fontSize: 16)),
                         ),
-                      ),
-                      PopupMenuItem(
-                        height: 50,
-                        onTap: () {
-                          setState(() {
-                            selectedMenu = "Pending";
-                          });
-                        },
-                        child: Text('Pending',
-                            style: TextStyle(
-                                color: selectedMenu == "Pending"
-                                    ? Colors.deepPurple
-                                    : Colors.black,
-                                fontSize: 16)),
-                      ),
-                      PopupMenuItem(
-                        height: 50,
-                        onTap: () {
-                          setState(() {
-                            selectedMenu = "Accepted";
-                          });
-                        },
-                        child: Text('Accepted',
-                            style: TextStyle(
-                                color: selectedMenu == "Accepted"
-                                    ? Colors.deepPurple
-                                    : Colors.black,
-                                fontSize: 16)),
-                      ),
-                      PopupMenuItem(
-                        height: 50,
-                        onTap: () {
-                          setState(() {
-                            selectedMenu = "Reject";
-                          });
-                        },
-                        child: Text('Reject',
-                            style: TextStyle(
-                                color: selectedMenu == "Reject"
-                                    ? Colors.deepPurple
-                                    : Colors.black,
-                                fontSize: 16)),
-                      ),
-                    ],
-                  )
-                ],
+                        PopupMenuItem(
+                          height: 50,
+                          onTap: () {
+                            setState(() {
+                              selectedMenu = "Accepted";
+                            });
+                          },
+                          child: Text('Accepted',
+                              style: TextStyle(
+                                  color: selectedMenu == "Accepted"
+                                      ? Colors.deepPurple
+                                      : Colors.black,
+                                  fontSize: 16)),
+                        ),
+                        PopupMenuItem(
+                          height: 50,
+                          onTap: () {
+                            setState(() {
+                              selectedMenu = "Reject";
+                            });
+                          },
+                          child: Text('Reject',
+                              style: TextStyle(
+                                  color: selectedMenu == "Reject"
+                                      ? Colors.deepPurple
+                                      : Colors.black,
+                                  fontSize: 16)),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
               ),
             ],
           ),

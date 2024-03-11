@@ -199,8 +199,12 @@ class _addProductState extends State<addProduct> {
                   passwordvisiblity: false,
                   sufixIcon: SizedBox.shrink(),
                   validation: (value) {
+                    var price = RegExp(r'^[0-9]*$');
                     if (priceController.text == '') {
                       return 'This is a required field';
+                    }
+                    if(price.hasMatch(priceController.text)){
+                      return " Symbolic value of alphabete are invalide.";
                     }
                   },
                 ),

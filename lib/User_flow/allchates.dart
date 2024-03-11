@@ -124,91 +124,93 @@ class _allChatesState extends State<allChates> {
                                                       user: userdata),
                                             ),
                                           ),
-                                          child: Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            mainAxisSize: MainAxisSize.max,
-                                            children: [
-                                              Container(
-                                                width: 45,
-                                                height: 45,
-                                                clipBehavior: Clip.antiAlias,
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          100),
+                                          child: SingleChildScrollView(
+                                            child: Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              mainAxisSize: MainAxisSize.max,
+                                              children: [
+                                                Container(
+                                                  width: 45,
+                                                  height: 45,
+                                                  clipBehavior: Clip.antiAlias,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            100),
+                                                  ),
+                                                  child: Image.network(
+                                                      userdata!.imagePath!,
+                                                      fit: BoxFit.cover),
                                                 ),
-                                                child: Image.network(
-                                                    userdata!.imagePath!,
-                                                    fit: BoxFit.cover),
-                                              ),
-                                              SizedBox(width: 15),
-                                              Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(userdata.name,
-                                                      style: TextStyle(
-                                                          color: AppColor
-                                                              .textColor,
-                                                          fontSize: 18,
-                                                          fontWeight:
-                                                              FontWeight.w400)),
-                                                  SizedBox(
-                                                    width: width * 0.62,
-                                                    child: Text(
-                                                        "${data.lastMessageSender == currentUserDocument!.reference ? "You:" : "${userdata.name}:"} ${data.lastMessage}",
+                                                SizedBox(width: 15),
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(userdata.name,
                                                         style: TextStyle(
                                                             color: AppColor
-                                                                .greycolor,
-                                                            fontSize: 14),
-                                                        maxLines: 2),
-                                                  ),
-                                                ],
-                                              ),
-                                              Column(
-                                                children: [
-                                                  InkWell(
-                                                      splashColor:
-                                                          Colors.transparent,
-                                                      onTap: () async {
-                                                        await data.reference
-                                                            .update({
-                                                          "${currentUserDocument!.type == "User" ? "userMessageList" : "messageList"}":
-                                                              []
-                                                        });
-                                                        setState(() {});
-                                                      },
-                                                      child: Icon(
-                                                          CupertinoIcons
-                                                              .clear_circled,
-                                                          size: 20,
-                                                          color: Colors.grey)),
-                                                  SizedBox(height: 10),
-                                                  Text(
-                                                    DateFormat('dd MMM yyyy')
-                                                                .format(data
-                                                                    .lastMessageTime!) !=
-                                                            DateFormat(
-                                                                    'dd MMM yyyy')
-                                                                .format(DateTime
-                                                                    .now())
-                                                        ? DateFormat(
-                                                                'dd MMM yyyy')
-                                                            .format(data
-                                                                .lastMessageTime!)
-                                                        : DateFormat('h:mm a')
-                                                            .format(data
-                                                                .lastMessageTime!),
-                                                    textAlign: TextAlign.end,
-                                                    style: TextStyle(
-                                                        color:
-                                                            AppColor.greycolor,
-                                                        fontSize: 13),
-                                                  ),
-                                                ],
-                                              )
-                                            ],
+                                                                .textColor,
+                                                            fontSize: 18,
+                                                            fontWeight:
+                                                                FontWeight.w400)),
+                                                    SizedBox(
+                                                      width: width * 0.6,
+                                                      child: Text(
+                                                          "${data.lastMessageSender == currentUserDocument!.reference ? "You:" : "${userdata.name}:"} ${data.lastMessage}",
+                                                          style: TextStyle(
+                                                              color: AppColor
+                                                                  .greycolor,
+                                                              fontSize: 14),
+                                                          maxLines: 2),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Column(
+                                                  children: [
+                                                    InkWell(
+                                                        splashColor:
+                                                            Colors.transparent,
+                                                        onTap: () async {
+                                                          await data.reference
+                                                              .update({
+                                                            "${currentUserDocument!.type == "User" ? "userMessageList" : "messageList"}":
+                                                                []
+                                                          });
+                                                          setState(() {});
+                                                        },
+                                                        child: Icon(
+                                                            CupertinoIcons
+                                                                .clear_circled,
+                                                            size: 20,
+                                                            color: Colors.grey)),
+                                                    SizedBox(height: 10),
+                                                    Text(
+                                                      DateFormat('dd MMM yyyy')
+                                                                  .format(data
+                                                                      .lastMessageTime!) !=
+                                                              DateFormat(
+                                                                      'dd MMM yyyy')
+                                                                  .format(DateTime
+                                                                      .now())
+                                                          ? DateFormat(
+                                                                  'dd MMM yyyy')
+                                                              .format(data
+                                                                  .lastMessageTime!)
+                                                          : DateFormat('h:mm a')
+                                                              .format(data
+                                                                  .lastMessageTime!),
+                                                      textAlign: TextAlign.end,
+                                                      style: TextStyle(
+                                                          color:
+                                                              AppColor.greycolor,
+                                                          fontSize: 13),
+                                                    ),
+                                                  ],
+                                                )
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       );

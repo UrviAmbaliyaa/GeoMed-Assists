@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
@@ -102,6 +103,7 @@ class _SignUpAsShopkeeperState extends State<SignUpAsShopkeeper> {
       var networkImagepath = imagepath != null
           ? await firebase_auth().uploadImage(File(imagepath!))
           : currentUserDocument!.imagePath;
+      print("-------------------------------->111");
       Map<String, dynamic> mapdata = {
         "type": "ShopKeeper",
         "name": namecontroller.text,
@@ -120,10 +122,13 @@ class _SignUpAsShopkeeperState extends State<SignUpAsShopkeeper> {
         "approve" :  widget.editdcreen? widget.editdcreen : "Pending"
       };
       !widget.editdcreen? mapdata.addAll({"favoriteReference": [],"availableSlot": [],"register": DateTime.now()}):null;
+      print("-------------------------------->222");
       !widget.editdcreen
           ? await firebase_auth().signUpWithEmailAndPassword(
               emailController.text, password.text, mapdata, context)
           : await firebase_auth().updateData(reference: currentUserDocument!.reference,jsondata: mapdata);
+      print("-------------------------------->333");
+      FirebaseAuth.instance.currentUser != null ?
       setState(() {
         isLoading = false;
         namecontroller.clear();
@@ -143,7 +148,7 @@ class _SignUpAsShopkeeperState extends State<SignUpAsShopkeeper> {
                 ),
               )
             :Navigator.push(context,MaterialPageRoute(builder: (context) => shop_bottomNavigationbar()));
-      });
+      }):null;
       !widget.editdcreen? mapdata.addAll({"favoriteReference": []}):null;
     } catch (e) {
       print("Error getting Sign Up in : $e");
