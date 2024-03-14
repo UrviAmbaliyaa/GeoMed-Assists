@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:geomed_assist/Firebase/firebaseAuthentications.dart';
 import 'package:geomed_assist/Firebase/firebase_quaries.dart';
 import 'package:geomed_assist/Models/ProductRequest.dart';
@@ -56,67 +57,69 @@ class _requestsState extends State<requests> {
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Row(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          width: 55,
-                                          height: 55,
-                                          clipBehavior: Clip.antiAlias,
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(10),
+                                    SingleChildScrollView(
+                                      child: Row(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            width: 55,
+                                            height: 55,
+                                            clipBehavior: Clip.antiAlias,
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(10),
+                                            ),
+                                            child: Image.network(userinfo!.imagePath!,fit: BoxFit.cover),
                                           ),
-                                          child: Image.network(userinfo!.imagePath!,fit: BoxFit.cover),
-                                        ),
-                                        SizedBox(width: 15),
-                                        Column(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                              children: [
-                                                SizedBox(
-                                                  width: width*0.52,
-                                                  child: Text(userinfo.name,
+                                          SizedBox(width: 15),
+                                          Column(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  SizedBox(
+                                                    width: width*0.52,
+                                                    child: Text(userinfo.name,
+                                                        style: TextStyle(
+                                                            color: AppColor.textColor,
+                                                            fontSize: 18,
+                                                            fontWeight: FontWeight.w400)),
+                                                  ),
+                                                  Container(
+                                                    padding: EdgeInsets.symmetric(vertical: 5,horizontal: 15),
+                                                    decoration: BoxDecoration(
+                                                      borderRadius: BorderRadius.circular(100),
+                                                      color: data.status == "Pending"
+                                                          ? CupertinoColors.systemGrey
+                                                          : data.status == "Accept"
+                                                          ? CupertinoColors.activeGreen
+                                                          : CupertinoColors.systemRed,
+                                                    ),
+                                      
+                                                    child: Text(data.status,
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 15,
+                                                            fontWeight: FontWeight.w500)),
+                                                  ),
+                                                ],
+                                              ),
+                                              StreamBuilder(
+                                                stream: data.productReference.snapshots(),
+                                                builder: (context, snapshot) {
+                                                  return Text(snapshot.hasData ?"Product: ${snapshot.data!.get('name')}":'',
                                                       style: TextStyle(
                                                           color: AppColor.textColor,
-                                                          fontSize: 18,
-                                                          fontWeight: FontWeight.w400)),
-                                                ),
-                                                Container(
-                                                  padding: EdgeInsets.symmetric(vertical: 5,horizontal: 15),
-                                                  decoration: BoxDecoration(
-                                                    borderRadius: BorderRadius.circular(100),
-                                                    color: data.status == "Pending"
-                                                        ? CupertinoColors.systemGrey
-                                                        : data.status == "Accept"
-                                                        ? CupertinoColors.activeGreen
-                                                        : CupertinoColors.systemRed,
-                                                  ),
-
-                                                  child: Text(data.status,
-                                                      style: TextStyle(
-                                                          color: Colors.white,
                                                           fontSize: 15,
-                                                          fontWeight: FontWeight.w500)),
-                                                ),
-                                              ],
-                                            ),
-                                            StreamBuilder(
-                                              stream: data.productReference.snapshots(),
-                                              builder: (context, snapshot) {
-                                                return Text(snapshot.hasData ?"Product: ${snapshot.data!.get('name')}":'',
-                                                    style: TextStyle(
-                                                        color: AppColor.textColor,
-                                                        fontSize: 15,
-                                                        fontWeight: FontWeight.w400));
-                                              }
-                                            ),
-                                          ],
-                                        )
-                                      ],
+                                                          fontWeight: FontWeight.w400));
+                                                }
+                                              ),
+                                            ],
+                                          )
+                                        ],
+                                      ),
                                     ),
                                     SizedBox(height: 5),
                                     Row(

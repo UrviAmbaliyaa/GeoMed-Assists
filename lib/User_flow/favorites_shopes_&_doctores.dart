@@ -129,7 +129,7 @@ class _favoriteShopesState extends State<favoriteShopes> {
                               alignment: Alignment.topRight,
                               children: [
                                 InkWell(
-                splashColor: Colors.transparent,
+                                  splashColor: Colors.transparent,
                                   onTap: () =>
                                       Navigator.of(context, rootNavigator: true)
                                           .push(
@@ -158,55 +158,57 @@ class _favoriteShopesState extends State<favoriteShopes> {
                                         ),
                                       ],
                                     ),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Image.network(data.imagePath!,
-                                            height: width * 0.28,
-                                            fit: BoxFit.cover,
-                                            width: double.infinity),
-                                        Padding(
-                                          padding: EdgeInsets.only(
-                                              top: 6, left: 6, right: 6),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(data.name,
-                                                  style: TextStyle(
-                                                      color: AppColor.textColor,
-                                                      fontSize: 14),
-                                                  maxLines: 2),
-                                              Text(data.address!,
-                                                  style: TextStyle(
-                                                      color: AppColor.greycolor,
-                                                      fontSize: 13),
-                                                  maxLines: 2),
-                                              Row(
-                                                children: [
-                                                  rattingBar(
-                                                      tapOnly: true,
-                                                      initValue: 2.5),
-                                                  Expanded(
-                                                    child: Text(
-                                                        "${calculateDistance(currentUserDocument!.latLong, currentUserDocument!.longitude, data.latLong, data.longitude)} mile",
-                                                        textAlign:
-                                                            TextAlign.end,
-                                                        style: TextStyle(
-                                                            color: AppColor
-                                                                .greycolor,
-                                                            fontSize: 13),
-                                                        maxLines: 2),
-                                                  ),
-                                                ],
-                                              )
-                                            ],
+                                    child: SingleChildScrollView(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Image.network(data.imagePath!,
+                                              height: width * 0.28,
+                                              fit: BoxFit.cover,
+                                              width: double.infinity),
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                                top: 6, left: 6, right: 6),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Text(data.name,
+                                                    style: TextStyle(
+                                                        color: AppColor.textColor,
+                                                        fontSize: 14),
+                                                    maxLines: 2),
+                                                Text(data.address!,
+                                                    style: TextStyle(
+                                                        color: AppColor.greycolor,
+                                                        fontSize: 13),
+                                                    maxLines: 2),
+                                                Row(
+                                                  children: [
+                                                    rattingBar(
+                                                        tapOnly: true,
+                                                        initValue: 2.5),
+                                                    Expanded(
+                                                      child: Text(
+                                                          "${calculateDistance(currentUserDocument!.latLong, currentUserDocument!.longitude, data.latLong, data.longitude)} mile",
+                                                          textAlign:
+                                                              TextAlign.end,
+                                                          style: TextStyle(
+                                                              color: AppColor
+                                                                  .greycolor,
+                                                              fontSize: 13),
+                                                          maxLines: 2),
+                                                    ),
+                                                  ],
+                                                )
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -279,7 +281,7 @@ class _favoriteDoctorState extends State<favoriteDoctor> {
                               return Visibility(
                                 visible: data.type == "Doctore",
                                 child: InkWell(
-                splashColor: Colors.transparent,
+                                  splashColor: Colors.transparent,
                                   onTap: () =>
                                       Navigator.of(context, rootNavigator: true).push(
                                         CupertinoPageRoute<bool>(
@@ -307,56 +309,58 @@ class _favoriteDoctorState extends State<favoriteDoctor> {
                                         ),
                                       ],
                                     ),
-                                    child: Row(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      mainAxisSize: MainAxisSize.max,
-                                      children: [
-                                        CircleAvatar(
-                                          backgroundImage:
-                                          NetworkImage(data.imagePath!),
-                                          radius: 35,
-                                        ),
-                                        SizedBox(width: 15),
-                                        Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text(data.name,
-                                                style: TextStyle(
-                                                    color: AppColor.textColor,
-                                                    fontSize: 18,
-                                                    fontWeight: FontWeight.w400)),
-                                            SizedBox(
-                                              width: width * 0.55,
-                                              child: Text(data.address!,
+                                    child: SingleChildScrollView(
+                                      child: Row(
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        mainAxisSize: MainAxisSize.max,
+                                        children: [
+                                          CircleAvatar(
+                                            backgroundImage:
+                                            NetworkImage(data.imagePath!),
+                                            radius: 35,
+                                          ),
+                                          SizedBox(width: 15),
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(data.name,
                                                   style: TextStyle(
-                                                      color: AppColor.greycolor,
-                                                      fontSize: 13),
-                                                  maxLines: 2),
-                                            ),
-                                            SizedBox(
-                                              width: width * 0.55,
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                                children: [
-                                                  rattingBar(
-                                                      tapOnly: true, initValue: 2.5),
-                                                  Text(
-                                                      "${calculateDistance(currentUserDocument!.latLong, currentUserDocument!.longitude, data.latLong, data.longitude)} mile",
-                                                      textAlign: TextAlign.end,
-                                                      style: TextStyle(
-                                                          color: AppColor.greycolor,
-                                                          fontSize: 13),
-                                                      maxLines: 2),
-                                                ],
+                                                      color: AppColor.textColor,
+                                                      fontSize: 18,
+                                                      fontWeight: FontWeight.w400)),
+                                              SizedBox(
+                                                width: width * 0.55,
+                                                child: Text(data.address!,
+                                                    style: TextStyle(
+                                                        color: AppColor.greycolor,
+                                                        fontSize: 13),
+                                                    maxLines: 2),
                                               ),
-                                            ),
-                                          ],
-                                        ),
-                                        Favorites(
-                                            reference: data.reference,
-                                            action: () => setState(() {})),
-                                      ],
+                                              SizedBox(
+                                                width: width * 0.55,
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                  MainAxisAlignment.spaceBetween,
+                                                  children: [
+                                                    rattingBar(
+                                                        tapOnly: true, initValue: 2.5),
+                                                    Text(
+                                                        "${calculateDistance(currentUserDocument!.latLong, currentUserDocument!.longitude, data.latLong, data.longitude)} mile",
+                                                        textAlign: TextAlign.end,
+                                                        style: TextStyle(
+                                                            color: AppColor.greycolor,
+                                                            fontSize: 13),
+                                                        maxLines: 2),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          Favorites(
+                                              reference: data.reference,
+                                              action: () => setState(() {})),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),

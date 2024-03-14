@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:geomed_assist/Authentication/sign_up.dart';
 import 'package:geomed_assist/Firebase/firebase_quaries.dart';
 import 'package:geomed_assist/Models/categoryModel.dart';
@@ -71,7 +72,7 @@ class _homePageState extends State<homePage> {
                 ),
                 Container(
                   width: double.infinity,
-                  height: width * 0.38,
+                  height: width * 0.39,
                   margin: EdgeInsets.only(top: 5),
                   child: (snapshot.connectionState == ConnectionState.done ||
                               snapshot.connectionState ==
@@ -92,7 +93,7 @@ class _homePageState extends State<homePage> {
                             return Visibility(
                               visible: isvisible,
                               child: InkWell(
-                splashColor: Colors.transparent,
+                                splashColor: Colors.transparent,
                                 onTap: () =>
                                     Navigator.of(context, rootNavigator: true)
                                         .push(
@@ -104,7 +105,6 @@ class _homePageState extends State<homePage> {
                                 ),
                                 child: Container(
                                   width: width * 0.32,
-                                  height: width * 0.32,
                                   margin: const EdgeInsets.only(
                                       bottom: 5, left: 5, top: 5),
                                   padding: EdgeInsets.all(2),
@@ -122,22 +122,24 @@ class _homePageState extends State<homePage> {
                                       ),
                                     ],
                                   ),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Image.network(data.imageUrl,
-                                          height: width * 0.26,
-                                          fit: BoxFit.cover,
-                                          width: double.infinity),
-                                      Padding(
-                                        padding: EdgeInsets.all(6.0),
-                                        child: Text(data.name,
-                                            style: TextStyle(
-                                                color: AppColor.textColor,
-                                                fontSize: 16),
-                                            maxLines: 1),
-                                      ),
-                                    ],
+                                  child: SingleChildScrollView(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Image.network(data.imageUrl,
+                                            height: width * 0.26,
+                                            fit: BoxFit.cover,
+                                            width: double.infinity),
+                                        Padding(
+                                          padding: EdgeInsets.all(6.0),
+                                          child: Text(data.name,
+                                              style: TextStyle(
+                                                  color: AppColor.textColor,
+                                                  fontSize: 16),
+                                              maxLines: 1),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
@@ -230,7 +232,7 @@ class _homePageState extends State<homePage> {
                                     alignment: Alignment.topRight,
                                     children: [
                                       Container(
-                                        width: width * 0.5,
+                                        width: width * 0.51,
                                         margin: EdgeInsets.only(
                                             bottom: 5, left: 5, top: 5),
                                         padding: EdgeInsets.all(2),
@@ -248,56 +250,58 @@ class _homePageState extends State<homePage> {
                                             ),
                                           ],
                                         ),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Image.network(data.imagePath!,
-                                                height: width * 0.28,
-                                                fit: BoxFit.cover,
-                                                width: double.infinity),
-                                            Padding(
-                                              padding: EdgeInsets.only(
-                                                  top: 6, left: 6, right: 6),
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(data.name,
-                                                      style: TextStyle(
-                                                          color: AppColor.textColor,
-                                                          fontSize: 16),
-                                                      maxLines: 1),
-                                                  Text(data.address!,
-                                                      style: TextStyle(
-                                                          color: AppColor.greycolor,
-                                                          fontSize: 13),
-                                                      maxLines: 2),
-                                                  StreamBuilder<UserModel?>(
-                                                      stream: Firebase_Quires().getuserInfo(refId: data.reference),
-                                                      builder: (context, snapshot) {
-                                                        return Row(
-                                                          crossAxisAlignment: CrossAxisAlignment.end,
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            rattingBar(
-                                                                tapOnly: true,
-                                                                initValue: (snapshot.connectionState == ConnectionState.done || snapshot.connectionState == ConnectionState.waiting) && snapshot.hasData ? (snapshot.data!.rate! /snapshot.data!.ratedUser!):0,
-                                                                size: 15),
-                                                            Text(
-                                                                "${calculateDistance(currentUserDocument!.latLong, currentUserDocument!.longitude, data.latLong, data.longitude)} mile",
-                                                                style: TextStyle(
-                                                                    color: AppColor.greycolor,
-                                                                    fontSize: 13,
-                                                                    fontWeight: FontWeight.w500))
-                                                          ],
-                                                        );
-                                                      }
-                                                  ),
-                                                ],
+                                        child: SingleChildScrollView(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Image.network(data.imagePath!,
+                                                  height: width * 0.28,
+                                                  fit: BoxFit.cover,
+                                                  width: double.infinity),
+                                              Padding(
+                                                padding: EdgeInsets.only(
+                                                    top: 6, left: 6, right: 6),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(data.name,
+                                                        style: TextStyle(
+                                                            color: AppColor.textColor,
+                                                            fontSize: 16),
+                                                        maxLines: 1),
+                                                    Text(data.address!,
+                                                        style: TextStyle(
+                                                            color: AppColor.greycolor,
+                                                            fontSize: 13),
+                                                        maxLines: 2),
+                                                    StreamBuilder<UserModel?>(
+                                                        stream: Firebase_Quires().getuserInfo(refId: data.reference),
+                                                        builder: (context, snapshot) {
+                                                          return Row(
+                                                            crossAxisAlignment: CrossAxisAlignment.end,
+                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                            children: [
+                                                              rattingBar(
+                                                                  tapOnly: true,
+                                                                  initValue: (snapshot.connectionState == ConnectionState.done || snapshot.connectionState == ConnectionState.waiting) && snapshot.hasData ? (snapshot.data!.rate! /snapshot.data!.ratedUser!):0,
+                                                                  size: 15),
+                                                              Text(
+                                                                  "${calculateDistance(currentUserDocument!.latLong, currentUserDocument!.longitude, data.latLong, data.longitude)} mile",
+                                                                  style: TextStyle(
+                                                                      color: AppColor.greycolor,
+                                                                      fontSize: 13,
+                                                                      fontWeight: FontWeight.w500))
+                                                            ],
+                                                          );
+                                                        }
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
-                                            ),
-                                          ],
+                                            ],
+                                          ),
                                         ),
                                       ),
                                       Favorites(reference: data.reference, action: () {}),
@@ -358,7 +362,7 @@ class _homePageState extends State<homePage> {
                 ),
                 Container(
                   width: double.infinity,
-                  height: width * 0.53,
+                  height: width * 0.54,
                   margin: EdgeInsets.only(top: 5, bottom: 20),
                   child: (snapshot.connectionState == ConnectionState.active ||
                               snapshot.connectionState ==
@@ -416,58 +420,60 @@ class _homePageState extends State<homePage> {
                                     child: Stack(
                                       alignment: Alignment.topRight,
                                       children: [
-                                        Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            Image.network(data.imagePath!,
-                                                height: width * 0.3,
-                                                fit: BoxFit.cover,
-                                                width: double.infinity),
-                                            Padding(
-                                              padding: EdgeInsets.only(
-                                                  top: 6, left: 6, right: 6),
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(data.name,
-                                                      style: TextStyle(
-                                                          color: AppColor.textColor,
-                                                          fontSize: 16),
-                                                      maxLines: 1),
-                                                  SizedBox(height: 3),
-                                                  Text("Education : ${data.degree}",
-                                                      style: TextStyle(
-                                                          color: AppColor.greycolor,
-                                                          fontSize: 13),
-                                                      maxLines: 2),
-                                                  SizedBox(height: 3),
-                                                  StreamBuilder<UserModel?>(
-                                                      stream: Firebase_Quires().getuserInfo(refId: data.reference),
-                                                      builder: (context, snapshot) {
-                                                        return Row(
-                                                          crossAxisAlignment: CrossAxisAlignment.end,
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            rattingBar(
-                                                                tapOnly: true,
-                                                                initValue: (snapshot.connectionState == ConnectionState.done || snapshot.connectionState == ConnectionState.waiting) && snapshot.hasData ? (snapshot.data!.rate! /snapshot.data!.ratedUser!):0,
-                                                                size: 15),
-                                                            Text(
-                                                                "${calculateDistance(currentUserDocument!.latLong, currentUserDocument!.longitude, data.latLong, data.longitude)} mile ",
-                                                                style: TextStyle(
-                                                                    color: AppColor.greycolor,
-                                                                    fontSize: 13,
-                                                                    fontWeight: FontWeight.w500))
-                                                          ],
-                                                        );
-                                                      }
-                                                  ),
-                                                ],
+                                        SingleChildScrollView(
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              Image.network(data.imagePath!,
+                                                  height: width * 0.3,
+                                                  fit: BoxFit.cover,
+                                                  width: double.infinity),
+                                              Padding(
+                                                padding: EdgeInsets.only(
+                                                    top: 6, left: 6, right: 6),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(data.name,
+                                                        style: TextStyle(
+                                                            color: AppColor.textColor,
+                                                            fontSize: 16),
+                                                        maxLines: 1),
+                                                    SizedBox(height: 3),
+                                                    Text("Education : ${data.degree}",
+                                                        style: TextStyle(
+                                                            color: AppColor.greycolor,
+                                                            fontSize: 13),
+                                                        maxLines: 2),
+                                                    SizedBox(height: 3),
+                                                    StreamBuilder<UserModel?>(
+                                                        stream: Firebase_Quires().getuserInfo(refId: data.reference),
+                                                        builder: (context, snapshot) {
+                                                          return Row(
+                                                            crossAxisAlignment: CrossAxisAlignment.end,
+                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                            children: [
+                                                              rattingBar(
+                                                                  tapOnly: true,
+                                                                  initValue: (snapshot.connectionState == ConnectionState.done || snapshot.connectionState == ConnectionState.waiting) && snapshot.hasData ? (snapshot.data!.rate! /snapshot.data!.ratedUser!):0,
+                                                                  size: 15),
+                                                              Text(
+                                                                  "${calculateDistance(currentUserDocument!.latLong, currentUserDocument!.longitude, data.latLong, data.longitude)} mile ",
+                                                                  style: TextStyle(
+                                                                      color: AppColor.greycolor,
+                                                                      fontSize: 13,
+                                                                      fontWeight: FontWeight.w500))
+                                                            ],
+                                                          );
+                                                        }
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
-                                            ),
-                                          ],
+                                            ],
+                                          ),
                                         ),
                                         Favorites(reference: data.reference, action: () {}),
                                       ],

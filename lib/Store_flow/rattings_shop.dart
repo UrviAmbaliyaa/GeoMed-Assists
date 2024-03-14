@@ -55,57 +55,59 @@ class _shop_rattingsState extends State<shop_rattings> {
                         return Container(
                           padding: EdgeInsets.symmetric(vertical: 15),
                           margin: EdgeInsets.only(left: 20, right: 20),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              Container(
-                                width: 45,
-                                height: 45,
-                                clipBehavior: Clip.antiAlias,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(100),
-                                ),
-                                child: Image.network(rateData.image,
-                                    fit: BoxFit.cover),
-                              ),
-                              SizedBox(width: 15),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(rateData.name,
-                                      style: TextStyle(
-                                          color: AppColor.textColor,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w400)),
-                                  SizedBox(
-                                    width: width * 0.75,
-                                    child: Text(
-                                        rateData.description,
-                                        style: TextStyle(
-                                            color: AppColor.greycolor, fontSize: 14),
-                                        maxLines: 2),
+                          child: SingleChildScrollView(
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                Container(
+                                  width: 45,
+                                  height: 45,
+                                  clipBehavior: Clip.antiAlias,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(100),
                                   ),
-                                  SizedBox(
-                                    width: width * 0.75,
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        rattingBar(
-                                            tapOnly: true, initValue: 0.toDouble()),
-                                        Text(
-                                          DateFormat('dd MMM', 'en_US').format(rateData.date),
-                                          textAlign: TextAlign.end,
+                                  child: Image.network(rateData.image,
+                                      fit: BoxFit.cover),
+                                ),
+                                SizedBox(width: 15),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(rateData.name,
+                                        style: TextStyle(
+                                            color: AppColor.textColor,
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w400)),
+                                    SizedBox(
+                                      width: width * 0.74,
+                                      child: Text(
+                                          rateData.description,
                                           style: TextStyle(
-                                              color: AppColor.greycolor, fontSize: 13),
-                                        )
-                                      ],
+                                              color: AppColor.greycolor, fontSize: 14),
+                                          maxLines: 2),
                                     ),
-                                  )
-                                ],
-                              ),
-                            ],
+                                    SizedBox(
+                                      width: width * 0.74,
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment: CrossAxisAlignment.end,
+                                        children: [
+                                          rattingBar(
+                                              tapOnly: true, initValue: 0.toDouble()),
+                                          Text(
+                                            DateFormat('dd MMM', 'en_US').format(rateData.date),
+                                            textAlign: TextAlign.end,
+                                            style: TextStyle(
+                                                color: AppColor.greycolor, fontSize: 13),
+                                          )
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         );
                       });
