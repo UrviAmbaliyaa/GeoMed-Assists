@@ -128,7 +128,7 @@ class _requestsState extends State<requests> {
                                       CrossAxisAlignment.start,
                                       children: [
                                         SizedBox(
-                                          width: width * 0.7,
+                                          width: width * 0.68,
                                           child: Text(data.description,
                                               style: TextStyle(
                                                   color: AppColor.greycolor,
