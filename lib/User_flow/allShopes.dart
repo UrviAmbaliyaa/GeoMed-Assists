@@ -171,7 +171,7 @@ class _allShopesState extends State<allShopes> {
                                                 style: TextStyle(
                                                     color: AppColor.greycolor,
                                                     fontSize: 13),
-                                                maxLines: 2),
+                                                maxLines: 1),
                                           ),
                                         ],
                                       )

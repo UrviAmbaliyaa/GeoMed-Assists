@@ -329,7 +329,7 @@ class _favoriteDoctorState extends State<favoriteDoctor> {
                                                       fontSize: 18,
                                                       fontWeight: FontWeight.w400)),
                                               SizedBox(
-                                                width: width * 0.55,
+                                                width: width * 0.54,
                                                 child: Text(data.address!,
                                                     style: TextStyle(
                                                         color: AppColor.greycolor,
@@ -337,7 +337,7 @@ class _favoriteDoctorState extends State<favoriteDoctor> {
                                                     maxLines: 2),
                                               ),
                                               SizedBox(
-                                                width: width * 0.55,
+                                                width: width * 0.54,
                                                 child: Row(
                                                   mainAxisAlignment:
                                                   MainAxisAlignment.spaceBetween,
