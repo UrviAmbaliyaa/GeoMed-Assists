@@ -47,7 +47,7 @@ class _product_adminState extends State<product_admin> {
                 child: Row(
                   children: [
                     Container(
-                      width: MediaQuery.sizeOf(context).width * 0.79,
+                      width: MediaQuery.sizeOf(context).width * 0.77,
                       height: 50,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(100),

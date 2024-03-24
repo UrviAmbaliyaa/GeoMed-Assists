@@ -330,7 +330,7 @@ class _doctoreDetailState extends State<doctoreDetail> {
                                                     fontWeight:
                                                         FontWeight.w400)),
                                             SizedBox(
-                                              width: width * 0.75,
+                                              width: width * 0.73,
                                               child: Text(data.description,
                                                   style: TextStyle(
                                                       color: AppColor.greycolor,
@@ -338,7 +338,7 @@ class _doctoreDetailState extends State<doctoreDetail> {
                                                   maxLines: 2),
                                             ),
                                             SizedBox(
-                                              width: width * 0.75,
+                                              width: width * 0.73,
                                               child: Row(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment
