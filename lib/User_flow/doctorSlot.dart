@@ -23,10 +23,10 @@ class _doctorSlotState extends State<doctorSlot> {
   List<String> slot2 = [];
 
   manageSlot(){
-    var bStart = DateFormat("h:mm").parse(widget.doctor.breckstartTime!);
+    var bStart = DateFormat("HH:mm").parse(widget.doctor.breckstartTime!);
     for(var slot in widget.doctor.availableSlot!){
-      var date = DateFormat("h:mm").parse(slot);
-      date.isBefore(bStart) || date == bStart? slot1.add(DateFormat("h:mm a").format(date)):slot2.add(DateFormat("h:mm a").format(date));
+      var date = DateFormat("HH:mm a").parse(slot);
+      date.isBefore(bStart) || date == bStart? slot1.add(slot):slot2.add(slot);
     }
     setState(() {
     });
@@ -89,19 +89,19 @@ class _doctorSlotState extends State<doctorSlot> {
                       );
                     },
                   ),
-                  Container(
-                    padding: EdgeInsets.all(10),
-                    margin: EdgeInsets.symmetric(horizontal: 20),
-                    decoration: BoxDecoration(
-                        color: AppColor.primaryColor.withOpacity(0.5),
-                        borderRadius: BorderRadius.circular(10)),
-                    alignment: Alignment.center,
-                    child: Text("Lunch Brack",
-                        style: TextStyle(
-                            color: AppColor.textColor,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w500)),
-                  ),
+                  // Container(
+                  //   padding: EdgeInsets.all(10),
+                  //   margin: EdgeInsets.symmetric(horizontal: 20),
+                  //   decoration: BoxDecoration(
+                  //       color: AppColor.primaryColor.withOpacity(0.5),
+                  //       borderRadius: BorderRadius.circular(10)),
+                  //   alignment: Alignment.center,
+                  //   child: Text("Lunch Brack",
+                  //       style: TextStyle(
+                  //           color: AppColor.textColor,
+                  //           fontSize: 20,
+                  //           fontWeight: FontWeight.w500)),
+                  // ),
                   GridView.builder(
                     shrinkWrap: true,
                     itemCount: slot2.length,
