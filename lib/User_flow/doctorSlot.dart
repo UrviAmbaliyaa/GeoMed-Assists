@@ -25,7 +25,7 @@ class _doctorSlotState extends State<doctorSlot> {
   manageSlot(){
     var bStart = DateFormat("h:mm").parse(widget.doctor.breckstartTime!);
     for(var slot in widget.doctor.availableSlot!){
-      var date = DateFormat("h:mm a").parse(slot);
+      var date = DateFormat("h:mm").parse(slot);
       date.isBefore(bStart) || date == bStart? slot1.add(DateFormat("h:mm a").format(date)):slot2.add(DateFormat("h:mm a").format(date));
     }
     setState(() {
