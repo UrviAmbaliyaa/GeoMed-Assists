@@ -32,6 +32,7 @@ class _SignUpAsDoctorState extends State<SignUpAsDoctor> {
   TextEditingController addressController = TextEditingController();
   TextEditingController contactNumberController = TextEditingController();
   TextEditingController zipCodeController = TextEditingController();
+  TextEditingController specialistController = TextEditingController();
   final formKey = GlobalKey<FormState>();
   bool passwordvisiblity = false;
   bool confirmpasswordvisiblity = false;
@@ -67,6 +68,7 @@ class _SignUpAsDoctorState extends State<SignUpAsDoctor> {
       });
     }
   }
+
   Future<void> _selectEndTime(BuildContext context) async {
     final TimeOfDay? pickedTime = await showTimePicker(
       context: context,
@@ -79,6 +81,7 @@ class _SignUpAsDoctorState extends State<SignUpAsDoctor> {
       });
     }
   }
+
   Future<void> _selectbreackEndTime(BuildContext context) async {
     final TimeOfDay? pickedTime = await showTimePicker(
       context: context,
@@ -91,7 +94,6 @@ class _SignUpAsDoctorState extends State<SignUpAsDoctor> {
       });
     }
   }
-
 
   Future<void> getAddressLatLng() async {
     try {
@@ -118,13 +120,20 @@ class _SignUpAsDoctorState extends State<SignUpAsDoctor> {
         "cantact": contactNumberController.text,
         "zipCode": zipCodeController.text,
         "imagePath": networkImagepath,
+        "specialist": specialistController.text,
         "startTime": "${startTime!.hour}:${startTime!.minute}",
         "breckstartTime": "${breckStartTime!.hour}:${breckStartTime!.minute}",
-        "endtime":"${endTime!.hour}:${endTime!.minute}",
-        "breckendTime":"${breackEndendTime!.hour}:${breackEndendTime!.minute}",
-        "approve" : widget.editdcreen? widget.editdcreen : "Pending"
+        "endtime": "${endTime!.hour}:${endTime!.minute}",
+        "breckendTime": "${breackEndendTime!.hour}:${breackEndendTime!.minute}",
+        "approve": widget.editdcreen ? widget.editdcreen : "Pending"
       };
-      !widget.editdcreen? mapdata.addAll({"favoriteReference": [],"availableSlot": [],"register": DateTime.now()}):null;
+      !widget.editdcreen
+          ? mapdata.addAll({
+              "favoriteReference": [],
+              "availableSlot": [],
+              "register": DateTime.now()
+            })
+          : null;
       !widget.editdcreen
           ? await firebase_auth().signUpWithEmailAndPassword(
               emailController.text, password.text, mapdata, context)
@@ -132,12 +141,13 @@ class _SignUpAsDoctorState extends State<SignUpAsDoctor> {
               reference: currentUserDocument!.reference, jsondata: mapdata);
       widget.editdcreen == false
           ? Navigator.of(context, rootNavigator: true).push(
-        CupertinoPageRoute<bool>(
-          fullscreenDialog: true,
-          builder: (BuildContext context) => new SignIn(),
-        ),
-      )
-          :Navigator.push(context,MaterialPageRoute(builder: (context) => bottomSheet_doctor()));
+              CupertinoPageRoute<bool>(
+                fullscreenDialog: true,
+                builder: (BuildContext context) => new SignIn(),
+              ),
+            )
+          : Navigator.push(context,
+              MaterialPageRoute(builder: (context) => bottomSheet_doctor()));
     } catch (e) {
       print("Error getting LatLng: $e");
     }
@@ -155,14 +165,19 @@ class _SignUpAsDoctorState extends State<SignUpAsDoctor> {
       aboutUscontroller.text = currentUserDocument!.aboutUs!;
       zipCodeController.text = currentUserDocument!.zipCode!;
       contactNumberController.text = currentUserDocument!.contact!;
+      specialistController.text = currentUserDocument!.specialist!;
       List<String> parts = currentUserDocument!.startTime!.split(":");
-      startTime = TimeOfDay(hour: int.parse(parts[0]), minute: int.parse(parts[1]));
+      startTime =
+          TimeOfDay(hour: int.parse(parts[0]), minute: int.parse(parts[1]));
       List<String> parts2 = currentUserDocument!.endTime!.split(":");
-      endTime = TimeOfDay(hour: int.parse(parts2[0]), minute: int.parse(parts2[1]));
+      endTime =
+          TimeOfDay(hour: int.parse(parts2[0]), minute: int.parse(parts2[1]));
       List<String> parts3 = currentUserDocument!.breckstartTime!.split(":");
-      breckStartTime = TimeOfDay(hour: int.parse(parts3[0]), minute: int.parse(parts3[1]));
+      breckStartTime =
+          TimeOfDay(hour: int.parse(parts3[0]), minute: int.parse(parts3[1]));
       List<String> parts4 = currentUserDocument!.breckendTime!.split(":");
-      breackEndendTime = TimeOfDay(hour: int.parse(parts4[0]), minute: int.parse(parts4[1]));
+      breackEndendTime =
+          TimeOfDay(hour: int.parse(parts4[0]), minute: int.parse(parts4[1]));
     });
   }
 
@@ -246,7 +261,7 @@ class _SignUpAsDoctorState extends State<SignUpAsDoctor> {
                                               fontWeight: FontWeight.w400)),
                                       SizedBox(height: 23),
                                       InkWell(
-                splashColor: Colors.transparent,
+                                        splashColor: Colors.transparent,
                                         onTap: () {
                                           showModalBottomSheet(
                                             context: context,
@@ -334,86 +349,129 @@ class _SignUpAsDoctorState extends State<SignUpAsDoctor> {
                                         },
                                       ),
                                       SizedBox(height: 15),
-                                     !widget.editdcreen ? Column(
-                                       children: [
-                                         Row(
-                                           children: [
-                                             Text("Password",
-                                                 style: TextStyle(
-                                                     fontSize: 18,
-                                                     color: AppColor.textColor)),
-                                           ],
-                                         ),
-                                         customeTextFormField(
-                                           autofillHint: [AutofillHints.password],
-                                           contoller: password,
-                                           hintTest: 'Enter Password',
-                                           keybordType:
-                                           TextInputType.visiblePassword,
-                                           password: true,
-                                           passwordvisiblity: !passwordvisiblity,
-                                           sufixIcon: InkWell(
-                splashColor: Colors.transparent,
-                                               onTap: () {
-                                                 setState(() {
-                                                   passwordvisiblity =
-                                                   !passwordvisiblity;
-                                                 });
-                                               },
-                                               child: Icon(!passwordvisiblity
-                                                   ? CupertinoIcons.eye
-                                                   : CupertinoIcons.eye_slash)),
-                                           validation: (value) {
-                                             if (password.text == '') {
-                                               return 'This is a required field.';
-                                             } else if (password.text.length < 6) {
-                                               return 'Password length should be Greter than 6.';
-                                             }
-                                           },
-                                         ),
-                                         SizedBox(height: 15),
-                                         Row(
-                                           children: [
-                                             Text("Confirm Password",
-                                                 style: TextStyle(
-                                                     fontSize: 18,
-                                                     color: AppColor.textColor)),
-                                           ],
-                                         ),
-                                         customeTextFormField(
-                                           autofillHint: [AutofillHints.password],
-                                           contoller: confirmpassword,
-                                           hintTest: 'Confirm Password',
-                                           keybordType:
-                                           TextInputType.visiblePassword,
-                                           password: true,
-                                           passwordvisiblity:
-                                          !confirmpasswordvisiblity,
-                                           sufixIcon: InkWell(
-                splashColor: Colors.transparent,
-                                               onTap: () {
-                                                 setState(() {
-                                                   confirmpasswordvisiblity =
-                                                   !confirmpasswordvisiblity;
-                                                 });
-                                               },
-                                               child: Icon(
-                                                   !confirmpasswordvisiblity
-                                                       ? CupertinoIcons.eye
-                                                       : CupertinoIcons
-                                                       .eye_slash)),
-                                           validation: (value) {
-                                             if (confirmpassword.text == '') {
-                                               return 'This is a required field.';
-                                             } else if (confirmpassword.text !=
-                                                 password.text) {
-                                               return "Confirm Password should be match with Password.";
-                                             }
-                                           },
-                                         ),
-                                         SizedBox(height: 15),
-                                       ],
-                                     ):SizedBox.shrink(),
+                                      !widget.editdcreen
+                                          ? Column(
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    Text("Password",
+                                                        style: TextStyle(
+                                                            fontSize: 18,
+                                                            color: AppColor
+                                                                .textColor)),
+                                                  ],
+                                                ),
+                                                customeTextFormField(
+                                                  autofillHint: [
+                                                    AutofillHints.password
+                                                  ],
+                                                  contoller: password,
+                                                  hintTest: 'Enter Password',
+                                                  keybordType: TextInputType
+                                                      .visiblePassword,
+                                                  password: true,
+                                                  passwordvisiblity:
+                                                      !passwordvisiblity,
+                                                  sufixIcon: InkWell(
+                                                      splashColor:
+                                                          Colors.transparent,
+                                                      onTap: () {
+                                                        setState(() {
+                                                          passwordvisiblity =
+                                                              !passwordvisiblity;
+                                                        });
+                                                      },
+                                                      child: Icon(
+                                                          !passwordvisiblity
+                                                              ? CupertinoIcons
+                                                                  .eye
+                                                              : CupertinoIcons
+                                                                  .eye_slash)),
+                                                  validation: (value) {
+                                                    if (password.text == '') {
+                                                      return 'This is a required field.';
+                                                    } else if (password
+                                                            .text.length <
+                                                        6) {
+                                                      return 'Password length should be Greter than 6.';
+                                                    }
+                                                  },
+                                                ),
+                                                SizedBox(height: 15),
+                                                Row(
+                                                  children: [
+                                                    Text("Confirm Password",
+                                                        style: TextStyle(
+                                                            fontSize: 18,
+                                                            color: AppColor
+                                                                .textColor)),
+                                                  ],
+                                                ),
+                                                customeTextFormField(
+                                                  autofillHint: [
+                                                    AutofillHints.password
+                                                  ],
+                                                  contoller: confirmpassword,
+                                                  hintTest: 'Confirm Password',
+                                                  keybordType: TextInputType
+                                                      .visiblePassword,
+                                                  password: true,
+                                                  passwordvisiblity:
+                                                      !confirmpasswordvisiblity,
+                                                  sufixIcon: InkWell(
+                                                      splashColor:
+                                                          Colors.transparent,
+                                                      onTap: () {
+                                                        setState(() {
+                                                          confirmpasswordvisiblity =
+                                                              !confirmpasswordvisiblity;
+                                                        });
+                                                      },
+                                                      child: Icon(
+                                                          !confirmpasswordvisiblity
+                                                              ? CupertinoIcons
+                                                                  .eye
+                                                              : CupertinoIcons
+                                                                  .eye_slash)),
+                                                  validation: (value) {
+                                                    if (confirmpassword.text ==
+                                                        '') {
+                                                      return 'This is a required field.';
+                                                    } else if (confirmpassword
+                                                            .text !=
+                                                        password.text) {
+                                                      return "Confirm Password should be match with Password.";
+                                                    }
+                                                  },
+                                                ),
+                                                SizedBox(height: 15),
+                                              ],
+                                            )
+                                          : SizedBox.shrink(),
+                                      Row(
+                                        children: [
+                                          Text("Degree",
+                                              style: TextStyle(
+                                                  fontSize: 18,
+                                                  color: AppColor.textColor)),
+                                        ],
+                                      ),
+                                      customeTextFormField(
+                                        autofillHint: [
+                                        ],
+                                        contoller: specialistController,
+                                        hintTest: 'Specialist',
+                                        keybordType: TextInputType.text,
+                                        password: false,
+                                        passwordvisiblity: false,
+                                        sufixIcon: SizedBox.shrink(),
+                                        validation: (value) {
+                                          if (specialistController.text == '') {
+                                            return 'This is a required field';
+                                          }
+                                        },
+                                      ),
+                                      SizedBox(height: 15),
                                       Row(
                                         children: [
                                           Text("Degree",
@@ -506,13 +564,11 @@ class _SignUpAsDoctorState extends State<SignUpAsDoctor> {
                                         passwordvisiblity: false,
                                         sufixIcon: SizedBox.shrink(),
                                         validation: (value) {
-                                          if (zipCodeController.text ==
-                                              '') {
+                                          if (zipCodeController.text == '') {
                                             return 'This is a required field';
-                                          } else if (zipCodeController
-                                              .text
-                                              .trim()
-                                              .length <
+                                          } else if (zipCodeController.text
+                                                  .trim()
+                                                  .length <
                                               5) {
                                             return 'Zip code length should be grater than 5.';
                                           }
@@ -561,143 +617,204 @@ class _SignUpAsDoctorState extends State<SignUpAsDoctor> {
                                       ),
                                       SizedBox(height: 10),
                                       Row(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
                                               SizedBox(
                                                 height: 45,
                                                 child: ElevatedButton(
-                                                  onPressed: () => _selectStartTime(context),
+                                                  onPressed: () =>
+                                                      _selectStartTime(context),
                                                   style: ButtonStyle(
-                                                    backgroundColor: MaterialStatePropertyAll(AppColor.inputTextfill),
-                                                    shape: MaterialStatePropertyAll(
-                                                      RoundedRectangleBorder(
-                                                          borderRadius: BorderRadius.circular(10)
-                                                      ),
-                                                    )
-                                                  ),
-                                                  child: Text(startTime == null ? 'Start Time':"${startTime!.hour}:${startTime!.minute}",style: TextStyle(
-                                                      color: startTime != null ? AppColor.textColor : Colors.grey.withOpacity(0.8),
-                                                      fontSize: 17,
-                                                      fontWeight: FontWeight.w400)),
+                                                      backgroundColor:
+                                                          MaterialStatePropertyAll(
+                                                              AppColor
+                                                                  .inputTextfill),
+                                                      shape:
+                                                          MaterialStatePropertyAll(
+                                                        RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10)),
+                                                      )),
+                                                  child: Text(
+                                                      startTime == null
+                                                          ? 'Start Time'
+                                                          : "${startTime!.hour}:${startTime!.minute}",
+                                                      style: TextStyle(
+                                                          color: startTime != null
+                                                              ? AppColor
+                                                                  .textColor
+                                                              : Colors.grey
+                                                                  .withOpacity(
+                                                                      0.8),
+                                                          fontSize: 17,
+                                                          fontWeight:
+                                                              FontWeight.w400)),
                                                 ),
                                               ),
                                               SizedBox(height: 3),
                                               Text("Start Time",
                                                   style: TextStyle(
                                                       fontSize: 15,
-                                                      color: AppColor.textColor))
+                                                      color:
+                                                          AppColor.textColor))
                                             ],
                                           ),
-                                          SizedBox(width: 8),
-                                          Padding(
-                                            padding: const EdgeInsets.only(top: 8),
-                                            child: Text("to",
-                                                style: TextStyle(
-                                                    fontSize: 18,
-                                                    color: AppColor.textColor)),
-                                          ),
-                                          SizedBox(width: 5),
+                                          SizedBox(width: 10),
                                           Column(
                                             children: [
                                               SizedBox(
                                                 height: 45,
                                                 child: ElevatedButton(
-                                                  onPressed: () => _selectBrackStartTime(context),
+                                                  onPressed: () =>
+                                                      _selectBrackStartTime(
+                                                          context),
                                                   style: ButtonStyle(
-                                                      backgroundColor: MaterialStatePropertyAll(AppColor.inputTextfill),
-                                                      shape: MaterialStatePropertyAll(
+                                                      backgroundColor:
+                                                          MaterialStatePropertyAll(
+                                                              AppColor
+                                                                  .inputTextfill),
+                                                      shape:
+                                                          MaterialStatePropertyAll(
                                                         RoundedRectangleBorder(
-                                                            borderRadius: BorderRadius.circular(10)
-                                                        ),
-                                                      )
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10)),
+                                                      )),
+                                                  child: Text(
+                                                    breckStartTime == null
+                                                        ? 'Break start Time'
+                                                        : "${breckStartTime!.hour}:${breckStartTime!.minute} ",
+                                                    style: TextStyle(
+                                                        color: breckStartTime !=
+                                                                null
+                                                            ? AppColor.textColor
+                                                            : Colors.grey
+                                                                .withOpacity(
+                                                                    0.8),
+                                                        fontSize: 17,
+                                                        fontWeight:
+                                                            FontWeight.w400),
                                                   ),
-                                                  child: Text(breckStartTime == null ? 'Break start Time':"${breckStartTime!.hour}:${breckStartTime!.minute} ",style: TextStyle(
-                                                      color: breckStartTime != null ? AppColor.textColor : Colors.grey.withOpacity(0.8),
-                                                      fontSize: 17,
-                                                      fontWeight: FontWeight.w400),),
                                                 ),
                                               ),
                                               SizedBox(height: 3),
                                               Text("Break Start Time",
                                                   style: TextStyle(
                                                       fontSize: 18,
-                                                      color: AppColor.textColor))
+                                                      color:
+                                                          AppColor.textColor))
                                             ],
                                           ),
                                         ],
                                       ),
                                       SizedBox(height: 10),
                                       Row(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
                                         children: [
                                           Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
                                               SizedBox(
                                                 height: 45,
                                                 child: ElevatedButton(
-                                                  onPressed: () => _selectbreackEndTime(context),
+                                                  onPressed: () =>
+                                                      _selectbreackEndTime(
+                                                          context),
                                                   style: ButtonStyle(
-                                                    backgroundColor: MaterialStatePropertyAll(AppColor.inputTextfill),
-                                                    shape: MaterialStatePropertyAll(
-                                                      RoundedRectangleBorder(
-                                                          borderRadius: BorderRadius.circular(10)
-                                                      ),
-                                                    )
-                                                  ),
-                                                  child: Text(breackEndendTime == null ? 'Break End Time':"${breackEndendTime!.hour}:${breackEndendTime!.minute}",style: TextStyle(
-                                                      color: breackEndendTime != null ? AppColor.textColor : Colors.grey.withOpacity(0.8),
-                                                      fontSize: 17,
-                                                      fontWeight: FontWeight.w400)),
+                                                      backgroundColor:
+                                                          MaterialStatePropertyAll(
+                                                              AppColor
+                                                                  .inputTextfill),
+                                                      shape:
+                                                          MaterialStatePropertyAll(
+                                                        RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10)),
+                                                      )),
+                                                  child: Text(
+                                                      breackEndendTime == null
+                                                          ? 'Break End Time'
+                                                          : "${breackEndendTime!.hour}:${breackEndendTime!.minute}",
+                                                      style: TextStyle(
+                                                          color: breackEndendTime !=
+                                                                  null
+                                                              ? AppColor
+                                                                  .textColor
+                                                              : Colors.grey
+                                                                  .withOpacity(
+                                                                      0.8),
+                                                          fontSize: 17,
+                                                          fontWeight:
+                                                              FontWeight.w400)),
                                                 ),
                                               ),
                                               SizedBox(height: 3),
                                               Text("Break End Time",
                                                   style: TextStyle(
                                                       fontSize: 15,
-                                                      color: AppColor.textColor))
+                                                      color:
+                                                          AppColor.textColor))
                                             ],
                                           ),
-                                          SizedBox(width: 13),
-                                          Padding(
-                                            padding: const EdgeInsets.only(top: 8),
-                                            child: Text("to",
-                                                style: TextStyle(
-                                                    fontSize: 13,
-                                                    color: AppColor.textColor)),
-                                          ),
-                                          SizedBox(width: 15),
+                                          SizedBox(width: 10),
                                           Column(
                                             children: [
                                               SizedBox(
                                                 height: 45,
                                                 child: ElevatedButton(
-                                                  onPressed: () => _selectEndTime(context),
+                                                  onPressed: () =>
+                                                      _selectEndTime(context),
                                                   style: ButtonStyle(
-                                                      backgroundColor: MaterialStatePropertyAll(AppColor.inputTextfill),
-                                                      shape: MaterialStatePropertyAll(
+                                                      backgroundColor:
+                                                          MaterialStatePropertyAll(
+                                                              AppColor
+                                                                  .inputTextfill),
+                                                      shape:
+                                                          MaterialStatePropertyAll(
                                                         RoundedRectangleBorder(
-                                                            borderRadius: BorderRadius.circular(10)
-                                                        ),
-                                                      )
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10)),
+                                                      )),
+                                                  child: Text(
+                                                    endTime == null
+                                                        ? 'End Time'
+                                                        : "${endTime!.hour}:${endTime!.minute} ",
+                                                    style: TextStyle(
+                                                        color: endTime != null
+                                                            ? AppColor.textColor
+                                                            : Colors.grey
+                                                                .withOpacity(
+                                                                    0.8),
+                                                        fontSize: 17,
+                                                        fontWeight:
+                                                            FontWeight.w400),
                                                   ),
-                                                  child: Text(endTime == null ? 'End Time':"${endTime!.hour}:${endTime!.minute} ",style: TextStyle(
-                                                      color: endTime != null ? AppColor.textColor : Colors.grey.withOpacity(0.8),
-                                                      fontSize: 17,
-                                                      fontWeight: FontWeight.w400),),
                                                 ),
                                               ),
                                               SizedBox(height: 3),
                                               Text("End Time",
                                                   style: TextStyle(
                                                       fontSize: 15,
-                                                      color: AppColor.textColor))
+                                                      color:
+                                                          AppColor.textColor))
                                             ],
                                           ),
                                         ],
@@ -729,19 +846,23 @@ class _SignUpAsDoctorState extends State<SignUpAsDoctor> {
                                   ),
                                 ),
                                 InkWell(
-                splashColor: Colors.transparent,
+                                  splashColor: Colors.transparent,
                                   onTap: () {
-                                    if (widget.editdcreen || imagepath != null) {
+                                    if (widget.editdcreen ||
+                                        imagepath != null) {
                                       var validate =
                                           formKey.currentState!.validate();
                                       if (validate) {
-                                        if(startTime != null && endTime != null && breackEndendTime != null && breckStartTime != null){
+                                        if (startTime != null &&
+                                            endTime != null &&
+                                            breackEndendTime != null &&
+                                            breckStartTime != null) {
                                           getAddressLatLng();
-                                        }else{
+                                        } else {
                                           constWidget().showSnackbar(
-                                              "Please select Working times", context);
+                                              "Please select Working times",
+                                              context);
                                         }
-
                                       }
                                     } else {
                                       constWidget().showSnackbar(
@@ -784,7 +905,7 @@ class _SignUpAsDoctorState extends State<SignUpAsDoctor> {
                                 style: TextStyle(
                                     color: AppColor.textColor, fontSize: 18)),
                             InkWell(
-                splashColor: Colors.transparent,
+                                splashColor: Colors.transparent,
                                 onTap: () {
                                   Navigator.of(context, rootNavigator: true)
                                       .push(

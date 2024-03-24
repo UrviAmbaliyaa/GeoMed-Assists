@@ -553,7 +553,7 @@ class _SignUpAsShopkeeperState extends State<SignUpAsShopkeeper> {
                                                       color: AppColor.textColor))
                                             ],
                                           ),
-                                          SizedBox(width: 15),
+                                          SizedBox(width: 10),
                                           Column(
                                             children: [
                                               SizedBox(
@@ -614,7 +614,7 @@ class _SignUpAsShopkeeperState extends State<SignUpAsShopkeeper> {
                                                       color: AppColor.textColor))
                                             ],
                                           ),
-                                          SizedBox(width: 15),
+                                          SizedBox(width: 10),
                                           Column(
                                             children: [
                                               SizedBox(

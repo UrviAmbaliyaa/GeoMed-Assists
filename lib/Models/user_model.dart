@@ -28,6 +28,7 @@ class UserModel {
   String? zipCode;
   String? cancelReason;
   String approve;
+  String? specialist;
   double? distanc;
   List? availableSlot;
   DateTime register;
@@ -52,6 +53,7 @@ class UserModel {
     this.degree,
     this.exp,
     this.aboutUs,
+    this.specialist,
     this.contact,
     this.startTime,
     this.breckstartTime,
@@ -91,6 +93,7 @@ class UserModel {
       breckendTime: json['breckendTime'] ?? '',
       lunchTime: json['lunchTime'],
       cancelReason: json['cancelReason'] ?? '',
+      specialist: json['specialist'] ?? '',
       approve: json['approve'],
       distanc: json['latLong'] != null ? currentUserDocument != null
           ? calculateDistance(
@@ -123,6 +126,7 @@ class UserModel {
       'age': age,
       'zipCode': zipCode,
       'degree': degree,
+      'specialist': specialist,
       'exp': exp,
       "availableSlot":availableSlot,
       'about_us': aboutUs,

@@ -148,7 +148,7 @@ class _allDoctoresState extends State<allDoctores> {
                                             fontWeight: FontWeight.w400)),
                                     SizedBox(
                                       width: width * 0.57,
-                                      child: Text(data.address!,
+                                      child: Text("Specialist of:${data.specialist}",
                                           style: TextStyle(
                                               color: AppColor.greycolor,
                                               fontSize: 13),

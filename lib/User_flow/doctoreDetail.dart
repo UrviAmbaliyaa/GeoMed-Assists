@@ -180,6 +180,12 @@ class _doctoreDetailState extends State<doctoreDetail> {
                           ? Colors.black
                           : AppColor.textColor,
                       fontSize: 13)),
+              Text("Specialist of: ${widget.doctor.specialist}",
+                  style: TextStyle(
+                      color: currentUserDocument!.type == "Admin"
+                          ? Colors.black
+                          : AppColor.textColor,
+                      fontSize: 13)),
               Text("Education: ${widget.doctor.degree}",
                   style: TextStyle(
                       color: currentUserDocument!.type == "Admin"

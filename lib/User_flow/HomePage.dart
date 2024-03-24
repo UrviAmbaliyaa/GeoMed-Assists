@@ -54,20 +54,20 @@ class _homePageState extends State<homePage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text("Disease", style: title),
-                   InkWell(
-                splashColor: Colors.transparent,
-                            onTap: () =>
-                                Navigator.of(context, rootNavigator: true).push(
-                              CupertinoPageRoute<bool>(
-                                fullscreenDialog: true,
-                                builder: (BuildContext context) =>
-                                    new allCategories(),
-                              ),
-                            ),
-                            child: Text("See All",
-                                style: TextStyle(
-                                    color: AppColor.textColor, fontSize: 13)),
-                          ),
+                    InkWell(
+                      splashColor: Colors.transparent,
+                      onTap: () =>
+                          Navigator.of(context, rootNavigator: true).push(
+                        CupertinoPageRoute<bool>(
+                          fullscreenDialog: true,
+                          builder: (BuildContext context) =>
+                              new allCategories(),
+                        ),
+                      ),
+                      child: Text("See All",
+                          style: TextStyle(
+                              color: AppColor.textColor, fontSize: 13)),
+                    ),
                   ],
                 ),
                 Container(
@@ -89,7 +89,10 @@ class _homePageState extends State<homePage> {
                           scrollDirection: Axis.horizontal,
                           itemBuilder: (context, index) {
                             var data = snapshot.data![index];
-                            var isvisible = serachingController.text.isNotEmpty?(data.name.toUpperCase().contains(serachingController.text.toUpperCase())): true;
+                            var isvisible = serachingController.text.isNotEmpty
+                                ? (data.name.toUpperCase().contains(
+                                    serachingController.text.toUpperCase()))
+                                : true;
                             return Visibility(
                               visible: isvisible,
                               child: InkWell(
@@ -124,7 +127,8 @@ class _homePageState extends State<homePage> {
                                   ),
                                   child: SingleChildScrollView(
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Image.network(data.imageUrl,
                                             height: width * 0.26,
@@ -163,7 +167,8 @@ class _homePageState extends State<homePage> {
 
   shopWidget() {
     return StreamBuilder<List<UserModel>?>(
-        stream: Firebase_Quires().getShopKeepe_Doctore(shopkeeper: true,fromMap: false),
+        stream: Firebase_Quires()
+            .getShopKeepe_Doctore(shopkeeper: true, fromMap: false),
         builder: (context, snapshot) {
           return Container(
             width: double.infinity,
@@ -177,19 +182,19 @@ class _homePageState extends State<homePage> {
                   children: [
                     Text("Shops", style: title),
                     InkWell(
-                splashColor: Colors.transparent,
-                            onTap: () =>
-                                Navigator.of(context, rootNavigator: true).push(
-                              CupertinoPageRoute<bool>(
-                                fullscreenDialog: true,
-                                builder: (BuildContext context) =>
-                                    allShopes(shopKeppers: snapshot.data!),
-                              ),
-                            ),
-                            child: Text("See All",
-                                style: TextStyle(
-                                    color: AppColor.textColor, fontSize: 13)),
-                          )
+                      splashColor: Colors.transparent,
+                      onTap: () =>
+                          Navigator.of(context, rootNavigator: true).push(
+                        CupertinoPageRoute<bool>(
+                          fullscreenDialog: true,
+                          builder: (BuildContext context) =>
+                              allShopes(shopKeppers: snapshot.data!),
+                        ),
+                      ),
+                      child: Text("See All",
+                          style: TextStyle(
+                              color: AppColor.textColor, fontSize: 13)),
+                    )
                   ],
                 ),
                 Container(
@@ -208,15 +213,21 @@ class _homePageState extends State<homePage> {
                           scrollDirection: Axis.horizontal,
                           itemBuilder: (context, index) {
                             var data = snapshot.data![index];
-                            var visiblity = serachingController.text.isNotEmpty?
-                                    (data.name.toUpperCase().contains(serachingController.text.toUpperCase()) ||
-                                        data.address!.toUpperCase().contains(serachingController.text.toUpperCase()) ||
-                                        data.distanc.toString().contains(serachingController.text)
-                                    ): true;
+                            var visiblity = serachingController.text.isNotEmpty
+                                ? (data.name.toUpperCase().contains(
+                                        serachingController.text
+                                            .toUpperCase()) ||
+                                    data.address!.toUpperCase().contains(
+                                        serachingController.text
+                                            .toUpperCase()) ||
+                                    data.distanc
+                                        .toString()
+                                        .contains(serachingController.text))
+                                : true;
                             return Visibility(
                               visible: visiblity,
                               child: InkWell(
-                splashColor: Colors.transparent,
+                                splashColor: Colors.transparent,
                                 onTap: () =>
                                     Navigator.of(context, rootNavigator: true)
                                         .push(
@@ -239,10 +250,12 @@ class _homePageState extends State<homePage> {
                                         clipBehavior: Clip.antiAlias,
                                         decoration: BoxDecoration(
                                           color: AppColor.backgroundColor,
-                                          borderRadius: BorderRadius.circular(15.0),
+                                          borderRadius:
+                                              BorderRadius.circular(15.0),
                                           boxShadow: [
                                             BoxShadow(
-                                              color: Colors.grey.withOpacity(0.5),
+                                              color:
+                                                  Colors.grey.withOpacity(0.5),
                                               spreadRadius: 1,
                                               blurRadius: 8,
                                               offset: Offset(0,
@@ -268,35 +281,57 @@ class _homePageState extends State<homePage> {
                                                   children: [
                                                     Text(data.name,
                                                         style: TextStyle(
-                                                            color: AppColor.textColor,
+                                                            color: AppColor
+                                                                .textColor,
                                                             fontSize: 16),
                                                         maxLines: 1),
                                                     Text(data.address!,
                                                         style: TextStyle(
-                                                            color: AppColor.greycolor,
+                                                            color: AppColor
+                                                                .greycolor,
                                                             fontSize: 13),
                                                         maxLines: 2),
                                                     StreamBuilder<UserModel?>(
-                                                        stream: Firebase_Quires().getuserInfo(refId: data.reference),
-                                                        builder: (context, snapshot) {
+                                                        stream: Firebase_Quires()
+                                                            .getuserInfo(
+                                                                refId: data
+                                                                    .reference),
+                                                        builder: (context,
+                                                            snapshot) {
                                                           return Row(
-                                                            crossAxisAlignment: CrossAxisAlignment.end,
-                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .end,
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
                                                             children: [
                                                               rattingBar(
                                                                   tapOnly: true,
-                                                                  initValue: (snapshot.connectionState == ConnectionState.done || snapshot.connectionState == ConnectionState.waiting) && snapshot.hasData ? (snapshot.data!.rate! /snapshot.data!.ratedUser!):0,
+                                                                  initValue: (snapshot.connectionState == ConnectionState.done || snapshot.connectionState == ConnectionState.waiting) &&
+                                                                          snapshot
+                                                                              .hasData
+                                                                      ? (snapshot
+                                                                              .data!
+                                                                              .rate! /
+                                                                          snapshot
+                                                                              .data!
+                                                                              .ratedUser!)
+                                                                      : 0,
                                                                   size: 15),
                                                               Text(
                                                                   "${calculateDistance(currentUserDocument!.latLong, currentUserDocument!.longitude, data.latLong, data.longitude)} mile",
                                                                   style: TextStyle(
-                                                                      color: AppColor.greycolor,
-                                                                      fontSize: 13,
-                                                                      fontWeight: FontWeight.w500))
+                                                                      color: AppColor
+                                                                          .greycolor,
+                                                                      fontSize:
+                                                                          13,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500))
                                                             ],
                                                           );
-                                                        }
-                                                    ),
+                                                        }),
                                                   ],
                                                 ),
                                               ),
@@ -304,7 +339,9 @@ class _homePageState extends State<homePage> {
                                           ),
                                         ),
                                       ),
-                                      Favorites(reference: data.reference, action: () {}),
+                                      Favorites(
+                                          reference: data.reference,
+                                          action: () {}),
                                     ],
                                   ),
                                 ),
@@ -330,7 +367,8 @@ class _homePageState extends State<homePage> {
 
   doctorWidget() {
     return StreamBuilder<List<UserModel>?>(
-        stream: Firebase_Quires().getShopKeepe_Doctore(shopkeeper: false,fromMap: false),
+        stream: Firebase_Quires()
+            .getShopKeepe_Doctore(shopkeeper: false, fromMap: false),
         builder: (context, snapshot) {
           print(snapshot.connectionState);
           return Container(
@@ -345,19 +383,19 @@ class _homePageState extends State<homePage> {
                   children: [
                     Text("Doctors", style: title),
                     InkWell(
-                splashColor: Colors.transparent,
-                            onTap: () =>
-                                Navigator.of(context, rootNavigator: true).push(
-                              CupertinoPageRoute<bool>(
-                                fullscreenDialog: true,
-                                builder: (BuildContext context) =>
-                                    allDoctores(doctores: snapshot.data!),
-                              ),
-                            ),
-                            child: Text("See All",
-                                style: TextStyle(
-                                    color: AppColor.textColor, fontSize: 13)),
-                          ),
+                      splashColor: Colors.transparent,
+                      onTap: () =>
+                          Navigator.of(context, rootNavigator: true).push(
+                        CupertinoPageRoute<bool>(
+                          fullscreenDialog: true,
+                          builder: (BuildContext context) =>
+                              allDoctores(doctores: snapshot.data!),
+                        ),
+                      ),
+                      child: Text("See All",
+                          style: TextStyle(
+                              color: AppColor.textColor, fontSize: 13)),
+                    ),
                   ],
                 ),
                 Container(
@@ -376,19 +414,28 @@ class _homePageState extends State<homePage> {
                           scrollDirection: Axis.horizontal,
                           itemBuilder: (context, index) {
                             var data = snapshot.data![index];
-                            var visiblity = serachingController.text.isNotEmpty?
-                            (data.name.toUpperCase().contains(serachingController.text.toUpperCase()) ||
-                                data.address!.toUpperCase().contains(serachingController.text.toUpperCase()) ||
-                                data.degree!.toUpperCase().contains(serachingController.text.toUpperCase()) ||
-                                data.distanc.toString().contains(serachingController.text) ||
-                                data.exp!.toUpperCase().contains(serachingController.text.toUpperCase())
-                            ): true;
+                            var visiblity = serachingController.text.isNotEmpty
+                                ? (data.name.toUpperCase().contains(
+                                        serachingController.text
+                                            .toUpperCase()) ||
+                                    data.address!.toUpperCase().contains(
+                                        serachingController.text
+                                            .toUpperCase()) ||
+                                    data.degree!.toUpperCase().contains(
+                                        serachingController.text
+                                            .toUpperCase()) ||
+                                    data.distanc
+                                        .toString()
+                                        .contains(serachingController.text) ||
+                                    data.exp!.toUpperCase().contains(
+                                        serachingController.text.toUpperCase()))
+                                : true;
                             return Visibility(
                               visible: visiblity,
                               child: Container(
                                 margin: EdgeInsets.only(right: 15),
                                 child: InkWell(
-                splashColor: Colors.transparent,
+                                  splashColor: Colors.transparent,
                                   onTap: () =>
                                       Navigator.of(context, rootNavigator: true)
                                           .push(
@@ -400,8 +447,8 @@ class _homePageState extends State<homePage> {
                                   ),
                                   child: Container(
                                     width: width * 0.5,
-                                    margin:
-                                        EdgeInsets.only(bottom: 5, left: 5, top: 5),
+                                    margin: EdgeInsets.only(
+                                        bottom: 5, left: 5, top: 5),
                                     padding: EdgeInsets.all(2),
                                     clipBehavior: Clip.antiAlias,
                                     decoration: BoxDecoration(
@@ -412,8 +459,8 @@ class _homePageState extends State<homePage> {
                                           color: Colors.grey.withOpacity(0.5),
                                           spreadRadius: 1,
                                           blurRadius: 8,
-                                          offset: Offset(
-                                              0, 3), // changes position of shadow
+                                          offset: Offset(0,
+                                              3), // changes position of shadow
                                         ),
                                       ],
                                     ),
@@ -438,44 +485,69 @@ class _homePageState extends State<homePage> {
                                                   children: [
                                                     Text(data.name,
                                                         style: TextStyle(
-                                                            color: AppColor.textColor,
+                                                            color: AppColor
+                                                                .textColor,
                                                             fontSize: 16),
                                                         maxLines: 1),
                                                     SizedBox(height: 3),
-                                                    Text("Education : ${data.degree}",
+                                                    Text(
+                                                        "Specialist of:${data.specialist}",
                                                         style: TextStyle(
-                                                            color: AppColor.greycolor,
+                                                            color: AppColor
+                                                                .greycolor,
                                                             fontSize: 13),
                                                         maxLines: 2),
                                                     SizedBox(height: 3),
                                                     StreamBuilder<UserModel?>(
-                                                        stream: Firebase_Quires().getuserInfo(refId: data.reference),
-                                                        builder: (context, snapshot) {
+                                                        stream: Firebase_Quires()
+                                                            .getuserInfo(
+                                                                refId: data
+                                                                    .reference),
+                                                        builder: (context,
+                                                            snapshot) {
                                                           return Row(
-                                                            crossAxisAlignment: CrossAxisAlignment.end,
-                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .end,
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
                                                             children: [
                                                               rattingBar(
                                                                   tapOnly: true,
-                                                                  initValue: (snapshot.connectionState == ConnectionState.done || snapshot.connectionState == ConnectionState.waiting) && snapshot.hasData ? (snapshot.data!.rate! /snapshot.data!.ratedUser!):0,
+                                                                  initValue: (snapshot.connectionState == ConnectionState.done || snapshot.connectionState == ConnectionState.waiting) &&
+                                                                          snapshot
+                                                                              .hasData
+                                                                      ? (snapshot
+                                                                              .data!
+                                                                              .rate! /
+                                                                          snapshot
+                                                                              .data!
+                                                                              .ratedUser!)
+                                                                      : 0,
                                                                   size: 15),
                                                               Text(
                                                                   "${calculateDistance(currentUserDocument!.latLong, currentUserDocument!.longitude, data.latLong, data.longitude)} mile ",
                                                                   style: TextStyle(
-                                                                      color: AppColor.greycolor,
-                                                                      fontSize: 13,
-                                                                      fontWeight: FontWeight.w500))
+                                                                      color: AppColor
+                                                                          .greycolor,
+                                                                      fontSize:
+                                                                          13,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500))
                                                             ],
                                                           );
-                                                        }
-                                                    ),
+                                                        }),
                                                   ],
                                                 ),
                                               ),
                                             ],
                                           ),
                                         ),
-                                        Favorites(reference: data.reference, action: () {}),
+                                        Favorites(
+                                            reference: data.reference,
+                                            action: () {}),
                                       ],
                                     ),
                                   ),
@@ -550,8 +622,7 @@ class _homePageState extends State<homePage> {
                     Navigator.of(context, rootNavigator: true).push(
                       CupertinoPageRoute<bool>(
                           fullscreenDialog: true,
-                          builder: (BuildContext context) => MapScreen()
-                      ),
+                          builder: (BuildContext context) => MapScreen()),
                     );
                   },
                   icon: Icon(
@@ -587,7 +658,7 @@ class _homePageState extends State<homePage> {
                 controller: serachingController,
                 style: TextStyle(color: AppColor.textColor, fontSize: 15),
                 onChanged: (value) {
-                  Future.delayed(Duration(seconds: 1),() => setState(() {}));
+                  Future.delayed(Duration(seconds: 1), () => setState(() {}));
                 },
                 decoration: InputDecoration(
                   hintText: "Search here..",
@@ -679,7 +750,7 @@ class _homePageState extends State<homePage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           InkWell(
-                splashColor: Colors.transparent,
+                            splashColor: Colors.transparent,
                             onTap: () {
                               drawerKey.currentState?.closeDrawer();
                               Navigator.of(context, rootNavigator: true).push(
@@ -705,14 +776,13 @@ class _homePageState extends State<homePage> {
                             ),
                           ),
                           InkWell(
-                splashColor: Colors.transparent,
+                            splashColor: Colors.transparent,
                             onTap: () {
                               drawerKey.currentState?.closeDrawer();
                               Navigator.of(context, rootNavigator: true).push(
                                 CupertinoPageRoute<bool>(
                                   fullscreenDialog: true,
-                                  builder: (BuildContext context) =>
-                                      requests(),
+                                  builder: (BuildContext context) => requests(),
                                 ),
                               );
                             },
@@ -731,7 +801,7 @@ class _homePageState extends State<homePage> {
                             ),
                           ),
                           InkWell(
-                splashColor: Colors.transparent,
+                            splashColor: Colors.transparent,
                             onTap: () {
                               drawerKey.currentState?.closeDrawer();
                               Navigator.of(context, rootNavigator: true).push(
@@ -757,7 +827,7 @@ class _homePageState extends State<homePage> {
                             ),
                           ),
                           InkWell(
-                splashColor: Colors.transparent,
+                            splashColor: Colors.transparent,
                             onTap: () {
                               drawerKey.currentState?.closeDrawer();
                               Navigator.of(context, rootNavigator: true).push(
