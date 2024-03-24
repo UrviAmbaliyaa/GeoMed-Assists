@@ -450,7 +450,7 @@ class _SignUpAsDoctorState extends State<SignUpAsDoctor> {
                                           : SizedBox.shrink(),
                                       Row(
                                         children: [
-                                          Text("Degree",
+                                          Text("Specialist",
                                               style: TextStyle(
                                                   fontSize: 18,
                                                   color: AppColor.textColor)),
