@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geomed_assist/Admin_Panel/bottom_navigationBar/bottombar_Admin.dart';
 import 'package:geomed_assist/Authentication/forgotpassword.dart';
@@ -45,14 +46,15 @@ class _SignInState extends State<SignIn> {
           child: Column(
             children: [
               Container(
-                width: double.infinity,
-                height: width * 0.65,
+                width: kIsWeb ? 200 : double.infinity,
+                height: kIsWeb ? 100 : width * 0.65,
                 alignment: Alignment.bottomCenter,
                 child: Image.asset("assets/logo/Logo.png", color: Colors.white),
               ),
               Form(
                 key: formKey,
                 child: Container(
+                  width: kIsWeb ? 500 : double.infinity,
                   margin: EdgeInsets.only(left: 25, right: 25, top: 60),
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
@@ -115,7 +117,7 @@ class _SignInState extends State<SignIn> {
                               password: true,
                               passwordvisiblity: passwordvisiblity,
                               sufixIcon: InkWell(
-                splashColor: Colors.transparent,
+                                  splashColor: Colors.transparent,
                                   onTap: () {
                                     setState(() {
                                       passwordvisiblity = !passwordvisiblity;
@@ -136,36 +138,45 @@ class _SignInState extends State<SignIn> {
                         ),
                       ),
                       InkWell(
-                splashColor: Colors.transparent,
+                        splashColor: Colors.transparent,
                         onTap: () async {
                           var validate = formKey.currentState!.validate();
                           if (validate) {
                             setState(() {
                               isLoading = !isLoading;
                             });
-                            var signUn = await firebase_auth().signInWithEmailAndPassword(emailController.text, password.text);
+                            var signUn = await firebase_auth()
+                                .signInWithEmailAndPassword(
+                                    emailController.text, password.text);
                             if (signUn) {
                               emailController.clear();
                               password.clear();
                               var Screens;
                               switch (currentUserDocument!.type) {
                                 case "User":
-                                  Screens = currentUserDocument!.approve == "Accepted" ? MapScreen() :unAuthorized();
+                                  Screens =
+                                      currentUserDocument!.approve == "Accepted"
+                                          ? MapScreen()
+                                          : unAuthorized();
                                 case "ShopKeeper":
-                                  Screens = currentUserDocument!.approve == "Accepted" ? shop_bottomNavigationbar() :unAuthorized();
+                                  Screens =
+                                      currentUserDocument!.approve == "Accepted"
+                                          ? shop_bottomNavigationbar()
+                                          : unAuthorized();
                                 case "Doctore":
-                                  Screens = currentUserDocument!.approve == "Accepted" ? bottomSheet_doctor() :unAuthorized();
+                                  Screens =
+                                      currentUserDocument!.approve == "Accepted"
+                                          ? bottomSheet_doctor()
+                                          : unAuthorized();
                                 case "Admin":
                                   Screens = admin_bottomTabBar();
                               }
                               Navigator.of(context, rootNavigator: true).push(
                                 CupertinoPageRoute<bool>(
                                   fullscreenDialog: true,
-                                  builder: (BuildContext context) =>
-                                      Screens,
+                                  builder: (BuildContext context) => Screens,
                                 ),
                               );
-
                             } else {
                               constWidget().showSnackbar(
                                   "Invalide Authentication Id and Password, Please Enter right Authentication Id and Password",
@@ -177,7 +188,7 @@ class _SignInState extends State<SignIn> {
                           }
                         },
                         child: Container(
-                          height: width * 0.13,
+                          height: kIsWeb? 50 : width * 0.13,
                           alignment: Alignment.center,
                           child: Text("Sign in",
                               style: TextStyle(
@@ -215,7 +226,7 @@ class _SignInState extends State<SignIn> {
                       style:
                           TextStyle(color: AppColor.textColor, fontSize: 18)),
                   InkWell(
-                splashColor: Colors.transparent,
+                      splashColor: Colors.transparent,
                       onTap: () {
                         Navigator.of(context, rootNavigator: true).push(
                           CupertinoPageRoute<bool>(
