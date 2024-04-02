@@ -119,15 +119,13 @@ class _SignUpAsShopkeeperState extends State<SignUpAsShopkeeper> {
         "breckstartTime": "${breckStartTime!.hour}:${breckStartTime!.minute}",
         "endtime":"${endTime!.hour}:${endTime!.minute}",
         "breckendTime":"${breackEndendTime!.hour}:${breackEndendTime!.minute}",
-        "approve" :  widget.editdcreen? widget.editdcreen : "Pending"
+        "approve" :  widget.editdcreen?  currentUserDocument!.approve : "Pending"
       };
       !widget.editdcreen? mapdata.addAll({"favoriteReference": [],"availableSlot": [],"register": DateTime.now()}):null;
-      print("-------------------------------->222");
       !widget.editdcreen
           ? await firebase_auth().signUpWithEmailAndPassword(
               emailController.text, password.text, mapdata, context)
           : await firebase_auth().updateData(reference: currentUserDocument!.reference,jsondata: mapdata);
-      print("-------------------------------->333");
       FirebaseAuth.instance.currentUser != null ?
       setState(() {
         isLoading = false;

@@ -125,7 +125,7 @@ class _SignUpAsDoctorState extends State<SignUpAsDoctor> {
         "breckstartTime": "${breckStartTime!.hour}:${breckStartTime!.minute}",
         "endtime": "${endTime!.hour}:${endTime!.minute}",
         "breckendTime": "${breackEndendTime!.hour}:${breackEndendTime!.minute}",
-        "approve": widget.editdcreen ? widget.editdcreen : "Pending"
+        "approve": widget.editdcreen ?  currentUserDocument!.approve : "Pending"
       };
       !widget.editdcreen
           ? mapdata.addAll({

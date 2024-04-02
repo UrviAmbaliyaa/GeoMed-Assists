@@ -39,7 +39,8 @@ class _SignUpState extends State<SignUp> {
       namecontroller.text = currentUserDocument!.name;
       password.text = "123456";
       confirmpassword.text = "123456";
-      contactNumberController.text = currentUserDocument!.contact!;
+      print("currentUserDocument!.contact ----->${currentUserDocument!.contact}");
+      currentUserDocument!.contact != null ? contactNumberController.text = currentUserDocument!.contact!:null;
     });
   }
 
@@ -57,9 +58,9 @@ class _SignUpState extends State<SignUp> {
         "email" :  emailController.text,
         "imagePath" :  networkImagepath,
         "cantact": contactNumberController.text,
-        "approve" :  widget.editdcreen? widget.editdcreen : "Accepted"
+        "approve" :  widget.editdcreen? currentUserDocument!.approve : "Accepted"
       };
-      !widget.editdcreen? mapdata.addAll({"favoriteReference": [],"create": DateTime.now()}):null;
+      !widget.editdcreen? mapdata.addAll({"favoriteReference": [],"register": DateTime.now()}):null;
       !widget.editdcreen
           ? await firebase_auth().signUpWithEmailAndPassword(
           emailController.text, password.text, mapdata, context)

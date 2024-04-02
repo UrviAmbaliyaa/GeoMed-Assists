@@ -69,6 +69,7 @@ class UserModel {
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
+    print("json['register']-------->${json['register']}");
     return UserModel(
       address: json['address'] ?? '',
       gender: json['gender'],
@@ -103,7 +104,7 @@ class UserModel {
               json['longitude'].toDouble())
           : 0 ?? 0.0:0.0,
       reference: json['reference'],
-      register: json['register'].toDate(),
+      register: json['register'] != null ? json['register'].runtimeType != DateTime ? json['register'].toDate():json['register'] :currentUserDocument!.register,
       availableSlot:json['availableSlot'] ?? [],
       favoriteReference: List<DocumentReference>.from(
               json['favoriteReference']?.map((x) => x) ?? []) ?? [],
