@@ -39,7 +39,6 @@ class _SignUpState extends State<SignUp> {
       namecontroller.text = currentUserDocument!.name;
       password.text = "123456";
       confirmpassword.text = "123456";
-      print("currentUserDocument!.contact ----->${currentUserDocument!.contact}");
       currentUserDocument!.contact != null ? contactNumberController.text = currentUserDocument!.contact!:null;
     });
   }
@@ -84,7 +83,16 @@ class _SignUpState extends State<SignUp> {
           new SignIn(),
         ),
       )
-          : Navigator.pop(context);
+          : Navigator.of(context,
+          rootNavigator: true)
+          .push(
+        CupertinoPageRoute<bool>(
+          fullscreenDialog: true,
+          builder:
+              (BuildContext context) =>
+          new homePage(),
+        ),
+      );
 
 
     } catch (e) {

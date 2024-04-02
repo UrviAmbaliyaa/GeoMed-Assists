@@ -66,6 +66,7 @@ class firebase_auth{
       Map<String, dynamic> mapdata = jsondata;
       mapdata.addAll({"reference":reference});
       currentUserDocument = await UserModel.fromJson(mapdata);
+      print("currentUserDocument ------>${currentUserDocument!.name}");
     // }catch(error){
     //   print("Error =====>${error}");
     // }

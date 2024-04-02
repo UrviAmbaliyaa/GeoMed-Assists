@@ -69,7 +69,6 @@ class UserModel {
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
-    print("json['register']-------->${json['register']}");
     return UserModel(
       address: json['address'] ?? '',
       gender: json['gender'],

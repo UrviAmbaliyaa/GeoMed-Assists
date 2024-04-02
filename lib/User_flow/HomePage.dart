@@ -607,7 +607,7 @@ class _homePageState extends State<homePage> {
                           style: TextStyle(
                               color: AppColor.textColor, fontSize: 20)),
                       Text(
-                        currentUserDocument!.address!,
+                        currentUserDocument!.email!,
                         style: TextStyle(
                           color: AppColor.greycolor,
                           fontSize: 13,
@@ -729,7 +729,7 @@ class _homePageState extends State<homePage> {
                               style: TextStyle(
                                   color: AppColor.textColor, fontSize: 23)),
                           Text(
-                            currentUserDocument!.address!,
+                            currentUserDocument!.email,
                             style: TextStyle(
                               color: AppColor.greycolor,
                               fontSize: 15,
