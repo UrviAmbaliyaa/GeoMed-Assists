@@ -180,8 +180,7 @@ class _productDetailState extends State<productDetail> {
                             color: currentUserDocument!.type == "Admin" ?Colors.black : AppColor.textColor, fontSize: 13)),
 
                     SizedBox(height: 30),
-                    currentUserDocument!.type != "Admin" &&
-                        currentUserDocument!.type != "ShopKeeper"
+                    currentUserDocument!.type == "User"
                         ? Column(
                       children: [
                         Form(

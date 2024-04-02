@@ -23,64 +23,65 @@ class allProducts extends StatefulWidget {
 class _allProductsState extends State<allProducts> {
   TextEditingController serachingController = TextEditingController();
   GlobalKey<ScaffoldState> drawerKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
     return Scaffold(
-        key: drawerKey,
+      key: drawerKey,
       backgroundColor: AppColor.backgroundColor,
-        appBar: AppBar(
-          backgroundColor: AppColor.backgroundColor,
-          elevation: 0,
-          automaticallyImplyLeading: false,
-          leadingWidth: 0,
-          centerTitle: true,
-          toolbarHeight: 75,
-          title: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              CircleAvatar(
-                radius: 25,
-                backgroundImage: NetworkImage(
-                  currentUserDocument!.imagePath!,
-                ),
+      appBar: AppBar(
+        backgroundColor: AppColor.backgroundColor,
+        elevation: 0,
+        automaticallyImplyLeading: false,
+        leadingWidth: 0,
+        centerTitle: true,
+        toolbarHeight: 75,
+        title: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CircleAvatar(
+              radius: 25,
+              backgroundImage: NetworkImage(
+                currentUserDocument!.imagePath!,
               ),
-              SizedBox(width: 15),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(currentUserDocument!.name,
-                        style:
-                        TextStyle(color: AppColor.textColor, fontSize: 20)),
-                    Text(
-                      currentUserDocument!.address!,
-                      style: TextStyle(
-                        color: AppColor.greycolor,
-                        fontSize: 13,
-                      ),
-                      maxLines: 2,
+            ),
+            SizedBox(width: 15),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(currentUserDocument!.name,
+                      style:
+                          TextStyle(color: AppColor.textColor, fontSize: 20)),
+                  Text(
+                    currentUserDocument!.address!,
+                    style: TextStyle(
+                      color: AppColor.greycolor,
+                      fontSize: 13,
                     ),
-                  ],
-                ),
+                    maxLines: 2,
+                  ),
+                ],
               ),
-              IconButton(
-                onPressed: () => drawerKey.currentState?.openDrawer(),
-                icon: Icon(
-                  Icons.menu_sharp,
-                  color: AppColor.textColor,
-                ),
-                tooltip: "Drawer",
-              )
-            ],
-          ),
+            ),
+            IconButton(
+              onPressed: () => drawerKey.currentState?.openDrawer(),
+              icon: Icon(
+                Icons.menu_sharp,
+                color: AppColor.textColor,
+              ),
+              tooltip: "Drawer",
+            )
+          ],
         ),
+      ),
       body: Padding(
-        padding: EdgeInsets.only(left: 20,right: 20,bottom: 20),
+        padding: EdgeInsets.only(left: 20, right: 20, bottom: 20),
         child: Column(
           children: [
             Container(
-              margin: EdgeInsets.only(left: 5,right: 5,bottom: 20),
+              margin: EdgeInsets.only(left: 5, right: 5, bottom: 20),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(25.0),
                 boxShadow: [
@@ -96,7 +97,7 @@ class _allProductsState extends State<allProducts> {
                 controller: serachingController,
                 style: TextStyle(color: AppColor.textColor, fontSize: 15),
                 onChanged: (value) {
-                  Future.delayed(Duration(seconds: 3),() => setState(() {}));
+                  Future.delayed(Duration(seconds: 3), () => setState(() {}));
                 },
                 decoration: InputDecoration(
                   hintText: "Search here..",
@@ -105,13 +106,13 @@ class _allProductsState extends State<allProducts> {
                   fillColor: AppColor.backgroundColor,
                   filled: true,
                   contentPadding:
-                  EdgeInsets.only(left: 15, top: 5, bottom: 5, right: 15),
+                      EdgeInsets.only(left: 15, top: 5, bottom: 5, right: 15),
                   suffixIcon:
-                  Icon(Icons.search, color: AppColor.greycolor, size: 29),
+                      Icon(Icons.search, color: AppColor.greycolor, size: 29),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(50.0),
                     borderSide:
-                    BorderSide(color: AppColor.greycolor.withOpacity(0.3)),
+                        BorderSide(color: AppColor.greycolor.withOpacity(0.3)),
                   ),
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(50.0),
@@ -121,7 +122,7 @@ class _allProductsState extends State<allProducts> {
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(50.0),
                     borderSide:
-                    BorderSide(color: AppColor.textColor.withOpacity(0.5)),
+                        BorderSide(color: AppColor.textColor.withOpacity(0.5)),
                   ),
                 ),
               ),
@@ -132,29 +133,41 @@ class _allProductsState extends State<allProducts> {
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.active ||
                         snapshot.connectionState == ConnectionState.done) {
-                      if (snapshot.hasData && snapshot.data!.products.length != 0) {
-                        var maindata = serachingController.text.trim().length != 0 ?
-                        snapshot.data!.products.where((element) {
-                          return (element.name.toUpperCase().contains(serachingController.text.toUpperCase())) ||
-                              (element.category.toUpperCase().contains(serachingController.text.toUpperCase())) ||
-                              (element.price.toString().contains(serachingController.text.toUpperCase())) ||
-                              (serachingController.text.toUpperCase().contains("AVAILABLE") && element.available);
-                        }).toList()
+                      if (snapshot.hasData &&
+                          snapshot.data!.products.length != 0) {
+                        var maindata = serachingController.text.trim().length !=
+                                0
+                            ? snapshot.data!.products.where((element) {
+                                return (element.name.toUpperCase().contains(
+                                        serachingController.text
+                                            .toUpperCase())) ||
+                                    (element.category.toUpperCase().contains(
+                                        serachingController.text
+                                            .toUpperCase())) ||
+                                    (element.price.toString().contains(
+                                        serachingController.text
+                                            .toUpperCase())) ||
+                                    (serachingController.text
+                                            .toUpperCase()
+                                            .contains("AVAILABLE") &&
+                                        element.available);
+                              }).toList()
                             : snapshot.data!.products;
                         return GridView.builder(
                             shrinkWrap: true,
                             padding: EdgeInsets.only(bottom: 70),
                             physics: BouncingScrollPhysics(),
                             itemCount: maindata.length,
-                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                                crossAxisSpacing: 15,
-                                mainAxisSpacing: 15,
-                                childAspectRatio: 0.66),
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    crossAxisSpacing: 15,
+                                    mainAxisSpacing: 15,
+                                    childAspectRatio: 0.66),
                             itemBuilder: (context, index) {
                               var data = maindata[index];
                               return InkWell(
-                splashColor: Colors.transparent,
+                                splashColor: Colors.transparent,
                                 onTap: () {
                                   showBottomSheet(
                                       context: context,
@@ -168,7 +181,8 @@ class _allProductsState extends State<allProducts> {
                                       });
                                 },
                                 child: Container(
-                                  margin: EdgeInsets.only(bottom: 5, left: 5, top: 5),
+                                  margin: EdgeInsets.only(
+                                      bottom: 5, left: 5, top: 5),
                                   padding: EdgeInsets.only(bottom: 5),
                                   clipBehavior: Clip.antiAlias,
                                   decoration: BoxDecoration(
@@ -179,21 +193,24 @@ class _allProductsState extends State<allProducts> {
                                         color: Colors.grey.withOpacity(0.5),
                                         spreadRadius: 1,
                                         blurRadius: 8,
-                                        offset:
-                                        Offset(0, 3), // changes position of shadow
+                                        offset: Offset(
+                                            0, 3), // changes position of shadow
                                       ),
                                     ],
                                   ),
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Image.network(data.image,
                                           height: width * 0.3,
                                           fit: BoxFit.cover,
                                           width: double.infinity),
                                       Padding(
-                                        padding: EdgeInsets.symmetric(horizontal: 5),
+                                        padding:
+                                            EdgeInsets.symmetric(horizontal: 5),
                                         child: Text(data.name,
                                             style: TextStyle(
                                                 color: AppColor.textColor,
@@ -201,16 +218,18 @@ class _allProductsState extends State<allProducts> {
                                             maxLines: 2),
                                       ),
                                       Padding(
-                                        padding: EdgeInsets.symmetric(horizontal: 5),
-                                        child: Text("Category: ${data.category}",
+                                        padding:
+                                            EdgeInsets.symmetric(horizontal: 5),
+                                        child: Text(
+                                            "Category: ${data.category}",
                                             style: TextStyle(
                                                 color: AppColor.greycolor,
                                                 fontSize: 13),
                                             maxLines: 2),
                                       ),
-
                                       Padding(
-                                        padding: EdgeInsets.symmetric(horizontal: 5),
+                                        padding:
+                                            EdgeInsets.symmetric(horizontal: 5),
                                         child: Text("Price: ${data.price}\$",
                                             style: TextStyle(
                                                 color: AppColor.greycolor,
@@ -218,7 +237,8 @@ class _allProductsState extends State<allProducts> {
                                             maxLines: 2),
                                       ),
                                       Padding(
-                                        padding: EdgeInsets.symmetric(horizontal: 5),
+                                        padding:
+                                            EdgeInsets.symmetric(horizontal: 5),
                                         child: Row(
                                           children: [
                                             Container(
@@ -226,21 +246,30 @@ class _allProductsState extends State<allProducts> {
                                               height: 10,
                                               margin: EdgeInsets.only(right: 5),
                                               decoration: BoxDecoration(
-                                                  borderRadius: BorderRadius.circular(100),
-                                                  color: data.available ? Colors.green : Colors.red
-                                              ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          100),
+                                                  color: data.available
+                                                      ? Colors.green
+                                                      : Colors.red),
                                             ),
                                             Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: [
-                                                Text(data.available ? "Available" : "Not Available",
+                                                Text(
+                                                    data.available
+                                                        ? "Available"
+                                                        : "Not Available",
                                                     style: TextStyle(
-                                                        color: data.available ? Colors.green : Colors.red,
+                                                        color: data.available
+                                                            ? Colors.green
+                                                            : Colors.red,
                                                         fontSize: 13),
                                                     maxLines: 2),
                                               ],
                                             ),
-
                                           ],
                                         ),
                                       ),
@@ -251,12 +280,14 @@ class _allProductsState extends State<allProducts> {
                             });
                       } else {
                         return Center(
-                          child: constWidget().circularProgressInd(nodatafound: true),
+                          child: constWidget()
+                              .circularProgressInd(nodatafound: true),
                         );
                       }
                     } else {
                       return Center(
-                        child: constWidget().circularProgressInd(nodatafound: false),
+                        child: constWidget()
+                            .circularProgressInd(nodatafound: false),
                       );
                     }
                   }),
@@ -307,19 +338,19 @@ class _allProductsState extends State<allProducts> {
                     ),
                     Padding(
                       padding:
-                      EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           InkWell(
-                splashColor: Colors.transparent,
+                            splashColor: Colors.transparent,
                             onTap: () {
                               drawerKey.currentState?.closeDrawer();
                               Navigator.of(context, rootNavigator: true).push(
                                 CupertinoPageRoute<bool>(
                                   fullscreenDialog: true,
                                   builder: (BuildContext context) =>
-                                  new SignUpAsDoctor(editdcreen: true),
+                                      new SignUpAsDoctor(editdcreen: true),
                                 ),
                               );
                             },
@@ -338,40 +369,14 @@ class _allProductsState extends State<allProducts> {
                             ),
                           ),
                           InkWell(
-                splashColor: Colors.transparent,
+                            splashColor: Colors.transparent,
                             onTap: () {
                               drawerKey.currentState?.closeDrawer();
                               Navigator.of(context, rootNavigator: true).push(
                                 CupertinoPageRoute<bool>(
                                   fullscreenDialog: true,
                                   builder: (BuildContext context) =>
-                                  new requests(),
-                                ),
-                              );
-                            },
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(vertical: 10),
-                              child: Row(
-                                children: [
-                                  Text(
-                                    'Product Request',
-                                    style: TextStyle(
-                                        color: AppColor.textColor,
-                                        fontSize: 18),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          InkWell(
-                splashColor: Colors.transparent,
-                            onTap: () {
-                              drawerKey.currentState?.closeDrawer();
-                              Navigator.of(context, rootNavigator: true).push(
-                                CupertinoPageRoute<bool>(
-                                  fullscreenDialog: true,
-                                  builder: (BuildContext context) =>
-                                  new homeScreen_doctor(),
+                                      new homeScreen_doctor(),
                                 ),
                               );
                             },
@@ -390,14 +395,14 @@ class _allProductsState extends State<allProducts> {
                             ),
                           ),
                           InkWell(
-                splashColor: Colors.transparent,
+                            splashColor: Colors.transparent,
                             onTap: () {
                               drawerKey.currentState?.closeDrawer();
                               Navigator.of(context, rootNavigator: true).push(
                                 CupertinoPageRoute<bool>(
                                   fullscreenDialog: true,
                                   builder: (BuildContext context) =>
-                                  new terms_conditions(),
+                                      new terms_conditions(),
                                 ),
                               );
                             },
@@ -416,14 +421,14 @@ class _allProductsState extends State<allProducts> {
                             ),
                           ),
                           InkWell(
-                splashColor: Colors.transparent,
+                            splashColor: Colors.transparent,
                             onTap: () {
                               drawerKey.currentState?.closeDrawer();
                               Navigator.of(context, rootNavigator: true).push(
                                 CupertinoPageRoute<bool>(
                                   fullscreenDialog: true,
                                   builder: (BuildContext context) =>
-                                  new privacy_Policy(),
+                                      new privacy_Policy(),
                                 ),
                               );
                             },
@@ -466,7 +471,7 @@ class _allProductsState extends State<allProducts> {
                       Text(
                         'Logout',
                         style:
-                        TextStyle(color: AppColor.textColor, fontSize: 18),
+                            TextStyle(color: AppColor.textColor, fontSize: 18),
                       ),
                     ],
                   ),

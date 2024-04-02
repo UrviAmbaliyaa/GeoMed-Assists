@@ -80,7 +80,7 @@ class _requestsState extends State<requests> {
                                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                 children: [
                                                   SizedBox(
-                                                    width: width*0.52,
+                                                    width: width*0.44,
                                                     child: Text(userinfo.name,
                                                         style: TextStyle(
                                                             color: AppColor.textColor,
